@@ -1,0 +1,314 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4233B82C17412287005F7C4C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4233B82B17412287005F7C4C /* UIKit.framework */; };
+		4233B82E17412287005F7C4C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4233B82D17412287005F7C4C /* Foundation.framework */; };
+		4233B83017412287005F7C4C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4233B82F17412287005F7C4C /* CoreGraphics.framework */; };
+		4233B83617412287005F7C4C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4233B83417412287005F7C4C /* InfoPlist.strings */; };
+		4233B83817412287005F7C4C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233B83717412287005F7C4C /* main.m */; };
+		4233B83C17412287005F7C4C /* OTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233B83B17412287005F7C4C /* OTAppDelegate.m */; };
+		4233B83E17412287005F7C4C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4233B83D17412287005F7C4C /* Default.png */; };
+		4233B84017412287005F7C4C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4233B83F17412287005F7C4C /* Default@2x.png */; };
+		4233B84217412287005F7C4C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4233B84117412287005F7C4C /* Default-568h@2x.png */; };
+		4233B84517412287005F7C4C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233B84417412287005F7C4C /* ViewController.m */; };
+		4233B85117412383005F7C4C /* OTHTTPDownloadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233B85017412383005F7C4C /* OTHTTPDownloadRequest.m */; };
+		4233B85417412486005F7C4C /* OTHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233B85317412486005F7C4C /* OTHTTPRequest.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4233B82817412287005F7C4C /* OTHTTPRequestDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OTHTTPRequestDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4233B82B17412287005F7C4C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		4233B82D17412287005F7C4C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		4233B82F17412287005F7C4C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		4233B83317412287005F7C4C /* OTHTTPRequestDemo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OTHTTPRequestDemo-Info.plist"; sourceTree = "<group>"; };
+		4233B83517412287005F7C4C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4233B83717412287005F7C4C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4233B83917412287005F7C4C /* OTHTTPRequestDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OTHTTPRequestDemo-Prefix.pch"; sourceTree = "<group>"; };
+		4233B83A17412287005F7C4C /* OTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTAppDelegate.h; sourceTree = "<group>"; };
+		4233B83B17412287005F7C4C /* OTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OTAppDelegate.m; sourceTree = "<group>"; };
+		4233B83D17412287005F7C4C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		4233B83F17412287005F7C4C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		4233B84117412287005F7C4C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		4233B84317412287005F7C4C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		4233B84417412287005F7C4C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		4233B84F17412383005F7C4C /* OTHTTPDownloadRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTHTTPDownloadRequest.h; sourceTree = "<group>"; };
+		4233B85017412383005F7C4C /* OTHTTPDownloadRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTHTTPDownloadRequest.m; sourceTree = "<group>"; };
+		4233B85217412486005F7C4C /* OTHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTHTTPRequest.h; sourceTree = "<group>"; };
+		4233B85317412486005F7C4C /* OTHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTHTTPRequest.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4233B82517412287005F7C4C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4233B82C17412287005F7C4C /* UIKit.framework in Frameworks */,
+				4233B82E17412287005F7C4C /* Foundation.framework in Frameworks */,
+				4233B83017412287005F7C4C /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4233B81F17412286005F7C4C = {
+			isa = PBXGroup;
+			children = (
+				4233B84E17412383005F7C4C /* OTHTTPRequest */,
+				4233B83117412287005F7C4C /* OTHTTPRequestDemo */,
+				4233B82A17412287005F7C4C /* Frameworks */,
+				4233B82917412287005F7C4C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4233B82917412287005F7C4C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4233B82817412287005F7C4C /* OTHTTPRequestDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4233B82A17412287005F7C4C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4233B82B17412287005F7C4C /* UIKit.framework */,
+				4233B82D17412287005F7C4C /* Foundation.framework */,
+				4233B82F17412287005F7C4C /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4233B83117412287005F7C4C /* OTHTTPRequestDemo */ = {
+			isa = PBXGroup;
+			children = (
+				4233B83A17412287005F7C4C /* OTAppDelegate.h */,
+				4233B83B17412287005F7C4C /* OTAppDelegate.m */,
+				4233B84317412287005F7C4C /* ViewController.h */,
+				4233B84417412287005F7C4C /* ViewController.m */,
+				4233B83217412287005F7C4C /* Supporting Files */,
+			);
+			path = OTHTTPRequestDemo;
+			sourceTree = "<group>";
+		};
+		4233B83217412287005F7C4C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4233B83317412287005F7C4C /* OTHTTPRequestDemo-Info.plist */,
+				4233B83417412287005F7C4C /* InfoPlist.strings */,
+				4233B83717412287005F7C4C /* main.m */,
+				4233B83917412287005F7C4C /* OTHTTPRequestDemo-Prefix.pch */,
+				4233B83D17412287005F7C4C /* Default.png */,
+				4233B83F17412287005F7C4C /* Default@2x.png */,
+				4233B84117412287005F7C4C /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4233B84E17412383005F7C4C /* OTHTTPRequest */ = {
+			isa = PBXGroup;
+			children = (
+				4233B85217412486005F7C4C /* OTHTTPRequest.h */,
+				4233B85317412486005F7C4C /* OTHTTPRequest.m */,
+				4233B84F17412383005F7C4C /* OTHTTPDownloadRequest.h */,
+				4233B85017412383005F7C4C /* OTHTTPDownloadRequest.m */,
+			);
+			path = OTHTTPRequest;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4233B82717412287005F7C4C /* OTHTTPRequestDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4233B84B17412287005F7C4C /* Build configuration list for PBXNativeTarget "OTHTTPRequestDemo" */;
+			buildPhases = (
+				4233B82417412287005F7C4C /* Sources */,
+				4233B82517412287005F7C4C /* Frameworks */,
+				4233B82617412287005F7C4C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OTHTTPRequestDemo;
+			productName = OTHTTPRequestDemo;
+			productReference = 4233B82817412287005F7C4C /* OTHTTPRequestDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4233B82017412286005F7C4C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = OT;
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = openthread;
+			};
+			buildConfigurationList = 4233B82317412286005F7C4C /* Build configuration list for PBXProject "OTHTTPRequestDemo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4233B81F17412286005F7C4C;
+			productRefGroup = 4233B82917412287005F7C4C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4233B82717412287005F7C4C /* OTHTTPRequestDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4233B82617412287005F7C4C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4233B83617412287005F7C4C /* InfoPlist.strings in Resources */,
+				4233B83E17412287005F7C4C /* Default.png in Resources */,
+				4233B84017412287005F7C4C /* Default@2x.png in Resources */,
+				4233B84217412287005F7C4C /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4233B82417412287005F7C4C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4233B83817412287005F7C4C /* main.m in Sources */,
+				4233B83C17412287005F7C4C /* OTAppDelegate.m in Sources */,
+				4233B84517412287005F7C4C /* ViewController.m in Sources */,
+				4233B85117412383005F7C4C /* OTHTTPDownloadRequest.m in Sources */,
+				4233B85417412486005F7C4C /* OTHTTPRequest.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		4233B83417412287005F7C4C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4233B83517412287005F7C4C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4233B84917412287005F7C4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		4233B84A17412287005F7C4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4233B84C17412287005F7C4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "OTHTTPRequestDemo/OTHTTPRequestDemo-Prefix.pch";
+				INFOPLIST_FILE = "OTHTTPRequestDemo/OTHTTPRequestDemo-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		4233B84D17412287005F7C4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "OTHTTPRequestDemo/OTHTTPRequestDemo-Prefix.pch";
+				INFOPLIST_FILE = "OTHTTPRequestDemo/OTHTTPRequestDemo-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4233B82317412286005F7C4C /* Build configuration list for PBXProject "OTHTTPRequestDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4233B84917412287005F7C4C /* Debug */,
+				4233B84A17412287005F7C4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4233B84B17412287005F7C4C /* Build configuration list for PBXNativeTarget "OTHTTPRequestDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4233B84C17412287005F7C4C /* Debug */,
+				4233B84D17412287005F7C4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4233B82017412286005F7C4C /* Project object */;
+}
