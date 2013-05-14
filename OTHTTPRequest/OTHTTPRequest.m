@@ -27,6 +27,7 @@
     if (self)
     {
         _request = request;
+        self.isLowPriority = YES;
     }
     return self;
 }
