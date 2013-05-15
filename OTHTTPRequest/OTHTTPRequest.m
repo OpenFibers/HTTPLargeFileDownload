@@ -8,6 +8,81 @@
 
 #import "OTHTTPRequest.h"
 
+@implementation NSMutableURLRequest (GetAndPostParams)
+
+- (void)setUpGetParams:(NSDictionary *)dictionary
+{
+    NSMutableString *getString = [NSMutableString stringWithString:@"?"];
+    for (id key in dictionary.allKeys)
+    {
+        if ([key isKindOfClass:[NSString class]])
+        {
+            NSString *value = dictionary[key];
+            if ([value isKindOfClass:[NSString class]])
+            {
+                [getString appendString:[self urlEncode:key]];
+                [getString appendString:@"="];
+                [getString appendString:[self urlEncode:value]];
+                [getString appendString:@"&"];
+            }
+        }
+    }
+    
+    NSString *urlString = self.URL.absoluteString;
+    NSRange qouteRange = [urlString rangeOfString:@"?"];
+    if (qouteRange.location != NSNotFound)
+    {
+        urlString = [urlString substringToIndex:qouteRange.location];
+    }
+    
+    NSString *finalURLString = [urlString stringByAppendingString:getString];
+    self.URL = [NSURL URLWithString:finalURLString];
+}
+
+
+- (void)setUpPostParams:(NSDictionary *)dictionary
+{
+    NSMutableString *postString = [NSMutableString string];
+    for (id key in dictionary.allKeys)
+    {
+        if ([key isKindOfClass:[NSString class]])
+        {
+            NSString *value = dictionary[key];
+            if ([value isKindOfClass:[NSString class]])
+            {
+                [postString appendString:[self urlEncode:key]];
+                [postString appendString:@"="];
+                [postString appendString:[self urlEncode:value]];
+                [postString appendString:@"&"];
+            }
+        }
+    }
+    
+    NSData *postData = [postString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+    NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
+    
+    [self setValue:@"application/x-www-form-urlencoded; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [self setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    [self setHTTPBody:postData];
+    [self setHTTPMethod:@"POST"];
+}
+
+- (NSString *)urlEncode:(NSString *)stringToEncode
+{
+    return [self urlEncode:stringToEncode usingEncoding:NSUTF8StringEncoding];
+}
+
+- (NSString *)urlEncode:(NSString *)stringToEncode usingEncoding:(NSStringEncoding)encoding
+{
+    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
+                                                                                 (__bridge CFStringRef)stringToEncode,
+                                                                                 NULL,
+                                                                                 (CFStringRef)@"!*'\"();:@&=+$,/?%#[]% ",
+                                                                                 CFStringConvertNSStringEncodingToEncoding(encoding));
+}
+
+@end
+
 @interface OTHTTPRequest()<NSURLConnectionDataDelegate>
 @end
 
@@ -28,6 +103,7 @@
     {
         _request = request;
         self.isLowPriority = YES;
+        self.shouldClearCachedResponseWhenRequestDone = YES;
     }
     return self;
 }
@@ -45,6 +121,15 @@
 - (NSURLResponse *)response
 {
     return _response;
+}
+
+- (NSInteger)responseStatusCode
+{
+    if ([_response isKindOfClass:[NSHTTPURLResponse class]])
+    {
+        return [(NSHTTPURLResponse *)_response statusCode];
+    }
+    return 0;
 }
 
 - (void)cancel
@@ -104,17 +189,25 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    if ([self.delegate respondsToSelector:@selector(otRequestFinished:)])
+    if ([self.delegate respondsToSelector:@selector(otHTTPRequestFinished:)])
     {
-        [self.delegate otRequestFinished:self];
+        [self.delegate otHTTPRequestFinished:self];
+    }
+    if (self.shouldClearCachedResponseWhenRequestDone)
+    {
+        [[NSURLCache sharedURLCache] removeCachedResponseForRequest:_request];
     }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    if ([self.delegate respondsToSelector:@selector(otRequestFailed:)])
+    if ([self.delegate respondsToSelector:@selector(otHTTPRequestFailed:error:)])
     {
-        [self.delegate otRequestFailed:self];
+        [self.delegate otHTTPRequestFailed:self error:error];
+    }
+    if (self.shouldClearCachedResponseWhenRequestDone)
+    {
+        [[NSURLCache sharedURLCache] removeCachedResponseForRequest:_request];
     }
     [self cancel];
 }
