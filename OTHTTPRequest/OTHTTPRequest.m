@@ -20,9 +20,9 @@
             NSString *value = dictionary[key];
             if ([value isKindOfClass:[NSString class]])
             {
-                [getString appendString:[self urlEncode:key]];
+                [getString appendString:[OTHTTPRequest urlEncode:key]];
                 [getString appendString:@"="];
-                [getString appendString:[self urlEncode:value]];
+                [getString appendString:[OTHTTPRequest urlEncode:value]];
                 [getString appendString:@"&"];
             }
         }
@@ -50,9 +50,9 @@
             NSString *value = dictionary[key];
             if ([value isKindOfClass:[NSString class]])
             {
-                [postString appendString:[self urlEncode:key]];
+                [postString appendString:[OTHTTPRequest urlEncode:key]];
                 [postString appendString:@"="];
-                [postString appendString:[self urlEncode:value]];
+                [postString appendString:[OTHTTPRequest urlEncode:value]];
                 [postString appendString:@"&"];
             }
         }
@@ -65,20 +65,6 @@
     [self setValue:postLength forHTTPHeaderField:@"Content-Length"];
     [self setHTTPBody:postData];
     [self setHTTPMethod:@"POST"];
-}
-
-- (NSString *)urlEncode:(NSString *)stringToEncode
-{
-    return [self urlEncode:stringToEncode usingEncoding:NSUTF8StringEncoding];
-}
-
-- (NSString *)urlEncode:(NSString *)stringToEncode usingEncoding:(NSStringEncoding)encoding
-{
-    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
-                                                                                 (__bridge CFStringRef)stringToEncode,
-                                                                                 NULL,
-                                                                                 (CFStringRef)@"!*'\"();:@&=+$,/?%#[]% ",
-                                                                                 CFStringConvertNSStringEncodingToEncoding(encoding));
 }
 
 @end
@@ -94,6 +80,37 @@
     NSMutableData *_data;
     NSURLConnection *_connection;
 }
+
+#pragma mark - Class Methods
+
++ (NSString *)urlEncode:(NSString *)stringToEncode
+{
+    return [self urlEncode:stringToEncode usingEncoding:NSUTF8StringEncoding];
+}
+
++ (NSString *)urlEncode:(NSString *)stringToEncode usingEncoding:(NSStringEncoding)encoding
+{
+    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
+                                                                                 (__bridge CFStringRef)stringToEncode,
+                                                                                 NULL,
+                                                                                 (CFStringRef)@"!*'\"();:@&=+$,/?%#[]% ",
+                                                                                 CFStringConvertNSStringEncodingToEncoding(encoding));
+}
+
++ (NSString*)urlDecode:(NSString *)stringToDecode
+{
+    return [self urlDecode:stringToDecode usingEncoding:NSUTF8StringEncoding];
+}
+
++ (NSString*)urlDecode:(NSString *)stringToDecode usingEncoding:(NSStringEncoding)encoding
+{
+    return (__bridge_transfer NSString *) CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL,
+                                                                                                  (__bridge CFStringRef)stringToDecode,
+                                                                                                  (CFStringRef)@"",
+                                                                                                  CFStringConvertNSStringEncodingToEncoding(encoding));
+}
+
+#pragma mark - Init Methods
 
 //Create request with a NSURLRequest.
 - (id)initWithNSURLRequest:(NSURLRequest *)request
@@ -113,6 +130,8 @@
     [self cancel];
 }
 
+#pragma mark - Request and response
+
 - (NSURLRequest *)request
 {
     return _request;
@@ -131,6 +150,18 @@
     }
     return 0;
 }
+
+- (NSData *)responseData
+{
+    if (_data == nil)
+    {
+        return nil;
+    }
+    NSData *returnData = [NSData dataWithData:_data];
+    return returnData;
+}
+
+#pragma mark - Start and cancel
 
 - (void)cancel
 {
@@ -163,16 +194,6 @@
         [_connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     }
     [_connection start];
-}
-
-- (NSData *)responseData
-{
-    if (_data == nil)
-    {
-        return nil;
-    }
-    NSData *returnData = [NSData dataWithData:_data];
-    return returnData;
 }
 
 #pragma mark - NSURLConnectionDataDelegate Callbacks

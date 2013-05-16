@@ -27,6 +27,14 @@
 
 @interface OTHTTPRequest : NSObject
 
+#pragma mark - Class Methods
+
++ (NSString *)urlEncode:(NSString *)stringToEncode;
++ (NSString *)urlEncode:(NSString *)stringToEncode usingEncoding:(NSStringEncoding)encoding;
+
++ (NSString*)urlDecode:(NSString *)stringToDecode;
++ (NSString*)urlDecode:(NSString *)stringToDecode usingEncoding:(NSStringEncoding)encoding;
+
 #pragma mark - Init Methods
 
 //Create request with a NSURLRequest.
