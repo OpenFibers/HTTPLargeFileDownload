@@ -21,8 +21,6 @@
     NSMutableURLRequest *_request;
     NSFileHandle *_cacheFileHandle;
     
-    id<OTHTTPDownloadRequestDelegate> _delegate;
-    
     NSString *_urlString;//download URL
     NSString *_cacheFilePath;//cache file path
     NSString *_finishedFilePath;//finished file path
@@ -67,9 +65,9 @@
         @catch (NSException *exception)
         {
             writeSuccessed = NO;
-            if ([_delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
+            if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
             {
-                [_delegate downloadRequestWriteFileFailed:self];
+                [self.delegate downloadRequestWriteFileFailed:self];
             }
         }
     }
@@ -140,7 +138,7 @@
                                             timeoutInterval:timeoutInterval];
         
         //Set delegate
-        _delegate = delegate;
+        self.delegate = delegate;
         
         self.isLowPriority = YES;
     }
@@ -191,9 +189,9 @@
     }
     else
     {
-        if ([_delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
+        if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
         {
-            [_delegate downloadRequestWriteFileFailed:self];
+            [self.delegate downloadRequestWriteFileFailed:self];
         }
     }
 }
@@ -305,9 +303,9 @@
         long long expectedLengthInCurrentRequest = [response expectedContentLength];
         _expectedContentLength = _currentContentLength + expectedLengthInCurrentRequest;
     }
-    if ([_delegate respondsToSelector:@selector(downloadRequestReceivedResponse:)])
+    if ([self.delegate respondsToSelector:@selector(downloadRequestReceivedResponse:)])
     {
-        [_delegate downloadRequestReceivedResponse:self];
+        [self.delegate downloadRequestReceivedResponse:self];
     }
 }
 
@@ -321,7 +319,7 @@
         }
         NSUInteger dataLength = [data length];
         _currentContentLength += dataLength;
-        if ([_delegate respondsToSelector:@selector(downloadRequest:currentProgressUpdated:received:totalReceived:expectedDataSize:)])
+        if ([self.delegate respondsToSelector:@selector(downloadRequest:currentProgressUpdated:received:totalReceived:expectedDataSize:)])
         {
             CGFloat progress = 0.0f;
             if (_expectedContentLength != 0)
@@ -329,7 +327,7 @@
                 progress = (double)(_currentContentLength / (double)_expectedContentLength);
             }
             
-            [_delegate downloadRequest:self
+            [self.delegate downloadRequest:self
                 currentProgressUpdated:progress
                               received:dataLength
                          totalReceived:_currentContentLength
@@ -354,25 +352,25 @@
         BOOL moveSuccessed = [[NSFileManager defaultManager] moveItemAtPath:_cacheFilePath toPath:_finishedFilePath error:&error];
         if (moveSuccessed)
         {
-            if ([_delegate respondsToSelector:@selector(downloadRequestFinished:)])
+            if ([self.delegate respondsToSelector:@selector(downloadRequestFinished:)])
             {
-                [_delegate downloadRequestFinished:self];
+                [self.delegate downloadRequestFinished:self];
             }
         }
         else
         {
-            if ([_delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
+            if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
             {
-                [_delegate downloadRequestWriteFileFailed:self];
+                [self.delegate downloadRequestWriteFileFailed:self];
             }
         }
     }
     else
     {
         NSError *error = [[NSError alloc] initWithDomain:@"OTHTTPDownloadRequest response code error" code:_responseStatusCode userInfo:nil];
-        if ([_delegate respondsToSelector:@selector(downloadRequestFailed:error:)])
+        if ([self.delegate respondsToSelector:@selector(downloadRequestFailed:error:)])
         {
-            [_delegate downloadRequestFailed:self error:error];
+            [self.delegate downloadRequestFailed:self error:error];
         }
     }
 }
@@ -380,9 +378,9 @@
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     [self closeConnection];
-    if ([_delegate respondsToSelector:@selector(downloadRequestFailed:error:)])
+    if ([self.delegate respondsToSelector:@selector(downloadRequestFailed:error:)])
     {
-        [_delegate downloadRequestFailed:self error:error];
+        [self.delegate downloadRequestFailed:self error:error];
     }
 }
 
