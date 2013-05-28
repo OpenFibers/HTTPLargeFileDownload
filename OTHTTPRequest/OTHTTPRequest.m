@@ -161,6 +161,30 @@
     return returnData;
 }
 
+- (NSString *)responseString
+{
+    NSString *responseEncoding = [self.response textEncodingName];
+    NSString *responseString = nil;
+    if (responseEncoding)
+    {
+        NSData *responseData = [self responseData];
+        responseString = [[NSString alloc]initWithData:responseData
+                                              encoding:CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)responseEncoding))];
+    }
+    else
+    {
+        responseString = [self responseUTF8String];
+    }
+    return responseString;
+}
+
+- (NSString *)responseUTF8String
+{
+    NSData *responseData = [self responseData];
+    NSString *utf8String = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+    return utf8String;
+}
+
 #pragma mark - Start and cancel
 
 - (void)cancel
