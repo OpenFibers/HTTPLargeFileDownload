@@ -1,0 +1,4 @@
+iOSInjectionProject/
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+.DS_Store
