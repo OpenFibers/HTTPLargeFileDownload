@@ -30,6 +30,8 @@
 {
     [super viewDidLoad];
     
+    self.view.backgroundColor = [UIColor grayColor];
+    
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 300, 24)];
     label.text = @"Download file at URL:";
     label.backgroundColor = [UIColor clearColor];
