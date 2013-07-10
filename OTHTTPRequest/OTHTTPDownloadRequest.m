@@ -340,44 +340,61 @@
 {
     NSUInteger responseCode = _responseStatusCode;
     [self closeConnection];
-    if (200 == responseCode || 206 == responseCode || 416 == responseCode)
+    if (200 == responseCode || 206 == responseCode || 416 == responseCode)//Response code right
     {
-        NSError *error;
-        //remove old file
-        if ([[NSFileManager defaultManager] fileExistsAtPath:_finishedFilePath])
+        if (_currentContentLength == 0 || _currentContentLength != _expectedContentLength)//Response data length error
         {
-            [[NSFileManager defaultManager] removeItemAtPath:_finishedFilePath error:&error];
+            NSError *error = [[NSError alloc] initWithDomain:@"OTHTTPDownloadRequest response data length error"
+                                                        code:_responseStatusCode userInfo:nil];
+            [self failedCallbackWithError:error];
+            [[NSFileManager defaultManager] removeItemAtPath:_cacheFilePath error:nil];
         }
-        //move file
-        BOOL moveSuccessed = [[NSFileManager defaultManager] moveItemAtPath:_cacheFilePath toPath:_finishedFilePath error:&error];
-        if (moveSuccessed)
+        else//Response data length right
         {
-            if ([self.delegate respondsToSelector:@selector(downloadRequestFinished:)])
+            NSError *error;
+            //remove old file
+            if ([[NSFileManager defaultManager] fileExistsAtPath:_finishedFilePath])
             {
-                [self.delegate downloadRequestFinished:self];
+                [[NSFileManager defaultManager] removeItemAtPath:_finishedFilePath error:&error];
             }
-        }
-        else
-        {
-            if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
+            //move file
+            BOOL moveSuccessed = [[NSFileManager defaultManager] moveItemAtPath:_cacheFilePath
+                                                                         toPath:_finishedFilePath
+                                                                          error:&error];
+            if (moveSuccessed)//Move successed
             {
-                [self.delegate downloadRequestWriteFileFailed:self];
+                if ([self.delegate respondsToSelector:@selector(downloadRequestFinished:)])
+                {
+                    [self.delegate downloadRequestFinished:self];
+                }
+            }
+            else//Move failed
+            {
+                if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
+                {
+                    [self.delegate downloadRequestWriteFileFailed:self];
+                }
             }
         }
     }
-    else
+    else//Response code error
     {
-        NSError *error = [[NSError alloc] initWithDomain:@"OTHTTPDownloadRequest response code error" code:_responseStatusCode userInfo:nil];
-        if ([self.delegate respondsToSelector:@selector(downloadRequestFailed:error:)])
-        {
-            [self.delegate downloadRequestFailed:self error:error];
-        }
+        NSError *error = [[NSError alloc] initWithDomain:@"OTHTTPDownloadRequest response code error"
+                                                    code:_responseStatusCode userInfo:nil];
+        [self failedCallbackWithError:error];
     }
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     [self closeConnection];
+    [self failedCallbackWithError:error];
+}
+
+#pragma mark - Callback
+
+- (void)failedCallbackWithError:(NSError *)error
+{
     if ([self.delegate respondsToSelector:@selector(downloadRequestFailed:error:)])
     {
         [self.delegate downloadRequestFailed:self error:error];
