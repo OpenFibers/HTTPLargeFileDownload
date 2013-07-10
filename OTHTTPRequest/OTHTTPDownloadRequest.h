@@ -32,7 +32,8 @@
 @optional
 
 /*
- Response received
+ Response received. If block thread in this method, data transfer will be block too.
+ You can cancel download request if receivced a unexpected response in this method.
  */
 - (void)downloadRequestReceivedResponse:(OTHTTPDownloadRequest *)request;
 
