@@ -52,6 +52,8 @@
     return _finishedFilePath;
 }
 
+//Write data to file.
+//If write failed (due to disk full, etc.), download request will be automatically pause
 - (BOOL)writeToFile:(NSData *)data
 {
     BOOL writeSuccessed = YES;
@@ -64,6 +66,7 @@
         }
         @catch (NSException *exception)
         {
+            //Write successed callback. pause self later
             writeSuccessed = NO;
             if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
             {
@@ -75,7 +78,7 @@
     {
         writeSuccessed = NO;
     }
-    if (!writeSuccessed)
+    if (!writeSuccessed)//If write failed, pause self.
     {
         [self pause];
     }
