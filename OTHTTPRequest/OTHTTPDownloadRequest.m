@@ -99,9 +99,20 @@
 {
     if([[NSFileManager defaultManager] fileExistsAtPath:fileFullPath] == NO)
     {
-       BOOL createSuccessed = [[NSFileManager defaultManager] createFileAtPath:fileFullPath
-                                                                      contents:nil
-                                                                    attributes:nil];
+        NSError *error = nil;
+        NSString *folderPath = [fileFullPath stringByDeletingLastPathComponent];
+        BOOL createFolderSuccessed = [[NSFileManager defaultManager] createDirectoryAtPath:folderPath
+                                                               withIntermediateDirectories:YES
+                                                                                attributes:nil
+                                                                                     error:&error];
+        if (!createFolderSuccessed)
+        {
+            return NO;
+        }
+        
+        BOOL createSuccessed = [[NSFileManager defaultManager] createFileAtPath:fileFullPath
+                                                                       contents:nil
+                                                                     attributes:nil];
         return createSuccessed;
     }
     return YES;
