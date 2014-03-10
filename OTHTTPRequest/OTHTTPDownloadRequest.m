@@ -158,6 +158,11 @@
     return self;
 }
 
+- (void)dealloc
+{
+    [self pause];
+}
+
 - (void)closeConnection
 {
     if (self.connection)
