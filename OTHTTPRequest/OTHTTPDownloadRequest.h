@@ -87,6 +87,12 @@
 //Current download Speed
 @property (nonatomic,readonly) double currentDownloadSpeed;
 
+//Duration for each calculation of average speed, default is 0.5.
+@property (nonatomic,assign) NSTimeInterval averageDownloadSpeedCalculationDuration;
+
+//Average download speed
+@property (nonatomic,readonly) double averageDownloadSpeed;
+
 //Check downloaded file size
 @property (nonatomic,readonly) long long downloadedFileSize;
 

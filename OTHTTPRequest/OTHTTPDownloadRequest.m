@@ -30,8 +30,14 @@
     long long _currentContentLength;//current downloaded bytes count
     long long _expectedContentLength;//expected file length
     
+    //Calc current download speed
     NSTimeInterval _lastPackageTime;
     double _currentDownloadSpeed;
+    
+    //Calc average download speed
+    NSTimeInterval _lastCalcAverageDownloadSpeedTime;
+    long long _lastCalcAverageDownloadSpeedFileLength;
+    double _averageDownloadSpeed;
 }
 @synthesize connection = _connection;
 
@@ -147,6 +153,7 @@
         self.delegate = delegate;
         
         self.isLowPriority = YES;
+        self.averageDownloadSpeedCalculationDuration = 0.5;
     }
     return self;
 }
@@ -177,9 +184,17 @@
         
         _responseStatusCode = NSNotFound;
         
+        _lastPackageTime = 0;
+        _currentDownloadSpeed = 0;
+        
+        _lastCalcAverageDownloadSpeedTime = 0;
+        _lastCalcAverageDownloadSpeedFileLength = 0;
+        _averageDownloadSpeed = 0;
+        
         //get last download data size
         long long dataSize = [OTHTTPDownloadRequest fileSizeAtPath:_cacheFilePath];
         _currentContentLength = dataSize;
+        _lastCalcAverageDownloadSpeedFileLength = dataSize;
         
         //set request range
         NSString *rangeString = [NSString stringWithFormat:@"bytes=%lld-", dataSize];
@@ -300,6 +315,7 @@
     _responseStatusCode = [(NSHTTPURLResponse *)response statusCode];//status code为406可能是range超范围了
     _responseMIMEType = [(NSHTTPURLResponse *)response MIMEType];
     _lastPackageTime = [[NSDate date] timeIntervalSince1970];
+    _lastCalcAverageDownloadSpeedTime = _lastPackageTime;
     if(200 == _responseStatusCode)//request uncached file
     {
         long long expectedLengthInCurrentRequest = [response expectedContentLength];
@@ -332,6 +348,16 @@
         NSTimeInterval elapsedTime = currentTime - _lastPackageTime;
         _currentDownloadSpeed = (elapsedTime == 0 ? 0 : dataLength / elapsedTime);
         _lastPackageTime = currentTime;
+        
+        //Calculate average download speed
+        NSTimeInterval averageElapsedTime = currentTime - _lastCalcAverageDownloadSpeedTime;
+        if (averageElapsedTime > self.averageDownloadSpeedCalculationDuration)
+        {
+            long long averageAddedFileLength = _currentContentLength - _lastCalcAverageDownloadSpeedFileLength;
+            _averageDownloadSpeed = (averageElapsedTime == 0 ? 0 : averageAddedFileLength / averageElapsedTime);
+            _lastCalcAverageDownloadSpeedFileLength = _currentContentLength;
+            _lastCalcAverageDownloadSpeedTime = currentTime;
+        }
         
         //Callback delegate
         if ([self.delegate respondsToSelector:@selector(downloadRequest:currentProgressUpdated:received:totalReceived:expectedDataSize:)])

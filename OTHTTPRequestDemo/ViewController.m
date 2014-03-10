@@ -94,7 +94,7 @@
                          progress,
                          [request downloadedFileSize] / (double) (1024 * 1024),
                          expectedDataSize / (double) (1024 * 1024),
-                         request.currentDownloadSpeed / (double) (1024 * 1024)];
+                         request.averageDownloadSpeed / (double) (1024 * 1024)];
     _infoLabel.text = logInfo;
 }
 
