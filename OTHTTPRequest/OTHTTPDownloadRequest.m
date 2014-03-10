@@ -29,6 +29,9 @@
     NSString *_responseMIMEType;
     long long _currentContentLength;//current downloaded bytes count
     long long _expectedContentLength;//expected file length
+    
+    NSTimeInterval _lastPackageTime;
+    double _currentDownloadSpeed;
 }
 @synthesize connection = _connection;
 
@@ -296,6 +299,7 @@
 {
     _responseStatusCode = [(NSHTTPURLResponse *)response statusCode];//status code为406可能是range超范围了
     _responseMIMEType = [(NSHTTPURLResponse *)response MIMEType];
+    _lastPackageTime = [[NSDate date] timeIntervalSince1970];
     if(200 == _responseStatusCode)//request uncached file
     {
         long long expectedLengthInCurrentRequest = [response expectedContentLength];
@@ -322,6 +326,14 @@
         }
         NSUInteger dataLength = [data length];
         _currentContentLength += dataLength;
+
+        //Calculate current download speed
+        NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
+        NSTimeInterval elapsedTime = currentTime - _lastPackageTime;
+        _currentDownloadSpeed = (elapsedTime == 0 ? 0 : dataLength / elapsedTime);
+        _lastPackageTime = currentTime;
+        
+        //Callback delegate
         if ([self.delegate respondsToSelector:@selector(downloadRequest:currentProgressUpdated:received:totalReceived:expectedDataSize:)])
         {
             CGFloat progress = 0.0f;

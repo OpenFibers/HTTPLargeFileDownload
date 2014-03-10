@@ -89,11 +89,12 @@
        expectedDataSize:(long long)expectedDataSize
 {
     NSString *logInfo = [NSString stringWithFormat:
-                         @"Download URL:\n%@\nprogress:%f\ndownloaded size:%.2fMB\nexpected size:%.2fMB",
+                         @"Download URL:\n%@\nprogress:%f\ndownloaded size:%.2fMB\nexpected size:%.2fMB\ncurrent speed:%.2f",
                          [request requestURL],
                          progress,
                          [request downloadedFileSize] / (double) (1024 * 1024),
-                         expectedDataSize / (double) (1024 * 1024)];
+                         expectedDataSize / (double) (1024 * 1024),
+                         request.currentDownloadSpeed / (double) (1024 * 1024)];
     _infoLabel.text = logInfo;
 }
 

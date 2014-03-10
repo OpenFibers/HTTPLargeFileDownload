@@ -84,6 +84,9 @@
 //Check if download
 @property (nonatomic,readonly) BOOL isDownloading;
 
+//Current download Speed
+@property (nonatomic,readonly) double currentDownloadSpeed;
+
 //Check downloaded file size
 @property (nonatomic,readonly) long long downloadedFileSize;
 
