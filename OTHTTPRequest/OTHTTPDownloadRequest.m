@@ -94,12 +94,17 @@
     return writeSuccessed;
 }
 
-+ (void)createFileAtPath:(NSString *)fileFullPath
+//Returns YES if create successed or file already exists
++ (BOOL)createFileAtPath:(NSString *)fileFullPath
 {
     if([[NSFileManager defaultManager] fileExistsAtPath:fileFullPath] == NO)
     {
-        [[NSFileManager defaultManager] createFileAtPath:fileFullPath contents:nil attributes:nil];
+       BOOL createSuccessed = [[NSFileManager defaultManager] createFileAtPath:fileFullPath
+                                                                      contents:nil
+                                                                    attributes:nil];
+        return createSuccessed;
     }
+    return YES;
 }
 
 + (long long)fileSizeAtPath:(NSString*)fileFullPath
