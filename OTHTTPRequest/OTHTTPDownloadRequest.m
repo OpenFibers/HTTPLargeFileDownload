@@ -362,6 +362,10 @@
             _averageDownloadSpeed = (averageElapsedTime == 0 ? 0 : averageAddedFileLength / averageElapsedTime);
             _lastCalcAverageDownloadSpeedFileLength = _currentContentLength;
             _lastCalcAverageDownloadSpeedTime = currentTime;
+            if ([self.delegate respondsToSelector:@selector(downloadRequest:averageDownloadSpeedUpdated:)])
+            {
+                [self.delegate downloadRequest:self averageDownloadSpeedUpdated:_averageDownloadSpeed];
+            }
         }
         
         //Callback delegate

@@ -46,6 +46,11 @@
           totalReceived:(long long)totalReceived
        expectedDataSize:(long long)expectedDataSize;
 
+/*
+ Average download speed updated.
+ */
+- (void)downloadRequest:(OTHTTPDownloadRequest *)request averageDownloadSpeedUpdated:(float)averageDownloadSpeed;
+
 @end
 
 @interface OTHTTPDownloadRequest : NSObject
