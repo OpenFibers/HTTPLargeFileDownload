@@ -110,6 +110,37 @@
                                                                                                   CFStringConvertNSStringEncodingToEncoding(encoding));
 }
 
++ (NSDictionary *)parseGetParamsFromURLString:(NSString *)urlString
+{
+    if (!urlString)
+    {
+        return nil;
+    }
+    NSRange queryRange = [urlString rangeOfString:@"?"];
+    if (queryRange.location == NSNotFound)
+    {
+        return nil;
+    }
+    
+    NSString *subString = [urlString substringFromIndex:queryRange.location + queryRange.length];
+    NSArray *components = [subString componentsSeparatedByString:@"&"];
+    NSMutableDictionary *resultDic = [NSMutableDictionary dictionary];
+    for (NSString *string in components)
+    {
+        NSRange equalRange = [string rangeOfString:@"="];
+        if (equalRange.location == NSNotFound)
+        {
+            continue;
+        }
+        NSString *key = [string substringToIndex:equalRange.location];
+        NSString *value = [string substringFromIndex:equalRange.location + equalRange.length];
+        [resultDic setObject:value forKey:key];
+    }
+    
+    NSDictionary *returnDic = [NSDictionary dictionaryWithDictionary:resultDic];
+    return returnDic;
+}
+
 #pragma mark - Init Methods
 
 //Create request with a NSURLRequest.

@@ -29,11 +29,13 @@
 
 #pragma mark - Class Methods
 
-+ (NSString *)urlEncode:(NSString *)stringToEncode;
++ (NSString *)urlEncode:(NSString *)stringToEncode;//Encode with UTF8
 + (NSString *)urlEncode:(NSString *)stringToEncode usingEncoding:(NSStringEncoding)encoding;
 
-+ (NSString*)urlDecode:(NSString *)stringToDecode;
++ (NSString*)urlDecode:(NSString *)stringToDecode;//Decode with UTF8
 + (NSString*)urlDecode:(NSString *)stringToDecode usingEncoding:(NSStringEncoding)encoding;
+
++ (NSDictionary *)parseGetParamsFromURLString:(NSString *)urlString;
 
 #pragma mark - Init Methods
 
