@@ -117,7 +117,8 @@
 - (void)start;
 
 //set cookie. If you need to set cookie, you must do this before call start.
-- (void)setCookie:(NSArray *)cookie;
+//Each object in `cookie` is an `NSHTTPCookie`
+- (void)setCookies:(NSArray *)cookies;
 
 /*!
  @method addValue:forHTTPHeaderField:

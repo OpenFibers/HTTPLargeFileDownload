@@ -275,9 +275,9 @@
     }
 }
 
-- (void)setCookie:(NSArray *)cookie
+- (void)setCookies:(NSArray *)cookies
 {
-    [self addCookies:cookie];
+    [self addCookies:cookies];
 }
 
 - (void)addValue:(NSString *)value forHTTPHeaderField:(NSString *)field
