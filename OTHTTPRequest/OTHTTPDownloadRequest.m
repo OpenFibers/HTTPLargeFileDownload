@@ -408,7 +408,8 @@
     [self closeConnection];
     if (200 == responseCode || 206 == responseCode || 416 == responseCode)//Response code right
     {
-        if (_currentContentLength == 0 || _currentContentLength != _expectedContentLength)//Response data length error
+        if ((_currentContentLength == 0) || //Nothing downloaded
+            ((_currentContentLength != _expectedContentLength) && _expectedContentLength != -1))//Response data length error
         {
             NSError *error = [[NSError alloc] initWithDomain:@"OTHTTPDownloadRequest response data length error"
                                                         code:_responseStatusCode userInfo:nil];
