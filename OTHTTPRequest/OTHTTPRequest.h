@@ -20,9 +20,12 @@
 
 @protocol OTHTTPRequestDelegate <NSObject>
 
-- (void)otHTTPRequest:(OTHTTPRequest *)request dataUpdated:(NSData *)data;
+@required
 - (void)otHTTPRequestFinished:(OTHTTPRequest *)request;
 - (void)otHTTPRequestFailed:(OTHTTPRequest *)request error:(NSError *)error;
+
+@optional
+- (void)otHTTPRequest:(OTHTTPRequest *)request dataUpdated:(NSData *)data;
 
 @end
 
