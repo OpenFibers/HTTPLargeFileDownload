@@ -261,6 +261,11 @@
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
     [_data appendData:data];
+    if ([self.delegate respondsToSelector:@selector(otHTTPRequest:dataUpdated:)])
+    {
+        NSData *callbackData = [NSData dataWithData:_data];
+        [self.delegate otHTTPRequest:self dataUpdated:callbackData];
+    }
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
