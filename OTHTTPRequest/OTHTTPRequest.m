@@ -251,6 +251,11 @@
 //Create request with a NSURLRequest.
 - (id)initWithNSURLRequest:(NSURLRequest *)request
 {
+    if (!request || !request.URL || request.URL.absoluteString.length == 0)
+    {
+        return nil;
+    }
+    
     self = [super init];
     if (self)
     {
