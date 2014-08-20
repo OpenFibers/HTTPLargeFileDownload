@@ -157,8 +157,15 @@
     {
         //Set cache file path and finished file path
         _urlString = urlString;
-        _cacheFilePath = cacheFile;
-        _finishedFilePath = finishedFilePath;
+        
+        //Some Japanese string like べ may have differen length before convert to NSURL then convert back to path.
+        //Before convert then convert back, べ 's length is 1, after that, its length is 2.
+        //Which may lead to compare path string and converted path string returns the two string are different.
+        //Convert it at the first time here, to avoid the later different.
+        NSURL *cacheURL = [NSURL fileURLWithPath:cacheFile];
+        _cacheFilePath = cacheURL.path;
+        NSURL *finishedURL = [NSURL fileURLWithPath:finishedFilePath];
+        _finishedFilePath = finishedURL.path;
         
         NSURL *url= [NSURL URLWithString:_urlString];
         _request = [[NSMutableURLRequest alloc] initWithURL:url
