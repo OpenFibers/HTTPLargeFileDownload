@@ -25,11 +25,18 @@
 - (void)downloadRequestFailed:(OTHTTPDownloadRequest *)request error:(NSError *)error;
 
 /*
- Disk full
+ Write file failed, due to disk full or other reason. With a system exception callback.
+ You should IMPLEMENT AT LEAST ONE method in `downloadRequestWriteFileFailed:` and `downloadRequestWriteFileFailed:exception:`.
  */
-- (void)downloadRequestWriteFileFailed:(OTHTTPDownloadRequest *)request;
+- (void)downloadRequestWriteFileFailed:(OTHTTPDownloadRequest *)request exception:(NSException *)exception;
 
 @optional
+
+/*
+ Write file failed, due to disk full or other reason.
+ You should IMPLEMENT AT LEAST ONE method in `downloadRequestWriteFileFailed:` and `downloadRequestWriteFileFailed:exception:`.
+ */
+- (void)downloadRequestWriteFileFailed:(OTHTTPDownloadRequest *)request NS_DEPRECATED(10_0, 10_0, 2_0, 2_0, "Use downloadRequestWriteFileFailed:exception: instead");;
 
 /*
  Response received. If block thread in this method, data transfer will be block too.
@@ -109,6 +116,18 @@
 //Default value is `YES`.
 //When set to `NO`, download will be started at default priority.
 @property (nonatomic,assign) BOOL isLowPriority;
+
+//Current retried times after download failed.
+//If request not started or paused, call `start` will reset this property.
+@property (nonatomic, readonly) NSUInteger currentRetriedTimes;
+
+//Retry times for download failed due to response errors or network failed reasons.
+//Default is 1.
+@property (nonatomic,assign) NSUInteger retryTimes;
+
+//If download failed, and current retried times < `retryTimes`, then retry after `retryAfterFailedDuration`
+//Default is 0.5 second.
+@property (nonatomic,assign) NSTimeInterval retryAfterFailedDuration;
 
 //pause download
 - (void)pause;

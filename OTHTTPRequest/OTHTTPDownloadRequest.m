@@ -38,6 +38,8 @@
     NSTimeInterval _lastCalcAverageDownloadSpeedTime;
     long long _lastCalcAverageDownloadSpeedFileLength;
     double _averageDownloadSpeed;
+    
+    NSUInteger _currentRetriedTimes;
 }
 @synthesize connection = _connection;
 
@@ -77,9 +79,19 @@
         {
             //Write successed callback. pause self later
             writeSuccessed = NO;
-            if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
+            if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:exception:)])
             {
-                [self.delegate downloadRequestWriteFileFailed:self];
+                [self.delegate downloadRequestWriteFileFailed:self exception:exception];
+            }
+            else
+            {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+                if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
+                {
+                    [self.delegate downloadRequestWriteFileFailed:self];
+                }
+#pragma GCC diagnostic pop
             }
         }
     }
@@ -177,6 +189,9 @@
         
         self.isLowPriority = YES;
         self.averageDownloadSpeedCalculationDuration = 0.5;
+        self.retryAfterFailedDuration = 0.5f;
+        self.retryTimes = 1;
+        _currentRetriedTimes = 0;
     }
     return self;
 }
@@ -238,9 +253,22 @@
     }
     else
     {
-        if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
+        if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:exception:)])
         {
-            [self.delegate downloadRequestWriteFileFailed:self];
+            NSException *exception = [[NSException alloc] initWithName:@"OTHTTPDownloadRequest write failed"
+                                                                reason:@"Failed create file handle at start."
+                                                              userInfo:@{@"CachePath": _cacheFilePath}];
+            [self.delegate downloadRequestWriteFileFailed:self exception:exception];
+        }
+        else
+        {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+            if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
+            {
+                [self.delegate downloadRequestWriteFileFailed:self];
+            }
+#pragma GCC diagnostic pop
         }
     }
 }
@@ -276,8 +304,14 @@
 
 - (void)start
 {
+    if (![NSThread isMainThread])
+    {
+        [self performSelectorOnMainThread:@selector(start) withObject:nil waitUntilDone:NO];
+        return;
+    }
     if (!self.connection)
     {
+        _currentRetriedTimes = 0;
         [self beginConnection];
     }
 }
@@ -366,6 +400,10 @@
     {
         if (![self writeToFile:data])
         {
+            [self closeConnection];
+            NSError *error = [[NSError alloc] initWithDomain:@"OTHTTPDownloadRequest failed write data to local file"
+                                                        code:-1000 userInfo:nil];
+            [self failedCallbackWithError:error];
             return;
         }
         NSUInteger dataLength = [data length];
@@ -444,9 +482,22 @@
             }
             else//Move failed
             {
-                if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
+                if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:exception:)])
                 {
-                    [self.delegate downloadRequestWriteFileFailed:self];
+                    NSException *exception = [[NSException alloc] initWithName:@"OTHTTPDownloadRequest write failed"
+                                                                        reason:@"Move cached file to finished file failed."
+                                                                      userInfo:@{@"CachePath": _cacheFilePath, @"FinishedPath": _finishedFilePath}];
+                    [self.delegate downloadRequestWriteFileFailed:self exception:exception];
+                }
+                else
+                {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+                    if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
+                    {
+                        [self.delegate downloadRequestWriteFileFailed:self];
+                    }
+#pragma GCC diagnostic pop
                 }
             }
         }
@@ -469,6 +520,13 @@
 
 - (void)failedCallbackWithError:(NSError *)error
 {
+    if (_currentRetriedTimes < self.retryTimes)
+    {
+        _currentRetriedTimes++;
+        [self performSelector:@selector(beginConnection) withObject:nil afterDelay:self.retryAfterFailedDuration];
+        return;
+    }
+    
     if ([self.delegate respondsToSelector:@selector(downloadRequestFailed:error:)])
     {
         [self.delegate downloadRequestFailed:self error:error];

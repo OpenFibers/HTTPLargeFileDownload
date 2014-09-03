@@ -116,7 +116,7 @@
     _infoLabel.text = logInfo;
 }
 
--(void)downloadRequestWriteFileFailed:(OTHTTPDownloadRequest *)request
+-(void)downloadRequestWriteFileFailed:(OTHTTPDownloadRequest *)request exception:(NSException *)exception
 {
     NSString *logInfo = [NSString stringWithFormat:
                          @"Write file failed:\n%@",
