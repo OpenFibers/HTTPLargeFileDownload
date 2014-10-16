@@ -361,6 +361,10 @@
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     _response = response;
+    if ([self.delegate respondsToSelector:@selector(otHTTPRequest:didReceiveResponse:)])
+    {
+        [self.delegate otHTTPRequest:self didReceiveResponse:response];
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
@@ -368,8 +372,12 @@
     [_data appendData:data];
     if ([self.delegate respondsToSelector:@selector(otHTTPRequest:dataUpdated:)])
     {
+        [self.delegate otHTTPRequest:self dataUpdated:data];
+    }
+    if ([self.delegate respondsToSelector:@selector(otHTTPRequest:dataUpdated:totalData:)])
+    {
         NSData *callbackData = [NSData dataWithData:_data];
-        [self.delegate otHTTPRequest:self dataUpdated:callbackData];
+        [self.delegate otHTTPRequest:self dataUpdated:data totalData:callbackData];
     }
 }
 

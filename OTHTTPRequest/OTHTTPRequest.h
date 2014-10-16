@@ -49,7 +49,9 @@
 - (void)otHTTPRequestFailed:(OTHTTPRequest *)request error:(NSError *)error;
 
 @optional
+- (void)otHTTPRequest:(OTHTTPRequest *)request didReceiveResponse:(NSURLResponse *)response;
 - (void)otHTTPRequest:(OTHTTPRequest *)request dataUpdated:(NSData *)data;
+- (void)otHTTPRequest:(OTHTTPRequest *)request dataUpdated:(NSData *)data totalData:(NSData *)totalData;
 
 @end
 
