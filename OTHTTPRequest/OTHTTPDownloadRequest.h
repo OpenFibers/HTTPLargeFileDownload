@@ -45,18 +45,14 @@
 - (void)downloadRequestReceivedResponse:(OTHTTPDownloadRequest *)request;
 
 /*
- Downloaded data
+ Downloaded data callback
  */
 - (void)downloadRequest:(OTHTTPDownloadRequest *)request
  currentProgressUpdated:(float)progress
+                  speed:(float)bytesPerSecond
                received:(NSUInteger)received
           totalReceived:(long long)totalReceived
        expectedDataSize:(long long)expectedDataSize;
-
-/*
- Average download speed updated.
- */
-- (void)downloadRequest:(OTHTTPDownloadRequest *)request averageDownloadSpeedUpdated:(float)averageDownloadSpeed;
 
 @end
 
@@ -97,11 +93,8 @@
 //Check if download
 @property (nonatomic,readonly) BOOL isDownloading;
 
-//Current download Speed
-@property (nonatomic,readonly) double currentDownloadSpeed;
-
-//Duration for each calculation of average speed, default is 0.5.
-@property (nonatomic,assign) NSTimeInterval averageDownloadSpeedCalculationDuration;
+//Interval for each progress callback `downloadRequest:currentProgressUpdated:speed:received:totalReceived:expectedDataSize:`, default is 0.2.
+@property (nonatomic,assign) NSTimeInterval downloadProgressCallbackInterval;
 
 //Average download speed
 @property (nonatomic,readonly) double averageDownloadSpeed;
