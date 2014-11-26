@@ -11,10 +11,10 @@
 @class OTHTTPRequest;
 
 @interface OTHTTPRequestUploadFile : NSObject
-@property (nonatomic, retain) NSString *name;
-@property (nonatomic, retain) NSString *fileName;
-@property (nonatomic, retain) NSString *contentType;
-@property (nonatomic, retain) NSData *fileData;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *fileName;
+@property (nonatomic, strong) NSString *contentType;
+@property (nonatomic, strong) NSData *fileData;
 @end
 
 @interface NSMutableURLRequest (GetAndPostParams)
@@ -72,15 +72,15 @@
 //Create request with a NSURLRequest.
 - (id)initWithNSURLRequest:(NSURLRequest *)request;
 
-@property (nonatomic, assign) id<OTHTTPRequestDelegate> delegate;
-@property (nonatomic, retain) id userInfo;
+@property (nonatomic, weak) id<OTHTTPRequestDelegate> delegate;
+@property (nonatomic, strong) id userInfo;
 
 #pragma mark - Options
 
 //Set if this is a low priority request. Set this property before call `start` to take effect.
 //Default value is `YES`.
 //When set to `NO`, request will be started at default priority.
-@property (nonatomic,assign) BOOL isLowPriority;
+@property (nonatomic, assign) BOOL isLowPriority;
 
 //To avoid memory issues, default is YES.
 @property (nonatomic, assign) BOOL shouldClearCachedResponseWhenRequestDone;

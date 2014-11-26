@@ -72,8 +72,8 @@
                           timeoutInterval:(NSTimeInterval)timeoutInterval
                                  delegate:(id<OTHTTPDownloadRequestDelegate>)delegate;
 
-@property (nonatomic, assign) id<OTHTTPDownloadRequestDelegate> delegate;
-@property (nonatomic, retain) id userInfo;
+@property (nonatomic, weak) id<OTHTTPDownloadRequestDelegate> delegate;
+@property (nonatomic, strong) id userInfo;
 
 //Check response Status Code. If haven't receive response yet, return NSNotFound
 @property (nonatomic,readonly) NSUInteger responseStatusCode;

@@ -13,7 +13,7 @@
 #endif
 
 @interface OTHTTPDownloadRequest ()
-@property (nonatomic, retain) NSURLConnection *connection;
+@property (nonatomic, strong) NSURLConnection *connection;
 @end
 
 @implementation OTHTTPDownloadRequest
