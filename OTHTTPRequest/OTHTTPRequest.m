@@ -22,6 +22,11 @@
 
 @implementation NSMutableURLRequest (GetAndPostParams)
 
+/**
+ *  Setup simple request with get params.
+ *
+ *  @param getParams Get params to be set.
+ */
 - (void)setUpGetParams:(NSDictionary *)dictionary
 {
     NSMutableString *getString = [NSMutableString stringWithString:@"?"];
@@ -54,7 +59,11 @@
     self.URL = [NSURL URLWithString:finalURLString];
 }
 
-
+/**
+ *  Setup simple request with post params.
+ *
+ *  @param postParams Post params to be set.
+ */
 - (void)setUpPostParams:(NSDictionary *)dictionary
 {
     NSMutableString *postString = [NSMutableString string];
@@ -87,25 +96,36 @@
     [self setHTTPMethod:@"POST"];
 }
 
-//Multipart form data request with post params, and single file's data.
-//Using NSUTF8StringEncoding.
+/**
+ *  Multipart form data request with post params, and single file's data. Using NSUTF8StringEncoding.
+ *
+ *  @param postParams Post params to be set.
+ *  @param file       File to be upload.
+ */
 - (void)setUpMultiPartFormDataRequestWithPostParams:(NSDictionary *)postParams file:(OTHTTPRequestUploadFile *)file
 {
     [self setUpMultiPartFormDataRequestWithPostParams:postParams filesArray:@[file]];
 }
 
-//Multipart form data request with post params, and files' data.
-//Each member of `filesArray` is an `OTHTTPRequestUploadFile`.
-//Using NSUTF8StringEncoding.
-- (void)setUpMultiPartFormDataRequestWithPostParams:(NSDictionary *)postParams filesArray:(NSArray *)filesArray
+/**
+ *  Multipart form data request with post params, and files' data. Using NSUTF8StringEncoding.
+ *
+ *  @param postParams Post params to be set.
+ *  @param filesArray Files to be upload.
+ */
+- (void)setUpMultiPartFormDataRequestWithPostParams:(NSDictionary *)postParams filesArray:(NSArray<OTHTTPRequestUploadFile *> *)filesArray;
 {
     [self setUpMultiPartFormDataRequestWithPostParams:postParams filesArray:filesArray encoding:NSUTF8StringEncoding];
 }
 
-//Multipart form data request with post params, and files' data.
-//Each member of `filesArray` is an `OTHTTPRequestUploadFile`.
-//Using specific string encoding.
-- (void)setUpMultiPartFormDataRequestWithPostParams:(NSDictionary *)postParams filesArray:(NSArray *)filesArray encoding:(NSStringEncoding)encoding
+/**
+ *  Multipart form data request with post params, and files' data. Using specific string encoding.
+ *
+ *  @param postParams Post params to be set.
+ *  @param filesArray Files to be upload.
+ *  @param encoding   Encode for post.
+ */
+- (void)setUpMultiPartFormDataRequestWithPostParams:(NSDictionary *)postParams filesArray:(NSArray<OTHTTPRequestUploadFile *> *)filesArray encoding:(NSStringEncoding)encoding;
 {
     if (!encoding)
     {
