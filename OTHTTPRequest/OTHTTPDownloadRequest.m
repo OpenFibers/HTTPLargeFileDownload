@@ -20,22 +20,22 @@
 {
     NSMutableURLRequest *_request;
     NSFileHandle *_cacheFileHandle;
-    
-    NSString *_urlString;//download URL
-    NSString *_cacheFilePath;//cache file path
-    NSString *_finishedFilePath;//finished file path
-    
-    NSUInteger _responseStatusCode;//HTTP Status Code
+
+    NSString *_urlString; //download URL
+    NSString *_cacheFilePath; //cache file path
+    NSString *_finishedFilePath; //finished file path
+
+    NSUInteger _responseStatusCode; //HTTP Status Code
     NSString *_responseMIMEType;
-    long long _currentContentLength;//current downloaded bytes count
-    long long _expectedContentLength;//expected file length
-    
+    long long _currentContentLength; //current downloaded bytes count
+    long long _expectedContentLength; //expected file length
+
     //Calc current download speed
     NSTimeInterval _connectionBeginTime;
     long long _dataLengthAddedSinceConnectionBegin;
     double _averageDownloadSpeed;
     NSTimeInterval _lastProgressCallbackTime;
-    
+
     NSUInteger _currentRetriedTimes;
 }
 @synthesize connection = _connection;
@@ -96,7 +96,7 @@
     {
         writeSuccessed = NO;
     }
-    if (!writeSuccessed)//If write failed, pause self.
+    if (!writeSuccessed) //If write failed, pause self.
     {
         [self pause];
     }
@@ -106,7 +106,7 @@
 //Returns YES if create successed or file already exists
 + (BOOL)createFileAtPath:(NSString *)fileFullPath
 {
-    if([[NSFileManager defaultManager] fileExistsAtPath:fileFullPath] == NO)
+    if ([[NSFileManager defaultManager] fileExistsAtPath:fileFullPath] == NO)
     {
         NSError *error = nil;
         NSString *folderPath = [fileFullPath stringByDeletingLastPathComponent];
@@ -118,7 +118,7 @@
         {
             return NO;
         }
-        
+
         BOOL createSuccessed = [[NSFileManager defaultManager] createFileAtPath:fileFullPath
                                                                        contents:nil
                                                                      attributes:nil];
@@ -127,9 +127,9 @@
     return YES;
 }
 
-+ (long long)fileSizeAtPath:(NSString*)fileFullPath
++ (long long)fileSizeAtPath:(NSString *)fileFullPath
 {
-    NSFileManager* manager = [NSFileManager defaultManager];
+    NSFileManager *manager = [NSFileManager defaultManager];
     if ([manager fileExistsAtPath:fileFullPath])
     {
         return [[manager attributesOfItemAtPath:fileFullPath error:nil] fileSize];
@@ -146,7 +146,6 @@
                    cacheFile:cacheFile
             finishedFilePath:finishedFilePath
              timeoutInterval:15
-//             timeoutInterval:0.1
                     delegate:delegate];
     if (self)
     {
@@ -166,7 +165,7 @@
     {
         //Set cache file path and finished file path
         _urlString = urlString;
-        
+
         //Some Japanese string like べ may have differen length before convert to NSURL then convert back to path.
         //Before convert then convert back, べ 's length is 1, after that, its length is 2.
         //Which may lead to compare path string and converted path string returns the two string are different.
@@ -175,15 +174,15 @@
         _cacheFilePath = cacheURL.path;
         NSURL *finishedURL = [NSURL fileURLWithPath:finishedFilePath];
         _finishedFilePath = finishedURL.path;
-        
-        NSURL *url= [NSURL URLWithString:_urlString];
+
+        NSURL *url = [NSURL URLWithString:_urlString];
         _request = [[NSMutableURLRequest alloc] initWithURL:url
                                                 cachePolicy:NSURLRequestReloadIgnoringCacheData
                                             timeoutInterval:timeoutInterval];
-        
+
         //Set delegate
         self.delegate = delegate;
-        
+
         self.isLowPriority = YES;
         self.downloadProgressCallbackInterval = 0.2;
         self.retryAfterFailedDuration = 0.5f;
@@ -221,22 +220,22 @@
     if (_cacheFileHandle)
     {
         [_cacheFileHandle seekToEndOfFile];
-        
+
         _responseStatusCode = NSNotFound;
-        
+
         _connectionBeginTime = [[NSDate date] timeIntervalSince1970];
         _lastProgressCallbackTime = _connectionBeginTime;
         _dataLengthAddedSinceConnectionBegin = 0;
         _averageDownloadSpeed = 0;
-        
+
         //get last download data size
         long long dataSize = [OTHTTPDownloadRequest fileSizeAtPath:_cacheFilePath];
         _currentContentLength = dataSize;
-        
+
         //set request range
         NSString *rangeString = [NSString stringWithFormat:@"bytes=%lld-", dataSize];
         [_request setValue:rangeString forHTTPHeaderField:@"Range"];
-        
+
         //Setup connection
         self.connection = [[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:NO];
         if (!self.isLowPriority)
@@ -251,7 +250,7 @@
         {
             NSException *exception = [[NSException alloc] initWithName:@"OTHTTPDownloadRequest write failed"
                                                                 reason:@"Failed create file handle at start."
-                                                              userInfo:@{@"CachePath": _cacheFilePath}];
+                                                              userInfo:@{ @"CachePath" : _cacheFilePath }];
             [self.delegate downloadRequestWriteFileFailed:self exception:exception];
         }
         else
@@ -271,24 +270,24 @@
 {
     if ([cookies count] > 0)
     {
-		NSHTTPCookie *cookie;
-		NSString *cookieHeader = nil;
-		for (cookie in cookies)
+        NSHTTPCookie *cookie;
+        NSString *cookieHeader = nil;
+        for (cookie in cookies)
         {
-			if (!cookieHeader)
+            if (!cookieHeader)
             {
-				cookieHeader = [NSString stringWithFormat: @"%@=%@",[cookie name],[cookie value]];
-			}
+                cookieHeader = [NSString stringWithFormat:@"%@=%@", [cookie name], [cookie value]];
+            }
             else
             {
-				cookieHeader = [NSString stringWithFormat: @"%@; %@=%@",cookieHeader,[cookie name],[cookie value]];
-			}
-		}
-		if (cookieHeader)
+                cookieHeader = [NSString stringWithFormat:@"%@; %@=%@", cookieHeader, [cookie name], [cookie value]];
+            }
+        }
+        if (cookieHeader)
         {
             [_request setValue:cookieHeader forHTTPHeaderField:@"Cookie"];
-		}
-	}
+        }
+    }
 }
 
 - (void)pause
@@ -368,14 +367,14 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    _responseStatusCode = [(NSHTTPURLResponse *)response statusCode];//status code为406可能是range超范围了
+    _responseStatusCode = [(NSHTTPURLResponse *)response statusCode]; //status code为406可能是range超范围了
     _responseMIMEType = [(NSHTTPURLResponse *)response MIMEType];
-    if(200 == _responseStatusCode)//request uncached file
+    if (200 == _responseStatusCode) //request uncached file
     {
         long long expectedLengthInCurrentRequest = [response expectedContentLength];
         _expectedContentLength = expectedLengthInCurrentRequest;
     }
-    else if(206 == _responseStatusCode)//resume broken file downloading
+    else if (206 == _responseStatusCode) //resume broken file downloading
     {
         long long expectedLengthInCurrentRequest = [response expectedContentLength];
         _expectedContentLength = _currentContentLength + expectedLengthInCurrentRequest;
@@ -394,7 +393,8 @@
         {
             [self closeConnection];
             NSError *error = [[NSError alloc] initWithDomain:@"OTHTTPDownloadRequest failed write data to local file"
-                                                        code:-1000 userInfo:nil];
+                                                        code:-1000
+                                                    userInfo:nil];
             [self failedCallbackWithError:error];
             return;
         }
@@ -406,7 +406,7 @@
         _dataLengthAddedSinceConnectionBegin += dataLength;
         NSTimeInterval elapsed = currentTime - _connectionBeginTime;
         _averageDownloadSpeed = (elapsed == 0 ? 0 : _dataLengthAddedSinceConnectionBegin / elapsed);
-        
+
         //Callback delegate
         if (currentTime - _lastProgressCallbackTime > self.downloadProgressCallbackInterval)
         {
@@ -418,7 +418,7 @@
                 {
                     progress = (double)(_currentContentLength / (double)_expectedContentLength);
                 }
-                
+
                 [self.delegate downloadRequest:self
                         currentProgressUpdated:progress
                                          speed:_averageDownloadSpeed
@@ -434,17 +434,18 @@
 {
     NSUInteger responseCode = _responseStatusCode;
     [self closeConnection];
-    if (200 == responseCode || 206 == responseCode || 416 == responseCode)//Response code right
+    if (200 == responseCode || 206 == responseCode || 416 == responseCode) //Response code right
     {
         if ((_currentContentLength == 0) || //Nothing downloaded
-            ((_currentContentLength != _expectedContentLength) && _expectedContentLength != -1))//Response data length error
+            ((_currentContentLength != _expectedContentLength) && _expectedContentLength != -1)) //Response data length error
         {
             NSError *error = [[NSError alloc] initWithDomain:@"OTHTTPDownloadRequest response data length error"
-                                                        code:_responseStatusCode userInfo:nil];
+                                                        code:_responseStatusCode
+                                                    userInfo:nil];
             [self failedCallbackWithError:error];
             [[NSFileManager defaultManager] removeItemAtPath:_cacheFilePath error:nil];
         }
-        else//Response data length right
+        else //Response data length right
         {
             NSError *error;
             //remove old file
@@ -456,20 +457,21 @@
             BOOL moveSuccessed = [[NSFileManager defaultManager] moveItemAtPath:_cacheFilePath
                                                                          toPath:_finishedFilePath
                                                                           error:&error];
-            if (moveSuccessed)//Move successed
+            if (moveSuccessed) //Move successed
             {
                 if ([self.delegate respondsToSelector:@selector(downloadRequestFinished:)])
                 {
                     [self.delegate downloadRequestFinished:self];
                 }
             }
-            else//Move failed
+            else //Move failed
             {
                 if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:exception:)])
                 {
                     NSException *exception = [[NSException alloc] initWithName:@"OTHTTPDownloadRequest write failed"
                                                                         reason:@"Move cached file to finished file failed."
-                                                                      userInfo:@{@"CachePath": _cacheFilePath, @"FinishedPath": _finishedFilePath}];
+                                                                      userInfo:@{ @"CachePath" : _cacheFilePath,
+                                                                                  @"FinishedPath" : _finishedFilePath }];
                     [self.delegate downloadRequestWriteFileFailed:self exception:exception];
                 }
                 else
@@ -485,15 +487,16 @@
             }
         }
     }
-    else//Response code error
+    else //Response code error
     {
         NSError *error = [[NSError alloc] initWithDomain:@"OTHTTPDownloadRequest response code error"
-                                                    code:_responseStatusCode userInfo:nil];
+                                                    code:_responseStatusCode
+                                                userInfo:nil];
         [self failedCallbackWithError:error];
     }
 }
 
--(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     [self closeConnection];
     [self failedCallbackWithError:error];
@@ -509,7 +512,7 @@
         [self performSelector:@selector(beginConnection) withObject:nil afterDelay:self.retryAfterFailedDuration];
         return;
     }
-    
+
     if ([self.delegate respondsToSelector:@selector(downloadRequestFailed:error:)])
     {
         [self.delegate downloadRequestFailed:self error:error];

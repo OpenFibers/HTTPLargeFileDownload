@@ -60,7 +60,6 @@
 
 @end
 
-
 @protocol OTHTTPRequestDelegate <NSObject>
 
 @required
@@ -78,11 +77,11 @@
 
 #pragma mark - Class Methods
 
-+ (NSString *)urlEncode:(NSString *)stringToEncode;//Encode with UTF8
++ (NSString *)urlEncode:(NSString *)stringToEncode; //Encode with UTF8
 + (NSString *)urlEncode:(NSString *)stringToEncode usingEncoding:(NSStringEncoding)encoding;
 
-+ (NSString*)urlDecode:(NSString *)stringToDecode;//Decode with UTF8
-+ (NSString*)urlDecode:(NSString *)stringToDecode usingEncoding:(NSStringEncoding)encoding;
++ (NSString *)urlDecode:(NSString *)stringToDecode; //Decode with UTF8
++ (NSString *)urlDecode:(NSString *)stringToDecode usingEncoding:(NSStringEncoding)encoding;
 
 + (NSDictionary *)parseGetParamsFromURLString:(NSString *)urlString;
 
@@ -106,10 +105,10 @@
 
 #pragma mark - Request and response
 
-@property (nonatomic,readonly) NSURLRequest *request;
+@property (nonatomic, readonly) NSURLRequest *request;
 
 //Returns nil if response haven't reached yet.
-@property (nonatomic,readonly) NSURLResponse *response;
+@property (nonatomic, readonly) NSURLResponse *response;
 
 //Returns 0 if http url response haven't reached yet.
 @property (nonatomic, readonly) NSInteger responseStatusCode;

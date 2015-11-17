@@ -36,7 +36,7 @@
  Write file failed, due to disk full or other reason.
  You should IMPLEMENT AT LEAST ONE method in `downloadRequestWriteFileFailed:` and `downloadRequestWriteFileFailed:exception:`.
  */
-- (void)downloadRequestWriteFileFailed:(OTHTTPDownloadRequest *)request NS_DEPRECATED(10_0, 10_0, 2_0, 2_0, "Use downloadRequestWriteFileFailed:exception: instead");;
+- (void)downloadRequestWriteFileFailed:(OTHTTPDownloadRequest *)request NS_DEPRECATED(10_0, 10_0, 2_0, 2_0, "Use downloadRequestWriteFileFailed:exception: instead");
 
 /*
  Response received. If block thread in this method, data transfer will be block too.
@@ -76,39 +76,39 @@
 @property (nonatomic, strong) id userInfo;
 
 //Check response Status Code. If haven't receive response yet, return NSNotFound
-@property (nonatomic,readonly) NSUInteger responseStatusCode;
+@property (nonatomic, readonly) NSUInteger responseStatusCode;
 
 //Check response MIME type. If haven't receive response yet, return nil
-@property (nonatomic,readonly) NSString *responseMIMEType;
+@property (nonatomic, readonly) NSString *responseMIMEType;
 
 //Cache file path
-@property (nonatomic,readonly) NSString *cacheFilePath;
+@property (nonatomic, readonly) NSString *cacheFilePath;
 
 //Finished file path
-@property (nonatomic,readonly) NSString *finishedFilePath;
+@property (nonatomic, readonly) NSString *finishedFilePath;
 
 //Request URL
-@property (nonatomic,readonly) NSString *requestURL;
+@property (nonatomic, readonly) NSString *requestURL;
 
 //Check if download
-@property (nonatomic,readonly) BOOL isDownloading;
+@property (nonatomic, readonly) BOOL isDownloading;
 
 //Interval for each progress callback `downloadRequest:currentProgressUpdated:speed:received:totalReceived:expectedDataSize:`, default is 0.2.
-@property (nonatomic,assign) NSTimeInterval downloadProgressCallbackInterval;
+@property (nonatomic, assign) NSTimeInterval downloadProgressCallbackInterval;
 
 //Average download speed
-@property (nonatomic,readonly) double averageDownloadSpeed;
+@property (nonatomic, readonly) double averageDownloadSpeed;
 
 //Check downloaded file size
-@property (nonatomic,readonly) long long downloadedFileSize;
+@property (nonatomic, readonly) long long downloadedFileSize;
 
 //Check expected file size
-@property (nonatomic,readonly) long long expectedFileSize;
+@property (nonatomic, readonly) long long expectedFileSize;
 
 //Set if this is a low priority request. Set this property before call `start` to take effect.
 //Default value is `YES`.
 //When set to `NO`, download will be started at default priority.
-@property (nonatomic,assign) BOOL isLowPriority;
+@property (nonatomic, assign) BOOL isLowPriority;
 
 //Current retried times after download failed.
 //If request not started or paused, call `start` will reset this property.
@@ -116,11 +116,11 @@
 
 //Retry times for download failed due to response errors or network failed reasons.
 //Default is 1.
-@property (nonatomic,assign) NSUInteger retryTimes;
+@property (nonatomic, assign) NSUInteger retryTimes;
 
 //If download failed, and current retried times < `retryTimes`, then retry after `retryAfterFailedDuration`
 //Default is 0.5 second.
-@property (nonatomic,assign) NSTimeInterval retryAfterFailedDuration;
+@property (nonatomic, assign) NSTimeInterval retryAfterFailedDuration;
 
 //pause download
 - (void)pause;

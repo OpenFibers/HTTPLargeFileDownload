@@ -12,7 +12,8 @@
 - (id)init
 {
     self = [super init];
-    if (self) {
+    if (self)
+    {
         self.fileName = @"fileName";
         self.name = @"name";
     }
@@ -47,14 +48,14 @@
             }
         }
     }
-    
+
     NSString *urlString = self.URL.absoluteString;
     NSRange qouteRange = [urlString rangeOfString:@"?"];
     if (qouteRange.location != NSNotFound)
     {
         urlString = [urlString substringToIndex:qouteRange.location];
     }
-    
+
     NSString *finalURLString = [urlString stringByAppendingString:getString];
     self.URL = [NSURL URLWithString:finalURLString];
 }
@@ -77,7 +78,7 @@
                 [postString appendString:[OTHTTPRequest urlEncode:key]];
                 [postString appendString:@"="];
                 [postString appendString:[OTHTTPRequest urlEncode:value]];
-                
+
                 if ([dictionary.allKeys lastObject] != key)
                 {
                     [postString appendString:@"&"];
@@ -85,7 +86,7 @@
             }
         }
     }
-    
+
     NSData *postData = [postString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
     [self setHTTPBody:postData];
 
@@ -104,7 +105,7 @@
  */
 - (void)setUpMultiPartFormDataRequestWithPostParams:(NSDictionary *)postParams file:(OTHTTPRequestUploadFile *)file
 {
-    [self setUpMultiPartFormDataRequestWithPostParams:postParams filesArray:@[file]];
+    [self setUpMultiPartFormDataRequestWithPostParams:postParams filesArray:@[ file ]];
 }
 
 /**
@@ -113,7 +114,7 @@
  *  @param postParams Post params to be set.
  *  @param filesArray Files to be upload.
  */
-- (void)setUpMultiPartFormDataRequestWithPostParams:(NSDictionary *)postParams filesArray:(NSArray<OTHTTPRequestUploadFile *> *)filesArray;
+- (void)setUpMultiPartFormDataRequestWithPostParams:(NSDictionary *)postParams filesArray:(NSArray *)filesArray
 {
     [self setUpMultiPartFormDataRequestWithPostParams:postParams filesArray:filesArray encoding:NSUTF8StringEncoding];
 }
@@ -125,83 +126,83 @@
  *  @param filesArray Files to be upload.
  *  @param encoding   Encode for post.
  */
-- (void)setUpMultiPartFormDataRequestWithPostParams:(NSDictionary *)postParams filesArray:(NSArray<OTHTTPRequestUploadFile *> *)filesArray encoding:(NSStringEncoding)encoding;
+- (void)setUpMultiPartFormDataRequestWithPostParams:(NSDictionary *)postParams filesArray:(NSArray *)filesArray encoding:(NSStringEncoding)encoding
 {
     if (!encoding)
     {
         encoding = NSUTF8StringEncoding;
     }
     NSString *charset = (NSString *)CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(encoding));
-	
-	// We don't bother to check if post data contains the boundary, since it's pretty unlikely that it does.
+
+    // We don't bother to check if post data contains the boundary, since it's pretty unlikely that it does.
     CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
     NSString *uuidString = (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
     CFRelease(uuid);
-    
-	NSString *stringBoundary = [NSString stringWithFormat:@"0xKhTmLbOuNdArY-%@",uuidString];
-	
+
+    NSString *stringBoundary = [NSString stringWithFormat:@"0xKhTmLbOuNdArY-%@", uuidString];
+
     if (![self.allHTTPHeaderFields.allKeys containsObject:@"Content-Type"])
     {
         [self setValue:[NSString stringWithFormat:@"multipart/form-data; charset=%@; boundary=%@", charset, stringBoundary] forHTTPHeaderField:@"Content-Type"];
     }
-    
+
     NSMutableData *postBodyData = [NSMutableData data];
-    [postBodyData appendData:[[NSString stringWithFormat:@"--%@\r\n",stringBoundary] dataUsingEncoding:encoding]];
-	
-	// Adds post data
-	NSString *endItemBoundary = [NSString stringWithFormat:@"\r\n--%@\r\n",stringBoundary];
-	NSUInteger i=0;
-	for (NSString *eachKey in postParams.allKeys)
+    [postBodyData appendData:[[NSString stringWithFormat:@"--%@\r\n", stringBoundary] dataUsingEncoding:encoding]];
+
+    // Adds post data
+    NSString *endItemBoundary = [NSString stringWithFormat:@"\r\n--%@\r\n", stringBoundary];
+    NSUInteger i = 0;
+    for (NSString *eachKey in postParams.allKeys)
     {
-        [postBodyData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n",eachKey] dataUsingEncoding:encoding]];
+        [postBodyData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", eachKey] dataUsingEncoding:encoding]];
         [postBodyData appendData:[postParams[eachKey] dataUsingEncoding:encoding]];
-		i++;
-		if (i != [postParams.allKeys count] || [filesArray count] > 0)
+        i++;
+        if (i != [postParams.allKeys count] || [filesArray count] > 0)
         {
             //Only add the boundary if this is not the last item in the post body
             [postBodyData appendData:[endItemBoundary dataUsingEncoding:encoding]];
-		}
-	}
-	
-	// Adds files to upload
-	i=0;
-	for (OTHTTPRequestUploadFile *eachFile in filesArray)
+        }
+    }
+
+    // Adds files to upload
+    i = 0;
+    for (OTHTTPRequestUploadFile *eachFile in filesArray)
     {
         [postBodyData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", eachFile.name, eachFile.fileName] dataUsingEncoding:encoding]];
 
         [postBodyData appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", eachFile.contentType ? eachFile.contentType : @"application/octet-stream"] dataUsingEncoding:encoding]];
-		
-		NSData *data = eachFile.fileData;
-		if ([data isKindOfClass:[NSData class]])
+
+        NSData *data = eachFile.fileData;
+        if ([data isKindOfClass:[NSData class]])
         {
             [postBodyData appendData:data];
-		}
-		i++;
-		// Only add the boundary if this is not the last item in the post body
-		if (i != [filesArray count])
+        }
+        i++;
+        // Only add the boundary if this is not the last item in the post body
+        if (i != [filesArray count])
         {
             [postBodyData appendData:[endItemBoundary dataUsingEncoding:encoding]];
-		}
-	}
-    [postBodyData appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",stringBoundary] dataUsingEncoding:encoding]];
+        }
+    }
+    [postBodyData appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n", stringBoundary] dataUsingEncoding:encoding]];
     [self setHTTPBody:postBodyData];
-    
+
     NSString *postLength = [NSString stringWithFormat:@"%tu", [postBodyData length]];
     [self setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    
+
     [self setHTTPMethod:@"POST"];
 }
 
 @end
 
-@interface OTHTTPRequest()<NSURLConnectionDataDelegate>
+@interface OTHTTPRequest () <NSURLConnectionDataDelegate>
 @end
 
 @implementation OTHTTPRequest
 {
     NSURLRequest *_request;
     NSURLResponse *_response;
-    
+
     NSMutableData *_data;
     NSURLConnection *_connection;
 }
@@ -218,21 +219,21 @@
     return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
                                                                                  (__bridge CFStringRef)stringToEncode,
                                                                                  NULL,
-                                                                                 (CFStringRef)@"!*'\"();:@&=+$,/?%#[]% ",
+                                                                                 (CFStringRef) @"!*'\"();:@&=+$,/?%#[]% ",
                                                                                  CFStringConvertNSStringEncodingToEncoding(encoding));
 }
 
-+ (NSString*)urlDecode:(NSString *)stringToDecode
++ (NSString *)urlDecode:(NSString *)stringToDecode
 {
     return [self urlDecode:stringToDecode usingEncoding:NSUTF8StringEncoding];
 }
 
-+ (NSString*)urlDecode:(NSString *)stringToDecode usingEncoding:(NSStringEncoding)encoding
++ (NSString *)urlDecode:(NSString *)stringToDecode usingEncoding:(NSStringEncoding)encoding
 {
-    return (__bridge_transfer NSString *) CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL,
-                                                                                                  (__bridge CFStringRef)stringToDecode,
-                                                                                                  (CFStringRef)@"",
-                                                                                                  CFStringConvertNSStringEncodingToEncoding(encoding));
+    return (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL,
+                                                                                                 (__bridge CFStringRef)stringToDecode,
+                                                                                                 (CFStringRef) @"",
+                                                                                                 CFStringConvertNSStringEncodingToEncoding(encoding));
 }
 
 + (NSDictionary *)parseGetParamsFromURLString:(NSString *)urlString
@@ -246,7 +247,7 @@
     {
         return nil;
     }
-    
+
     NSString *subString = [urlString substringFromIndex:queryRange.location + queryRange.length];
     NSArray *components = [subString componentsSeparatedByString:@"&"];
     NSMutableDictionary *resultDic = [NSMutableDictionary dictionary];
@@ -261,7 +262,7 @@
         NSString *value = [string substringFromIndex:equalRange.location + equalRange.length];
         [resultDic setObject:value forKey:key];
     }
-    
+
     NSDictionary *returnDic = [NSDictionary dictionaryWithDictionary:resultDic];
     return returnDic;
 }
@@ -324,8 +325,8 @@
     if (responseEncoding)
     {
         NSData *responseData = [self responseData];
-        responseString = [[NSString alloc]initWithData:responseData
-                                              encoding:CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)responseEncoding))];
+        responseString = [[NSString alloc] initWithData:responseData
+                                               encoding:CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)responseEncoding))];
     }
     else
     {
@@ -358,7 +359,7 @@
         [self performSelectorOnMainThread:@selector(start) withObject:nil waitUntilDone:NO];
         return;
     }
-    
+
     if (!_connection)
     {
         [self beginConnection];
