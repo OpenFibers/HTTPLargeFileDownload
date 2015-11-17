@@ -28,27 +28,9 @@
  *
  *  @param getParams Get params to be set.
  */
-- (void)setUpGetParams:(NSDictionary *)dictionary
+- (void)setUpGetParams:(NSDictionary *)getParams
 {
-    NSMutableString *getString = [NSMutableString stringWithString:@"?"];
-    for (id key in dictionary.allKeys)
-    {
-        if ([key isKindOfClass:[NSString class]])
-        {
-            NSString *value = dictionary[key];
-            if ([value isKindOfClass:[NSString class]])
-            {
-                [getString appendString:[OTHTTPRequest urlEncode:key]];
-                [getString appendString:@"="];
-                [getString appendString:[OTHTTPRequest urlEncode:value]];
-                if ([dictionary.allKeys lastObject] != key)
-                {
-                    [getString appendString:@"&"];
-                }
-            }
-        }
-    }
-
+    NSString *paramString = [OTHTTPRequest paramsStringFromParamDictionary:getParams];
     NSString *urlString = self.URL.absoluteString;
     NSRange qouteRange = [urlString rangeOfString:@"?"];
     if (qouteRange.location != NSNotFound)
@@ -56,7 +38,7 @@
         urlString = [urlString substringToIndex:qouteRange.location];
     }
 
-    NSString *finalURLString = [urlString stringByAppendingString:getString];
+    NSString *finalURLString = [urlString stringByAppendingString:paramString];
     self.URL = [NSURL URLWithString:finalURLString];
 }
 
@@ -65,29 +47,10 @@
  *
  *  @param postParams Post params to be set.
  */
-- (void)setUpPostParams:(NSDictionary *)dictionary
+- (void)setUpPostParams:(NSDictionary *)postParams
 {
-    NSMutableString *postString = [NSMutableString string];
-    for (id key in dictionary.allKeys)
-    {
-        if ([key isKindOfClass:[NSString class]])
-        {
-            NSString *value = dictionary[key];
-            if ([value isKindOfClass:[NSString class]])
-            {
-                [postString appendString:[OTHTTPRequest urlEncode:key]];
-                [postString appendString:@"="];
-                [postString appendString:[OTHTTPRequest urlEncode:value]];
-
-                if ([dictionary.allKeys lastObject] != key)
-                {
-                    [postString appendString:@"&"];
-                }
-            }
-        }
-    }
-
-    NSData *postData = [postString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+    NSString *paramString = [OTHTTPRequest paramsStringFromParamDictionary:postParams];
+    NSData *postData = [paramString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
     [self setHTTPBody:postData];
 
     NSString *postLength = [NSString stringWithFormat:@"%tu", [postData length]];
@@ -234,6 +197,30 @@
                                                                                                  (__bridge CFStringRef)stringToDecode,
                                                                                                  (CFStringRef) @"",
                                                                                                  CFStringConvertNSStringEncodingToEncoding(encoding));
+}
+
++ (NSString *)paramsStringFromParamDictionary:(NSDictionary *)params
+{
+    NSMutableString *paramString = [NSMutableString string];
+    for (id key in params.allKeys)
+    {
+        if ([key isKindOfClass:[NSString class]])
+        {
+            NSString *value = params[key];
+            if ([value isKindOfClass:[NSString class]])
+            {
+                [paramString appendString:[OTHTTPRequest urlEncode:key]];
+                [paramString appendString:@"="];
+                [paramString appendString:[OTHTTPRequest urlEncode:value]];
+                
+                if ([params.allKeys lastObject] != key)
+                {
+                    [paramString appendString:@"&"];
+                }
+            }
+        }
+    }
+    return [NSString stringWithString:paramString];
 }
 
 + (NSDictionary *)parseGetParamsFromURLString:(NSString *)urlString
