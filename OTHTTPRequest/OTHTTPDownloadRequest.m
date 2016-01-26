@@ -174,16 +174,6 @@
                                                               userInfo:@{ @"CachePath" : _cacheFilePath }];
             [self.delegate downloadRequestWriteFileFailed:self exception:exception];
         }
-        else
-        {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-            if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
-            {
-                [self.delegate downloadRequestWriteFileFailed:self];
-            }
-#pragma GCC diagnostic pop
-        }
     }
 }
 
@@ -279,16 +269,6 @@
             if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:exception:)])
             {
                 [self.delegate downloadRequestWriteFileFailed:self exception:exception];
-            }
-            else
-            {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-                if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
-                {
-                    [self.delegate downloadRequestWriteFileFailed:self];
-                }
-#pragma GCC diagnostic pop
             }
         }
     }
@@ -413,16 +393,6 @@
                                                                       userInfo:@{ @"CachePath" : _cacheFilePath,
                                                                                   @"FinishedPath" : _finishedFilePath }];
                     [self.delegate downloadRequestWriteFileFailed:self exception:exception];
-                }
-                else
-                {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-                    if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
-                    {
-                        [self.delegate downloadRequestWriteFileFailed:self];
-                    }
-#pragma GCC diagnostic pop
                 }
             }
         }

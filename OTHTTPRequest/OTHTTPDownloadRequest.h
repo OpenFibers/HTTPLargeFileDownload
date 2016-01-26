@@ -10,10 +10,11 @@
 
 @class OTHTTPDownloadRequest;
 
+#pragma mark - Delegate
+
 @protocol OTHTTPDownloadRequestDelegate <NSObject>
 
-@required
-
+@optional
 
 /**
  *  Download successed
@@ -32,20 +33,11 @@
 
 /**
  *  Write file failed, due to disk full or other reason. With a system exception callback.
- *  @discussion You should IMPLEMENT AT LEAST ONE method in `downloadRequestWriteFileFailed:` and `downloadRequestWriteFileFailed:exception:`.
  *
  *  @param request   The downloading request instance
  *  @param exception The exception object for writing file failed
  */
 - (void)downloadRequestWriteFileFailed:(OTHTTPDownloadRequest *)request exception:(NSException *)exception;
-
-@optional
-
-/*
- Write file failed, due to disk full or other reason.
- You should IMPLEMENT AT LEAST ONE method in `downloadRequestWriteFileFailed:` and `downloadRequestWriteFileFailed:exception:`.
- */
-- (void)downloadRequestWriteFileFailed:(OTHTTPDownloadRequest *)request NS_DEPRECATED(10_0, 10_0, 2_0, 2_0, "Use downloadRequestWriteFileFailed:exception: instead");
 
 /*
  Response received. If block thread in this method, data transfer will be block too.
@@ -72,7 +64,11 @@
 
 @end
 
+#pragma mark - Interface
+
 @interface OTHTTPDownloadRequest : NSObject
+
+#pragma mark Init
 
 /**
  *  Create a file download request. Default timeout interval is 15 seconds.
@@ -87,6 +83,8 @@
 - (id)initWithURL:(NSString *)urlString
         cacheFile:(NSString *)cacheFile
  finishedFilePath:(NSString *)finishedFilePath;
+
+#pragma mark Properties
 
 @property (nonatomic, weak) id<OTHTTPDownloadRequestDelegate> delegate;
 @property (nonatomic, strong) id userInfo;
@@ -171,15 +169,19 @@
  */
 @property (nonatomic, assign) NSTimeInterval retryAfterFailedDuration;
 
-/**
- *  pause download
- */
-- (void)pause;
+#pragma mark Start/Pause
 
 /**
  *  begin or resume download
  */
 - (void)start;
+
+/**
+ *  pause download
+ */
+- (void)pause;
+
+#pragma mark HTTP header/cookie methods
 
 /**
  *  set cookie. If you need to set cookie, you must do this before call start.
