@@ -164,6 +164,7 @@
             [self.connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
         }
         [self.connection start];
+        [[self class] addRequestToContainer:self];
     }
     else
     {
@@ -195,6 +196,9 @@
         [_cacheFileHandle closeFile];
         _cacheFileHandle = nil;
     }
+    
+    //self may dealloc after remove from container, so don't execute any code below this line
+    [[self class] removeRequestFromContainer:self];
 }
 
 - (void)start
@@ -457,6 +461,32 @@
 }
 
 #pragma mark - Class helpers
+
+//added living request to container, incase they won't dealloc if working
++ (NSMutableArray <OTHTTPDownloadRequest *> *)livingDownloadRequestContainer
+{
+    static NSMutableArray *array = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        array = [NSMutableArray array];
+    });
+    return array;
+}
+
++ (void)addRequestToContainer:(OTHTTPDownloadRequest *)request
+{
+    NSMutableArray <OTHTTPDownloadRequest *> *container = [self livingDownloadRequestContainer];
+    [container addObject:request];
+}
+
++ (void)removeRequestFromContainer:(OTHTTPDownloadRequest *)request
+{
+    NSMutableArray <OTHTTPDownloadRequest *> *container = [self livingDownloadRequestContainer];
+    if ([container containsObject:request])
+    {
+        [container removeObject:request];
+    }
+}
 
 //Returns YES if create successed or file already exists
 + (BOOL)createFileAtPath:(NSString *)fileFullPath
