@@ -30,7 +30,7 @@
 {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor grayColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 300, 24)];
     label.text = @"Download file at URL:";
@@ -60,6 +60,7 @@
     _infoLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     _infoLabel.frame = CGRectMake(10, CGRectGetMaxY(_pauseButton.frame) + 20, 300, 280);
     _infoLabel.numberOfLines = 0;
+    _infoLabel.textColor = [UIColor blackColor];
     [self.view addSubview:_infoLabel];
 }
 
@@ -84,14 +85,15 @@
 
 - (void)downloadRequest:(OTHTTPDownloadRequest *)request
  currentProgressUpdated:(float)progress
+                  speed:(float)bytesPerSecond
                received:(NSUInteger)received
           totalReceived:(long long)totalReceived
        expectedDataSize:(long long)expectedDataSize
 {
     NSString *logInfo = [NSString stringWithFormat:
-                         @"Download URL:\n%@\nprogress:%f\ndownloaded size:%.2fMB\nexpected size:%.2fMB\ncurrent speed:%.2f",
+                         @"Download URL:\n%@\nprogress:%.2f %%\ndownloaded size:%.2fMB\nexpected size:%.2fMB\ncurrent speed:%.2f MB/s",
                          [request requestURL],
-                         progress,
+                         progress * 100,
                          [request downloadedFileSize] / (double) (1024 * 1024),
                          expectedDataSize / (double) (1024 * 1024),
                          request.averageDownloadSpeed / (double) (1024 * 1024)];
