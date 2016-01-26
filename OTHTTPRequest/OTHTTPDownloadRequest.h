@@ -171,6 +171,8 @@
 
 #pragma mark Callback blocks
 
+//blocks callback work as same as delegate's methods
+
 @property (nonatomic, copy) void(^finishCallback)(OTHTTPDownloadRequest *request);
 @property (nonatomic, copy) void(^failedCallback)(OTHTTPDownloadRequest *request, NSError *error);
 @property (nonatomic, copy) void(^writeFileFailedCallback)(OTHTTPDownloadRequest *request, NSException *exception);
