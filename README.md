@@ -5,6 +5,7 @@ A very light lib for http request.
 * Based on NSURLConnection
 * Resume broken HTTP download
 * Auto retry download for several times
+* Average download speed calculation
 * Easy to install
 * CPU time shorter than ASIHTTPRequest
 
