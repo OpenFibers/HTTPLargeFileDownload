@@ -66,15 +66,17 @@
 
 - (void)start
 {
-    if (!_request)
+    if (_request)
     {
-        NSString *downloadURLString = _downloadURLTextField.text;
-        NSString *documentPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
-        _request = [[OTHTTPDownloadRequest alloc] initWithURL:downloadURLString
-                                                    cacheFile:[documentPath stringByAppendingPathComponent:@"temp"]
-                                             finishedFilePath:[documentPath stringByAppendingPathComponent:[downloadURLString lastPathComponent]]];
-        _request.delegate = self;
+        [_request pause];
+        _request = nil;
     }
+    NSString *downloadURLString = _downloadURLTextField.text;
+    NSString *documentPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+    _request = [[OTHTTPDownloadRequest alloc] initWithURL:downloadURLString
+                                                cacheFile:[documentPath stringByAppendingPathComponent:@"temp"]
+                                         finishedFilePath:[documentPath stringByAppendingPathComponent:[downloadURLString lastPathComponent]]];
+    _request.delegate = self;
     [_request start];
 }
 
