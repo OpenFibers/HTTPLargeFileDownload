@@ -14,19 +14,28 @@
 
 @required
 
-/*
- Download finished
+
+/**
+ *  Download successed
+ *
+ *  @param request The downloading request instance
  */
 - (void)downloadRequestFinished:(OTHTTPDownloadRequest *)request;
 
-/*
- Download failed
+/**
+ *  Download failed
+ *
+ *  @param request The downloading request instance
+ *  @param error   Error for failing.
  */
 - (void)downloadRequestFailed:(OTHTTPDownloadRequest *)request error:(NSError *)error;
 
-/*
- Write file failed, due to disk full or other reason. With a system exception callback.
- You should IMPLEMENT AT LEAST ONE method in `downloadRequestWriteFileFailed:` and `downloadRequestWriteFileFailed:exception:`.
+/**
+ *  Write file failed, due to disk full or other reason. With a system exception callback.
+ *  @discussion You should IMPLEMENT AT LEAST ONE method in `downloadRequestWriteFileFailed:` and `downloadRequestWriteFileFailed:exception:`.
+ *
+ *  @param request   The downloading request instance
+ *  @param exception The exception object for writing file failed
  */
 - (void)downloadRequestWriteFileFailed:(OTHTTPDownloadRequest *)request exception:(NSException *)exception;
 
@@ -44,8 +53,15 @@
  */
 - (void)downloadRequestReceivedResponse:(OTHTTPDownloadRequest *)request;
 
-/*
- Downloaded data callback
+/**
+ *  Downloaded data callback
+ *
+ *  @param request          The downloading request instance
+ *  @param progress         Current progress
+ *  @param bytesPerSecond   Current speed, bytes per second
+ *  @param received         Received content size in this network package
+ *  @param totalReceived    Total received content size in cache file
+ *  @param expectedDataSize Expected file size from http response header
  */
 - (void)downloadRequest:(OTHTTPDownloadRequest *)request
  currentProgressUpdated:(float)progress
@@ -58,79 +74,119 @@
 
 @interface OTHTTPDownloadRequest : NSObject
 
-//Create download request with `urlString`, `cacheFileFullPath` and `finishedFileFullPath`
-//Default timeout interval is 15 seconds
-+ (OTHTTPDownloadRequest *)requestWithURL:(NSString *)urlString
-                            cacheFilePath:(NSString *)cacheFileFullPath
-                         finishedFilePath:(NSString *)finishedFileFullPath
-                                 delegate:(id<OTHTTPDownloadRequestDelegate>)delegate;
-
-//Create download request with `urlString`, `cacheFileFullPath`, `finishedFileFullPath` and `timeoutInterval`
-+ (OTHTTPDownloadRequest *)requestWithURL:(NSString *)urlString
-                            cacheFilePath:(NSString *)cacheFileFullPath
-                         finishedFilePath:(NSString *)finishedFileFullPath
-                          timeoutInterval:(NSTimeInterval)timeoutInterval
-                                 delegate:(id<OTHTTPDownloadRequestDelegate>)delegate;
+/**
+ *  Create a file download request. Default timeout interval is 15 seconds.
+ *
+ *  @param urlString        The downloading url string.
+ *  @param cacheFile        The file path for caching. If cache file exist, new content will append to this cache file (this behavior is to continue last paused downloading).
+ *  @param finishedFilePath The file path to save the downloading finished file.
+ *  @param delegate         The callback delegate.
+ *
+ *  @return The created request instance.
+ */
+- (id)initWithURL:(NSString *)urlString
+        cacheFile:(NSString *)cacheFile
+ finishedFilePath:(NSString *)finishedFilePath;
 
 @property (nonatomic, weak) id<OTHTTPDownloadRequestDelegate> delegate;
 @property (nonatomic, strong) id userInfo;
 
-//Check response Status Code. If haven't receive response yet, return NSNotFound
+/**
+ *  Check response Status Code. If haven't receive response yet, return NSNotFound
+ */
 @property (nonatomic, readonly) NSUInteger responseStatusCode;
 
-//Check response MIME type. If haven't receive response yet, return nil
+/**
+ *  Check response MIME type. If haven't receive response yet, return nil
+ */
 @property (nonatomic, readonly) NSString *responseMIMEType;
 
-//Cache file path
+/**
+ *  Cache file path
+ */
 @property (nonatomic, readonly) NSString *cacheFilePath;
 
-//Finished file path
+/**
+ *  Finished file path
+ */
 @property (nonatomic, readonly) NSString *finishedFilePath;
 
-//Request URL
+/**
+ *  Request URL string
+ */
 @property (nonatomic, readonly) NSString *requestURL;
 
-//Check if download
+/**
+ *  Check if downloading
+ */
 @property (nonatomic, readonly) BOOL isDownloading;
 
-//Interval for each progress callback `downloadRequest:currentProgressUpdated:speed:received:totalReceived:expectedDataSize:`, default is 0.2.
+/**
+ *  Interval for each progress callback `downloadRequest:currentProgressUpdated:speed:received:totalReceived:expectedDataSize:`, default is 0.2.
+ */
 @property (nonatomic, assign) NSTimeInterval downloadProgressCallbackInterval;
 
-//Average download speed
+/**
+ *  Get average download speed.
+ */
 @property (nonatomic, readonly) double averageDownloadSpeed;
 
-//Check downloaded file size
+/**
+ *  Check downloaded file content size
+ */
 @property (nonatomic, readonly) long long downloadedFileSize;
 
-//Check expected file size
+/**
+ *  Check expected file size (from http response header)
+ */
 @property (nonatomic, readonly) long long expectedFileSize;
 
-//Set if this is a low priority request. Set this property before call `start` to take effect.
-//Default value is `YES`.
-//When set to `NO`, download will be started at default priority.
+/**
+ *  Set if this is a low priority request. Set this property before call `start` to take effect.
+ *  Default value is `YES`.
+ *  When set to `NO`, download will be started at default priority.
+ */
 @property (nonatomic, assign) BOOL isLowPriority;
 
-//Current retried times after download failed.
-//If request not started or paused, call `start` will reset this property.
+/**
+ *  Current retried times after download failed.
+ *  If request not started or paused, call `start` will reset this property.
+ */
 @property (nonatomic, readonly) NSUInteger currentRetriedTimes;
 
-//Retry times for download failed due to response errors or network failed reasons.
-//Default is 1.
+/**
+ *  Retry times for download failed due to response errors or network failed reasons.
+ *  Default is 1.
+ */
 @property (nonatomic, assign) NSUInteger retryTimes;
 
-//If download failed, and current retried times < `retryTimes`, then retry after `retryAfterFailedDuration`
-//Default is 0.5 second.
+/**
+ *  The timeout interval for request.
+ */
+@property (nonatomic, assign) NSTimeInterval timeoutInterval;
+
+/**
+ *  If download failed, and current retried times < `retryTimes`, then retry after `retryAfterFailedDuration`
+ *  Default is 0.5 second.
+ */
 @property (nonatomic, assign) NSTimeInterval retryAfterFailedDuration;
 
-//pause download
+/**
+ *  pause download
+ */
 - (void)pause;
 
-//begin or resume download
+/**
+ *  begin or resume download
+ */
 - (void)start;
 
-//set cookie. If you need to set cookie, you must do this before call start.
-//Each object in `cookie` is an `NSHTTPCookie`
-- (void)setCookies:(NSArray *)cookies;
+/**
+ *  set cookie. If you need to set cookie, you must do this before call start.
+ *
+ *  @param cookies The cookies to set.
+ */
+- (void)setCookies:(NSArray <NSHTTPCookie *> *)cookies;
 
 /*!
  @method addValue:forHTTPHeaderField:

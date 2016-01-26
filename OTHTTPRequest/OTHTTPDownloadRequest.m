@@ -40,6 +40,8 @@
 }
 @synthesize connection = _connection;
 
+#pragma mark - Properties
+
 - (NSUInteger)responseStatusCode
 {
     return _responseStatusCode;
@@ -60,112 +62,48 @@
     return _finishedFilePath;
 }
 
-//Write data to file.
-//If write failed (due to disk full, etc.), download request will be automatically pause
-- (BOOL)writeToFile:(NSData *)data
+- (BOOL)isDownloading
 {
-    BOOL writeSuccessed = YES;
-    NSFileHandle *writeFileHandle = _cacheFileHandle;
-    if (writeFileHandle != nil)
-    {
-        @try
-        {
-            [writeFileHandle writeData:data];
-        }
-        @catch (NSException *exception)
-        {
-            //Write successed callback. pause self later
-            writeSuccessed = NO;
-            if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:exception:)])
-            {
-                [self.delegate downloadRequestWriteFileFailed:self exception:exception];
-            }
-            else
-            {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-                if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
-                {
-                    [self.delegate downloadRequestWriteFileFailed:self];
-                }
-#pragma GCC diagnostic pop
-            }
-        }
-    }
-    else
-    {
-        writeSuccessed = NO;
-    }
-    if (!writeSuccessed) //If write failed, pause self.
-    {
-        [self pause];
-    }
-    return writeSuccessed;
+    return self.connection != nil;
 }
 
-//Returns YES if create successed or file already exists
-+ (BOOL)createFileAtPath:(NSString *)fileFullPath
+- (NSString *)requestURL
 {
-    if ([[NSFileManager defaultManager] fileExistsAtPath:fileFullPath] == NO)
-    {
-        NSError *error = nil;
-        NSString *folderPath = [fileFullPath stringByDeletingLastPathComponent];
-        BOOL createFolderSuccessed = [[NSFileManager defaultManager] createDirectoryAtPath:folderPath
-                                                               withIntermediateDirectories:YES
-                                                                                attributes:nil
-                                                                                     error:&error];
-        if (!createFolderSuccessed)
-        {
-            return NO;
-        }
-
-        BOOL createSuccessed = [[NSFileManager defaultManager] createFileAtPath:fileFullPath
-                                                                       contents:nil
-                                                                     attributes:nil];
-        return createSuccessed;
-    }
-    return YES;
+    return _urlString;
 }
 
-+ (long long)fileSizeAtPath:(NSString *)fileFullPath
+- (long long)downloadedFileSize
 {
-    NSFileManager *manager = [NSFileManager defaultManager];
-    if ([manager fileExistsAtPath:fileFullPath])
-    {
-        return [[manager attributesOfItemAtPath:fileFullPath error:nil] fileSize];
-    }
-    return 0;
+    return _currentContentLength;
 }
+
+- (long long)expectedFileSize
+{
+    return _expectedContentLength;
+}
+
+- (NSTimeInterval)timeoutInterval
+{
+    return _request.timeoutInterval;
+}
+
+- (void)setTimeoutInterval:(NSTimeInterval)timeoutInterval
+{
+    _request.timeoutInterval = timeoutInterval;
+}
+
+#pragma mark - Life cycle
 
 - (id)initWithURL:(NSString *)urlString
         cacheFile:(NSString *)cacheFile
  finishedFilePath:(NSString *)finishedFilePath
-         delegate:(id<OTHTTPDownloadRequestDelegate>)delegate;
-{
-    self = [self initWithURL:urlString
-                   cacheFile:cacheFile
-            finishedFilePath:finishedFilePath
-             timeoutInterval:15
-                    delegate:delegate];
-    if (self)
-    {
-        //
-    }
-    return self;
-}
-
-- (id)initWithURL:(NSString *)urlString
-        cacheFile:(NSString *)cacheFile
- finishedFilePath:(NSString *)finishedFilePath
-  timeoutInterval:(NSTimeInterval)timeoutInterval
-         delegate:(id<OTHTTPDownloadRequestDelegate>)delegate;
 {
     self = [super init];
     if (self)
     {
         //Set cache file path and finished file path
         _urlString = urlString;
-
+        
         //Some Japanese string like べ may have differen length before convert to NSURL then convert back to path.
         //Before convert then convert back, べ 's length is 1, after that, its length is 2.
         //Which may lead to compare path string and converted path string returns the two string are different.
@@ -174,15 +112,12 @@
         _cacheFilePath = cacheURL.path;
         NSURL *finishedURL = [NSURL fileURLWithPath:finishedFilePath];
         _finishedFilePath = finishedURL.path;
-
+        
         NSURL *url = [NSURL URLWithString:_urlString];
         _request = [[NSMutableURLRequest alloc] initWithURL:url
                                                 cachePolicy:NSURLRequestReloadIgnoringCacheData
-                                            timeoutInterval:timeoutInterval];
-
-        //Set delegate
-        self.delegate = delegate;
-
+                                            timeoutInterval:15];
+        
         self.isLowPriority = YES;
         self.downloadProgressCallbackInterval = 0.2;
         self.retryAfterFailedDuration = 0.5f;
@@ -197,21 +132,7 @@
     [self pause];
 }
 
-- (void)closeConnection
-{
-    if (self.connection)
-    {
-        [self.connection cancel];
-        self.connection = nil;
-        _responseStatusCode = NSNotFound;
-        _responseMIMEType = nil;
-    }
-    if (_cacheFileHandle)
-    {
-        [_cacheFileHandle closeFile];
-        _cacheFileHandle = nil;
-    }
-}
+#pragma mark - Manage connection methods
 
 - (void)beginConnection
 {
@@ -266,7 +187,44 @@
     }
 }
 
-- (void)addCookies:(NSArray *)cookies
+- (void)closeConnection
+{
+    if (self.connection)
+    {
+        [self.connection cancel];
+        self.connection = nil;
+        _responseStatusCode = NSNotFound;
+        _responseMIMEType = nil;
+    }
+    if (_cacheFileHandle)
+    {
+        [_cacheFileHandle closeFile];
+        _cacheFileHandle = nil;
+    }
+}
+
+- (void)start
+{
+    if (![NSThread isMainThread])
+    {
+        [self performSelectorOnMainThread:@selector(start) withObject:nil waitUntilDone:NO];
+        return;
+    }
+    if (!self.connection)
+    {
+        _currentRetriedTimes = 0;
+        [self beginConnection];
+    }
+}
+
+- (void)pause
+{
+    [self closeConnection];
+}
+
+#pragma mark - Handle HTTP headers
+
+- (void)addCookies:(NSArray <NSHTTPCookie *> *)cookies
 {
     if ([cookies count] > 0)
     {
@@ -290,26 +248,7 @@
     }
 }
 
-- (void)pause
-{
-    [self closeConnection];
-}
-
-- (void)start
-{
-    if (![NSThread isMainThread])
-    {
-        [self performSelectorOnMainThread:@selector(start) withObject:nil waitUntilDone:NO];
-        return;
-    }
-    if (!self.connection)
-    {
-        _currentRetriedTimes = 0;
-        [self beginConnection];
-    }
-}
-
-- (void)setCookies:(NSArray *)cookies
+- (void)setCookies:(NSArray <NSHTTPCookie *> *)cookies
 {
     [self addCookies:cookies];
 }
@@ -319,51 +258,52 @@
     [_request addValue:value forHTTPHeaderField:field];
 }
 
-- (BOOL)isDownloading
+#pragma mark - Write stream
+
+//Write data to file.
+//If write failed (due to disk full, etc.), download request will be automatically pause
+- (BOOL)writeToFile:(NSData *)data
 {
-    return self.connection != nil;
+    BOOL writeSuccessed = YES;
+    NSFileHandle *writeFileHandle = _cacheFileHandle;
+    if (writeFileHandle != nil)
+    {
+        @try
+        {
+            [writeFileHandle writeData:data];
+        }
+        @catch (NSException *exception)
+        {
+            //Write successed callback. pause self later
+            writeSuccessed = NO;
+            if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:exception:)])
+            {
+                [self.delegate downloadRequestWriteFileFailed:self exception:exception];
+            }
+            else
+            {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+                if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:)])
+                {
+                    [self.delegate downloadRequestWriteFileFailed:self];
+                }
+#pragma GCC diagnostic pop
+            }
+        }
+    }
+    else
+    {
+        writeSuccessed = NO;
+    }
+    if (!writeSuccessed) //If write failed, pause self.
+    {
+        [self pause];
+    }
+    return writeSuccessed;
 }
 
-- (NSString *)requestURL
-{
-    return _urlString;
-}
-
-- (long long)downloadedFileSize
-{
-    return _currentContentLength;
-}
-
-- (long long)expectedFileSize
-{
-    return _expectedContentLength;
-}
-
-+ (OTHTTPDownloadRequest *)requestWithURL:(NSString *)urlString
-                            cacheFilePath:(NSString *)cacheFileFullPath
-                         finishedFilePath:(NSString *)finishedFileFullPath
-                                 delegate:(id<OTHTTPDownloadRequestDelegate>)delegate;
-{
-    OTHTTPDownloadRequest *request = [[OTHTTPDownloadRequest alloc] initWithURL:urlString
-                                                                      cacheFile:cacheFileFullPath
-                                                               finishedFilePath:finishedFileFullPath
-                                                                       delegate:delegate];
-    return request;
-}
-
-+ (OTHTTPDownloadRequest *)requestWithURL:(NSString *)urlString
-                            cacheFilePath:(NSString *)cacheFileFullPath
-                         finishedFilePath:(NSString *)finishedFileFullPath
-                          timeoutInterval:(NSTimeInterval)timeoutInterval
-                                 delegate:(id<OTHTTPDownloadRequestDelegate>)delegate;
-{
-    OTHTTPDownloadRequest *request = [[OTHTTPDownloadRequest alloc] initWithURL:urlString
-                                                                      cacheFile:cacheFileFullPath
-                                                               finishedFilePath:finishedFileFullPath
-                                                                timeoutInterval:timeoutInterval
-                                                                       delegate:delegate];
-    return request;
-}
+#pragma mark - URLConnection callback
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
@@ -517,6 +457,42 @@
     {
         [self.delegate downloadRequestFailed:self error:error];
     }
+}
+
+#pragma mark - Class helpers
+
+//Returns YES if create successed or file already exists
++ (BOOL)createFileAtPath:(NSString *)fileFullPath
+{
+    if ([[NSFileManager defaultManager] fileExistsAtPath:fileFullPath] == NO)
+    {
+        NSError *error = nil;
+        NSString *folderPath = [fileFullPath stringByDeletingLastPathComponent];
+        BOOL createFolderSuccessed = [[NSFileManager defaultManager] createDirectoryAtPath:folderPath
+                                                               withIntermediateDirectories:YES
+                                                                                attributes:nil
+                                                                                     error:&error];
+        if (!createFolderSuccessed)
+        {
+            return NO;
+        }
+        
+        BOOL createSuccessed = [[NSFileManager defaultManager] createFileAtPath:fileFullPath
+                                                                       contents:nil
+                                                                     attributes:nil];
+        return createSuccessed;
+    }
+    return YES;
+}
+
++ (long long)fileSizeAtPath:(NSString *)fileFullPath
+{
+    NSFileManager *manager = [NSFileManager defaultManager];
+    if ([manager fileExistsAtPath:fileFullPath])
+    {
+        return [[manager attributesOfItemAtPath:fileFullPath error:nil] fileSize];
+    }
+    return 0;
 }
 
 @end

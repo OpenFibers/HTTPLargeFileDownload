@@ -70,10 +70,10 @@
     {
         NSString *downloadURLString = _downloadURLTextField.text;
         NSString *documentPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
-        _request = [OTHTTPDownloadRequest requestWithURL:downloadURLString
-                                           cacheFilePath:[documentPath stringByAppendingPathComponent:@"temp"]
-                                        finishedFilePath:[documentPath stringByAppendingPathComponent:[downloadURLString lastPathComponent]]
-                                                delegate:self];
+        _request = [[OTHTTPDownloadRequest alloc] initWithURL:downloadURLString
+                                                    cacheFile:[documentPath stringByAppendingPathComponent:@"temp"]
+                                             finishedFilePath:[documentPath stringByAppendingPathComponent:[downloadURLString lastPathComponent]]];
+        _request.delegate = self;
     }
     [_request start];
 }
