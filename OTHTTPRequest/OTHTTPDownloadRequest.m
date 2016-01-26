@@ -167,12 +167,16 @@
     }
     else
     {
+        NSException *exception = [[NSException alloc] initWithName:@"OTHTTPDownloadRequest write failed"
+                                                            reason:@"Failed create file handle at start."
+                                                          userInfo:@{ @"CachePath" : _cacheFilePath }];
         if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:exception:)])
         {
-            NSException *exception = [[NSException alloc] initWithName:@"OTHTTPDownloadRequest write failed"
-                                                                reason:@"Failed create file handle at start."
-                                                              userInfo:@{ @"CachePath" : _cacheFilePath }];
             [self.delegate downloadRequestWriteFileFailed:self exception:exception];
+        }
+        if (self.writeFileFailedCallback)
+        {
+            self.writeFileFailedCallback(self, exception);
         }
     }
 }
@@ -270,6 +274,10 @@
             {
                 [self.delegate downloadRequestWriteFileFailed:self exception:exception];
             }
+            if (self.writeFileFailedCallback)
+            {
+                self.writeFileFailedCallback(self, exception);
+            }
         }
     }
     else
@@ -303,6 +311,10 @@
     {
         [self.delegate downloadRequestReceivedResponse:self];
     }
+    if (self.receivedResponseCallback)
+    {
+        self.receivedResponseCallback(self);
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
@@ -331,20 +343,23 @@
         if (currentTime - _lastProgressCallbackTime > self.downloadProgressCallbackInterval)
         {
             _lastProgressCallbackTime = currentTime;
+            CGFloat progress = 0.0f;
+            if (_expectedContentLength != 0)
+            {
+                progress = (double)(_currentContentLength / (double)_expectedContentLength);
+            }
             if ([self.delegate respondsToSelector:@selector(downloadRequest:currentProgressUpdated:speed:received:totalReceived:expectedDataSize:)])
             {
-                CGFloat progress = 0.0f;
-                if (_expectedContentLength != 0)
-                {
-                    progress = (double)(_currentContentLength / (double)_expectedContentLength);
-                }
-
                 [self.delegate downloadRequest:self
                         currentProgressUpdated:progress
                                          speed:_averageDownloadSpeed
                                       received:dataLength
                                  totalReceived:_currentContentLength
                               expectedDataSize:_expectedContentLength];
+            }
+            if (self.progressUpdatedCallback)
+            {
+                self.progressUpdatedCallback(self, progress, _averageDownloadSpeed, dataLength, _currentContentLength, _expectedContentLength);
             }
         }
     }
@@ -383,16 +398,24 @@
                 {
                     [self.delegate downloadRequestFinished:self];
                 }
+                if (self.finishCallback)
+                {
+                    self.finishCallback(self);
+                }
             }
             else //Move failed
             {
+                NSException *exception = [[NSException alloc] initWithName:@"OTHTTPDownloadRequest write failed"
+                                                                    reason:@"Move cached file to finished file failed."
+                                                                  userInfo:@{ @"CachePath" : _cacheFilePath,
+                                                                              @"FinishedPath" : _finishedFilePath }];
                 if ([self.delegate respondsToSelector:@selector(downloadRequestWriteFileFailed:exception:)])
                 {
-                    NSException *exception = [[NSException alloc] initWithName:@"OTHTTPDownloadRequest write failed"
-                                                                        reason:@"Move cached file to finished file failed."
-                                                                      userInfo:@{ @"CachePath" : _cacheFilePath,
-                                                                                  @"FinishedPath" : _finishedFilePath }];
                     [self.delegate downloadRequestWriteFileFailed:self exception:exception];
+                }
+                if (self.writeFileFailedCallback)
+                {
+                    self.writeFileFailedCallback(self, exception);
                 }
             }
         }
@@ -426,6 +449,10 @@
     if ([self.delegate respondsToSelector:@selector(downloadRequestFailed:error:)])
     {
         [self.delegate downloadRequestFailed:self error:error];
+    }
+    if (self.failedCallback)
+    {
+        self.failedCallback(self, error);
     }
 }
 

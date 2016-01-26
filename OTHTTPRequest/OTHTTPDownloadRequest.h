@@ -169,6 +169,19 @@
  */
 @property (nonatomic, assign) NSTimeInterval retryAfterFailedDuration;
 
+#pragma mark Callback blocks
+
+@property (nonatomic, copy) void(^finishCallback)(OTHTTPDownloadRequest *request);
+@property (nonatomic, copy) void(^failedCallback)(OTHTTPDownloadRequest *request, NSError *error);
+@property (nonatomic, copy) void(^writeFileFailedCallback)(OTHTTPDownloadRequest *request, NSException *exception);
+@property (nonatomic, copy) void(^receivedResponseCallback)(OTHTTPDownloadRequest *request);
+@property (nonatomic, copy) void(^progressUpdatedCallback)(OTHTTPDownloadRequest *request,
+                                                            float progress,
+                                                            float bytesPerSecond,
+                                                            NSUInteger received,
+                                                            long long totalReceived,
+                                                            long long expectedDataSize);
+
 #pragma mark Start/Pause
 
 /**
