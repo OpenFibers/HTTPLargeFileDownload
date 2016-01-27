@@ -476,15 +476,21 @@
 + (void)addRequestToContainer:(OTHTTPDownloadRequest *)request
 {
     NSMutableArray <OTHTTPDownloadRequest *> *container = [self livingDownloadRequestContainer];
-    [container addObject:request];
+    @synchronized(container)
+    {
+        [container addObject:request];
+    }
 }
 
 + (void)removeRequestFromContainer:(OTHTTPDownloadRequest *)request
 {
     NSMutableArray <OTHTTPDownloadRequest *> *container = [self livingDownloadRequestContainer];
-    if ([container containsObject:request])
+    @synchronized(container)
     {
-        [container removeObject:request];
+        if ([container containsObject:request])
+        {
+            [container removeObject:request];
+        }
     }
 }
 
