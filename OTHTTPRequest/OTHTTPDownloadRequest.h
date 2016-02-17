@@ -188,7 +188,8 @@
 #pragma mark Start/Pause
 
 /**
- *  begin or resume download
+ *  Begin or resume download. 
+ *  After the request is started, a strong reference will be kept by the class object, so it won't dealloc until it pause or finished.
  */
 - (void)start;
 
