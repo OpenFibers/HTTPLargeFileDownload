@@ -14,6 +14,9 @@
 
 @interface OTHTTPDownloadRequest ()
 @property (nonatomic, strong) NSURLConnection *connection;
+@property (nonatomic, copy) void(^successedCallback)(OTHTTPDownloadRequest *request);
+@property (nonatomic, copy) void(^failedCallback)(OTHTTPDownloadRequest *request, NSError *error);
+@property (nonatomic, copy) void(^writeFileFailedCallback)(OTHTTPDownloadRequest *request, NSException *exception);
 @end
 
 @implementation OTHTTPDownloadRequest
@@ -90,6 +93,17 @@
 - (void)setTimeoutInterval:(NSTimeInterval)timeoutInterval
 {
     _request.timeoutInterval = timeoutInterval;
+}
+
+#pragma mark - Set callback blocks
+
+- (void)setSuccessedCallback:(void (^)(OTHTTPDownloadRequest *))successedCallback
+              failedCallback:(void (^)(OTHTTPDownloadRequest *, NSError *))failedCallback
+     writeFileFailedCallback:(void (^)(OTHTTPDownloadRequest *, NSException *))writeFileFailedCallback
+{
+    self.successedCallback = successedCallback;
+    self.failedCallback = failedCallback;
+    self.writeFileFailedCallback = writeFileFailedCallback;
 }
 
 #pragma mark - Life cycle
@@ -402,9 +416,9 @@
                 {
                     [self.delegate downloadRequestFinished:self];
                 }
-                if (self.finishCallback)
+                if (self.successedCallback)
                 {
-                    self.finishCallback(self);
+                    self.successedCallback(self);
                 }
             }
             else //Move failed
