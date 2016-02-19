@@ -20,7 +20,7 @@ static NSString * const RequestURLString = @"https://www.google.com";
     UITextField *_requestURLTextField;
     UIButton *_startButton;
     UIButton *_cancelButton;
-    UILabel *_infoLabel;
+    UITextView *_infoView;
     
     OTHTTPRequest *_request;
 }
@@ -78,12 +78,13 @@ static NSString * const RequestURLString = @"https://www.google.com";
     
     CGFloat infoOriginY = CGRectGetMaxY(_cancelButton.frame) + 10;
     CGFloat infoHeight = CGRectGetHeight(self.view.bounds) - infoOriginY - 10 - 49;
-    _infoLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _infoLabel.frame = CGRectMake(10, infoOriginY, layoutWidth, infoHeight);
-    _infoLabel.numberOfLines = 0;
-    _infoLabel.textColor = [UIColor blackColor];
-    _infoLabel.backgroundColor = lightGrayColor;
-    [self.view addSubview:_infoLabel];
+    _infoView = [[UITextView alloc] initWithFrame:CGRectZero];
+    _infoView.frame = CGRectMake(10, infoOriginY, layoutWidth, infoHeight);
+    _infoView.textColor = [UIColor blackColor];
+    _infoView.backgroundColor = lightGrayColor;
+    _infoView.font = [UIFont systemFontOfSize:11];
+    _infoView.editable = NO;
+    [self.view addSubview:_infoView];
 }
 
 - (void)start
@@ -108,6 +109,7 @@ static NSString * const RequestURLString = @"https://www.google.com";
 - (void)otHTTPRequestFinished:(OTHTTPRequest *)request
 {
     NSString *responseString = request.responseString;
+    _infoView.text = responseString;
     NSLog(@"Request finished with response string:\n%@", responseString);
 }
 
