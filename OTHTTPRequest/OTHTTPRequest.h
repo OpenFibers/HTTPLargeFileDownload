@@ -49,6 +49,31 @@
  */
 @property (nonatomic, strong, nullable) id userInfo;
 
+#pragma mark - Headers
+
+/**
+ *  set cookie. If you need to set cookie, you must do this before call start.
+ *
+ *  @param cookies The cookies to set.
+ */
+- (void)setCookies:(nonnull NSArray <NSHTTPCookie *> *)cookies;
+
+/*!
+ @method addValue:forHTTPHeaderField:
+ @abstract Adds an HTTP header field in the current header
+ dictionary.
+ @discussion This method provides a way to add values to header
+ fields incrementally. If a value was previously set for the given
+ header field, the given value is appended to the previously-existing
+ value. The appropriate field delimiter, a comma in the case of HTTP,
+ is added by the implementation, and should not be added to the given
+ value by the caller. Note that, in keeping with the HTTP RFC, HTTP
+ header field names are case-insensitive.
+ @param value the header field value.
+ @param field the header field name (case-insensitive).
+ */
+- (void)addValue:(nonnull NSString *)value forHTTPHeaderField:(nonnull NSString *)field;
+
 #pragma mark - Params
 
 /**

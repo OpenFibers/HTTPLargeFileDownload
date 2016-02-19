@@ -43,6 +43,42 @@
     [self cancel];
 }
 
+#pragma mark - Header methods
+
+- (void)addCookies:(nonnull NSArray <NSHTTPCookie *> *)cookies
+{
+    if ([cookies count] > 0)
+    {
+        NSHTTPCookie *cookie;
+        NSString *cookieHeader = nil;
+        for (cookie in cookies)
+        {
+            if (!cookieHeader)
+            {
+                cookieHeader = [NSString stringWithFormat:@"%@=%@", [cookie name], [cookie value]];
+            }
+            else
+            {
+                cookieHeader = [NSString stringWithFormat:@"%@; %@=%@", cookieHeader, [cookie name], [cookie value]];
+            }
+        }
+        if (cookieHeader)
+        {
+            [_request setValue:cookieHeader forHTTPHeaderField:@"Cookie"];
+        }
+    }
+}
+
+- (void)setCookies:(nonnull NSArray <NSHTTPCookie *> *)cookies
+{
+    [self addCookies:cookies];
+}
+
+- (void)addValue:(nonnull NSString *)value forHTTPHeaderField:(nonnull NSString *)field
+{
+    [_request addValue:value forHTTPHeaderField:field];
+}
+
 #pragma mark - Param methods
 
 #pragma mark Get params
