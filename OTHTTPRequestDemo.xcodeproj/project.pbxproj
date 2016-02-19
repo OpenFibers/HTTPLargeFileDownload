@@ -22,6 +22,7 @@
 		42585CA61C76AC60005B6011 /* HTTPRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42585CA51C76AC60005B6011 /* HTTPRequestViewController.m */; };
 		42585CA91C76B4B7005B6011 /* OTHTTPRequestUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 42585CA81C76B4B7005B6011 /* OTHTTPRequestUtils.m */; };
 		42585CB81C770078005B6011 /* UploadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42585CB71C770078005B6011 /* UploadViewController.m */; };
+		42E0D5231C771B48009B1517 /* OTHTTPRequestPostObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E0D5221C771B48009B1517 /* OTHTTPRequestPostObject.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,8 @@
 		42585CA81C76B4B7005B6011 /* OTHTTPRequestUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTHTTPRequestUtils.m; sourceTree = "<group>"; };
 		42585CB61C770078005B6011 /* UploadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadViewController.h; sourceTree = "<group>"; };
 		42585CB71C770078005B6011 /* UploadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadViewController.m; sourceTree = "<group>"; };
+		42E0D5211C771B48009B1517 /* OTHTTPRequestPostObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTHTTPRequestPostObject.h; sourceTree = "<group>"; };
+		42E0D5221C771B48009B1517 /* OTHTTPRequestPostObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTHTTPRequestPostObject.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +131,7 @@
 				4233B85317412486005F7C4C /* OTHTTPRequest.m */,
 				4233B84F17412383005F7C4C /* OTHTTPDownloadRequest.h */,
 				4233B85017412383005F7C4C /* OTHTTPDownloadRequest.m */,
+				42E0D5201C771B3F009B1517 /* PrivateClasses */,
 			);
 			path = OTHTTPRequest;
 			sourceTree = "<group>";
@@ -143,6 +147,15 @@
 				42585CA21C76AC4F005B6011 /* DownloadViewController.m */,
 			);
 			path = DemoViewControllers;
+			sourceTree = "<group>";
+		};
+		42E0D5201C771B3F009B1517 /* PrivateClasses */ = {
+			isa = PBXGroup;
+			children = (
+				42E0D5211C771B48009B1517 /* OTHTTPRequestPostObject.h */,
+				42E0D5221C771B48009B1517 /* OTHTTPRequestPostObject.m */,
+			);
+			path = PrivateClasses;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -211,6 +224,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42E0D5231C771B48009B1517 /* OTHTTPRequestPostObject.m in Sources */,
 				42585CA91C76B4B7005B6011 /* OTHTTPRequestUtils.m in Sources */,
 				42585CA61C76AC60005B6011 /* HTTPRequestViewController.m in Sources */,
 				4233B83817412287005F7C4C /* main.m in Sources */,
