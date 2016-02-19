@@ -28,4 +28,7 @@
 //if object is a file and send from disk, set file path to this property and leave fileData nil
 @property (nonatomic, strong) NSString *filePath;
 
+//if this object is a valid upload object
+@property (nonatomic, readonly) BOOL isUploadObject;
+
 @end
