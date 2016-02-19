@@ -21,6 +21,7 @@
 		42585CA31C76AC4F005B6011 /* DownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42585CA21C76AC4F005B6011 /* DownloadViewController.m */; };
 		42585CA61C76AC60005B6011 /* HTTPRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42585CA51C76AC60005B6011 /* HTTPRequestViewController.m */; };
 		42585CA91C76B4B7005B6011 /* OTHTTPRequestUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 42585CA81C76B4B7005B6011 /* OTHTTPRequestUtils.m */; };
+		42585CB81C770078005B6011 /* UploadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42585CB71C770078005B6011 /* UploadViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,8 @@
 		42585CA51C76AC60005B6011 /* HTTPRequestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPRequestViewController.m; sourceTree = "<group>"; };
 		42585CA71C76B4B7005B6011 /* OTHTTPRequestUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTHTTPRequestUtils.h; sourceTree = "<group>"; };
 		42585CA81C76B4B7005B6011 /* OTHTTPRequestUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTHTTPRequestUtils.m; sourceTree = "<group>"; };
+		42585CB61C770078005B6011 /* UploadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadViewController.h; sourceTree = "<group>"; };
+		42585CB71C770078005B6011 /* UploadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +137,8 @@
 			children = (
 				42585CA41C76AC60005B6011 /* HTTPRequestViewController.h */,
 				42585CA51C76AC60005B6011 /* HTTPRequestViewController.m */,
+				42585CB61C770078005B6011 /* UploadViewController.h */,
+				42585CB71C770078005B6011 /* UploadViewController.m */,
 				42585CA11C76AC4F005B6011 /* DownloadViewController.h */,
 				42585CA21C76AC4F005B6011 /* DownloadViewController.m */,
 			);
@@ -211,6 +216,7 @@
 				4233B83817412287005F7C4C /* main.m in Sources */,
 				4233B83C17412287005F7C4C /* OTAppDelegate.m in Sources */,
 				42585CA31C76AC4F005B6011 /* DownloadViewController.m in Sources */,
+				42585CB81C770078005B6011 /* UploadViewController.m in Sources */,
 				4233B85117412383005F7C4C /* OTHTTPDownloadRequest.m in Sources */,
 				4233B85417412486005F7C4C /* OTHTTPRequest.m in Sources */,
 			);

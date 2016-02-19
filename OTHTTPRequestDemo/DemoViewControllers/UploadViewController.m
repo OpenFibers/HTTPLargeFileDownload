@@ -1,24 +1,24 @@
 //
-//  HTTPRequestViewController.m
+//  UploadViewController.m
 //  OTHTTPRequestDemo
 //
 //  Created by openthread on 2/19/16.
 //  Copyright © 2016 openthread. All rights reserved.
 //
 
-#import "HTTPRequestViewController.h"
+#import "UploadViewController.h"
 #import "OTHTTPRequest.h"
 
 static NSString * const RequestURLString = @"https://www.google.com";
 
-@interface HTTPRequestViewController () <OTHTTPRequestDelegate, UITextFieldDelegate>
+@interface UploadViewController() <OTHTTPRequestDelegate, UITextFieldDelegate>
 
 @end
 
-@implementation HTTPRequestViewController
+@implementation UploadViewController
 {
     UITextField *_requestURLTextField;
-    UIButton *_startButton;
+    UIButton *_uploadButton;
     UIButton *_cancelButton;
     UITextView *_infoView;
     
@@ -30,7 +30,7 @@ static NSString * const RequestURLString = @"https://www.google.com";
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        self.title = @"Request";
+        self.title = @"Upload";
     }
     return self;
 }
@@ -50,7 +50,7 @@ static NSString * const RequestURLString = @"https://www.google.com";
     UIColor *lightGrayColor = [UIColor colorWithWhite:0 alpha:0.08];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, layoutWidth, 24)];
-    label.text = @"Request URL:";
+    label.text = @"Upload file to URL:";
     label.backgroundColor = [UIColor clearColor];
     [self.view addSubview:label];
     
@@ -62,15 +62,15 @@ static NSString * const RequestURLString = @"https://www.google.com";
     _requestURLTextField.returnKeyType = UIReturnKeyDone;
     [self.view addSubview:_requestURLTextField];
     
-    _startButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    _startButton.frame = CGRectMake(10, CGRectGetMaxY(_requestURLTextField.frame) + 10, (layoutWidth - 10) / 2, 44);
-    [_startButton setTitle:@"Start" forState:UIControlStateNormal];
-    [_startButton addTarget:self action:@selector(start) forControlEvents:UIControlEventTouchUpInside];
-    _startButton.backgroundColor = lightGrayColor;
-    [self.view addSubview:_startButton];
+    _uploadButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    _uploadButton.frame = CGRectMake(10, CGRectGetMaxY(_requestURLTextField.frame) + 10, (layoutWidth - 10) / 2, 44);
+    [_uploadButton setTitle:@"Upload" forState:UIControlStateNormal];
+    [_uploadButton addTarget:self action:@selector(upload) forControlEvents:UIControlEventTouchUpInside];
+    _uploadButton.backgroundColor = lightGrayColor;
+    [self.view addSubview:_uploadButton];
     
     _cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    _cancelButton.frame = CGRectMake(CGRectGetMaxX(_startButton.frame) + 10, CGRectGetMinY(_startButton.frame), _startButton.frame.size.width, 44);
+    _cancelButton.frame = CGRectMake(CGRectGetMaxX(_uploadButton.frame) + 10, CGRectGetMinY(_uploadButton.frame), _uploadButton.frame.size.width, 44);
     [_cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
     [_cancelButton addTarget:self action:@selector(cancel) forControlEvents:UIControlEventTouchUpInside];
     _cancelButton.backgroundColor = lightGrayColor;
@@ -87,7 +87,7 @@ static NSString * const RequestURLString = @"https://www.google.com";
     [self.view addSubview:_infoView];
 }
 
-- (void)start
+- (void)upload
 {
     if (_request)
     {

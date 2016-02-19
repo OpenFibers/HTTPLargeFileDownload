@@ -9,6 +9,7 @@
 #import "OTAppDelegate.h"
 
 #import "HTTPRequestViewController.h"
+#import "UploadViewController.h"
 #import "DownloadViewController.h"
 
 @implementation OTAppDelegate
@@ -18,10 +19,11 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     HTTPRequestViewController *requestController = [[HTTPRequestViewController alloc] init];
+    UploadViewController *uploadController = [[UploadViewController alloc] init];
     DownloadViewController *downloadController = [[DownloadViewController alloc] init];
     
     UITabBarController *tabBarController = [[UITabBarController alloc] init];
-    tabBarController.viewControllers = @[requestController, downloadController];
+    tabBarController.viewControllers = @[requestController, uploadController, downloadController];
     self.window.rootViewController = tabBarController;
     [self.window makeKeyAndVisible];
     return YES;
