@@ -10,10 +10,42 @@
 
 @interface OTHTTPRequestUtils : NSObject
 
-+ (NSString *)urlEncode:(NSString *)stringToEncode; //Encode with UTF8
+/**
+ *  URL encode with UTF8
+ *
+ *  @param stringToEncode string to be URL encoded
+ *
+ *  @return encoded string
+ */
++ (NSString *)urlEncode:(NSString *)stringToEncode;
+
+/**
+ *  URL encode with custom string encoding
+ *
+ *  @param stringToEncode string to be URL encoded
+ *  @param encoding       custom string encoding
+ *
+ *  @return encoded string
+ */
 + (NSString *)urlEncode:(NSString *)stringToEncode usingEncoding:(NSStringEncoding)encoding;
 
+/**
+ *  URL dncode with UTF8
+ *
+ *  @param stringToDecode string to be url decoded
+ *
+ *  @return decoded string
+ */
 + (NSString *)urlDecode:(NSString *)stringToDecode; //Decode with UTF8
+
+/**
+ *  URL dncode with custom string encoding
+ *
+ *  @param stringToDecode string to be url decoded
+ *  @param encoding       custom string encoding
+ *
+ *  @return decoded string
+ */
 + (NSString *)urlDecode:(NSString *)stringToDecode usingEncoding:(NSStringEncoding)encoding;
 
 /**
@@ -23,7 +55,7 @@
  *
  *  @return Param string.
  */
-+ (NSString *)paramsStringFromParamDictionary:(NSDictionary *)params;
++ (NSString *)paramsStringFromParamDictionary:(NSDictionary<NSString *, NSString *> *)params;
 
 /**
  *  Parse params from get url request
@@ -32,6 +64,6 @@
  *
  *  @return The result of parsing.
  */
-+ (NSDictionary *)parseGetParamsFromURLString:(NSString *)urlString;
++ (NSDictionary<NSString *, NSString *> *)parseGetParamsFromURLString:(NSString *)urlString;
 
 @end

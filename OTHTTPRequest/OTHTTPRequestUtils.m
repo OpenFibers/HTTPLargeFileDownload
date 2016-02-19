@@ -37,7 +37,7 @@
                                                                                                  CFStringConvertNSStringEncodingToEncoding(encoding));
 }
 
-+ (NSString *)paramsStringFromParamDictionary:(NSDictionary *)params
++ (NSString *)paramsStringFromParamDictionary:(NSDictionary<NSString *, NSString *> *)params;
 {
     NSMutableString *paramString = [NSMutableString string];
     for (id key in params.allKeys)
@@ -61,7 +61,7 @@
     return [NSString stringWithString:paramString];
 }
 
-+ (NSDictionary *)parseGetParamsFromURLString:(NSString *)urlString
++ (NSDictionary<NSString *, NSString *> *)parseGetParamsFromURLString:(NSString *)urlString
 {
     if (!urlString)
     {
