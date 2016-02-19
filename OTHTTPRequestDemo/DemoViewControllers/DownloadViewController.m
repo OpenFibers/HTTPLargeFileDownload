@@ -9,15 +9,13 @@
 #import "DownloadViewController.h"
 #import "OTHTTPDownloadRequest.h"
 
-#define DOWNLOAD_URL        @"http://dl.google.com/drive/installgoogledrive.dmg"
+static NSString *const DownloadURLString = @"http://dl.google.com/drive/installgoogledrive.dmg";
 
 @interface DownloadViewController ()<UITextFieldDelegate,OTHTTPDownloadRequestDelegate>
 {
     UITextField *_downloadURLTextField;
-    
     UIButton *_startButton;
     UIButton *_pauseButton;
-    
     UILabel *_infoLabel;
     
     OTHTTPDownloadRequest *_request;
@@ -36,6 +34,11 @@
     return self;
 }
 
+- (void)dealloc
+{
+    [_request pause];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -52,7 +55,7 @@
     
     _downloadURLTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     _downloadURLTextField.frame = CGRectMake(10, CGRectGetMaxY(label.frame) + 10, layoutWidth, 24);
-    _downloadURLTextField.text = DOWNLOAD_URL;
+    _downloadURLTextField.text = DownloadURLString;
     _downloadURLTextField.backgroundColor = lightGrayColor;
     _downloadURLTextField.delegate = self;
     _downloadURLTextField.returnKeyType = UIReturnKeyDone;
@@ -150,11 +153,6 @@
 {
     [textField resignFirstResponder];
     return YES;
-}
-
-- (void)dealloc
-{
-    [_request pause];
 }
 
 @end
