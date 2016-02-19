@@ -85,4 +85,13 @@
  */
 + (NSString *)MIMETypeForFileExtension:(NSString *)fileExtension;
 
+/**
+ *  Get MIME type from file name
+ *
+ *  @param fileName file name
+ *
+ *  @return MIME type
+ */
++ (NSString *)MIMETypeForFileName:(NSString *)fileName;
+
 @end

@@ -101,10 +101,27 @@
 
 + (NSString *)MIMETypeForFileExtension:(NSString *)fileExtension
 {
+    NSString *const defaultMIMEType = @"application/octet-stream";
+    if (fileExtension.length == 0)
+    {
+        return defaultMIMEType;
+    }
     CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)fileExtension, NULL);
     CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass (UTI, kUTTagClassMIMEType);
     CFRelease(UTI);
-    return (NSString *)CFBridgingRelease(MIMEType);
+    NSString *MIMETypetring = (NSString *)CFBridgingRelease(MIMEType);
+    if (MIMETypetring.length == 0)
+    {
+        return defaultMIMEType;
+    }
+    return MIMETypetring;
+}
+
++ (NSString *)MIMETypeForFileName:(NSString *)fileName
+{
+    NSString *extension = [fileName pathExtension];
+    NSString *MIMEType = [self MIMETypeForFileExtension:extension];
+    return MIMEType;
 }
 
 @end
