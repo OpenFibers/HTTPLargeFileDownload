@@ -6,12 +6,12 @@
 //  Copyright (c) 2012 openthread. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "DownloadViewController.h"
 #import "OTHTTPDownloadRequest.h"
 
 #define DOWNLOAD_URL        @"http://dl.google.com/drive/installgoogledrive.dmg"
 
-@interface ViewController ()<UITextFieldDelegate,OTHTTPDownloadRequestDelegate>
+@interface DownloadViewController ()<UITextFieldDelegate,OTHTTPDownloadRequestDelegate>
 {
     UITextField *_downloadURLTextField;
     
@@ -24,7 +24,17 @@
 }
 @end
 
-@implementation ViewController
+@implementation DownloadViewController
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self)
+    {
+        self.title = @"Download";
+    }
+    return self;
+}
 
 - (void)viewDidLoad
 {
@@ -32,35 +42,43 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 300, 24)];
+    CGFloat layoutWidth = CGRectGetWidth(self.view.bounds) - 20;
+    UIColor *lightGrayColor = [UIColor colorWithWhite:0 alpha:0.08];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, layoutWidth, 24)];
     label.text = @"Download file at URL:";
     label.backgroundColor = [UIColor clearColor];
     [self.view addSubview:label];
     
     _downloadURLTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-    _downloadURLTextField.frame = CGRectMake(10, 54, 300, 24);
+    _downloadURLTextField.frame = CGRectMake(10, CGRectGetMaxY(label.frame) + 10, layoutWidth, 24);
     _downloadURLTextField.text = DOWNLOAD_URL;
-    _downloadURLTextField.backgroundColor = [UIColor whiteColor];
+    _downloadURLTextField.backgroundColor = lightGrayColor;
     _downloadURLTextField.delegate = self;
     _downloadURLTextField.returnKeyType = UIReturnKeyDone;
     [self.view addSubview:_downloadURLTextField];
     
     _startButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    _startButton.frame = CGRectMake(10, 100, (320 - 30) / 2, 44);
+    _startButton.frame = CGRectMake(10, CGRectGetMaxY(_downloadURLTextField.frame) + 10, (layoutWidth - 10) / 2, 44);
     [_startButton setTitle:@"Start" forState:UIControlStateNormal];
     [_startButton addTarget:self action:@selector(start) forControlEvents:UIControlEventTouchUpInside];
+    _startButton.backgroundColor = lightGrayColor;
     [self.view addSubview:_startButton];
     
     _pauseButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    _pauseButton.frame = CGRectMake(CGRectGetMaxX(_startButton.frame) + 10, 100, _startButton.frame.size.width, 44);
+    _pauseButton.frame = CGRectMake(CGRectGetMaxX(_startButton.frame) + 10, CGRectGetMinY(_startButton.frame), _startButton.frame.size.width, 44);
     [_pauseButton setTitle:@"Pause" forState:UIControlStateNormal];
     [_pauseButton addTarget:self action:@selector(pause) forControlEvents:UIControlEventTouchUpInside];
+    _pauseButton.backgroundColor = lightGrayColor;
     [self.view addSubview:_pauseButton];
     
+    CGFloat infoOriginY = CGRectGetMaxY(_pauseButton.frame) + 10;
+    CGFloat infoHeight = CGRectGetHeight(self.view.bounds) - infoOriginY - 10 - 49;
     _infoLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _infoLabel.frame = CGRectMake(10, CGRectGetMaxY(_pauseButton.frame) + 20, 300, 280);
+    _infoLabel.frame = CGRectMake(10, infoOriginY, layoutWidth, infoHeight);
     _infoLabel.numberOfLines = 0;
     _infoLabel.textColor = [UIColor blackColor];
+    _infoLabel.backgroundColor = lightGrayColor;
     [self.view addSubview:_infoLabel];
 }
 
@@ -93,7 +111,7 @@
        expectedDataSize:(long long)expectedDataSize
 {
     NSString *logInfo = [NSString stringWithFormat:
-                         @"Download URL:\n%@\nprogress:%.2f %%\ndownloaded size:%.2fMB\nexpected size:%.2fMB\ncurrent speed:%.2f MB/s",
+                         @"Download URL:\n%@\nprogress:%.2f %%\n\ndownloaded size:%.2fMB\n\nexpected size:%.2fMB\n\ncurrent speed:%.2f MB/s",
                          [request requestURL],
                          progress * 100,
                          [request downloadedFileSize] / (double) (1024 * 1024),
@@ -105,7 +123,7 @@
 - (void)downloadRequestFinished:(OTHTTPDownloadRequest *)request
 {
     NSString *logInfo = [NSString stringWithFormat:
-                         @"Download URL Finished:\n%@\nexpected size:%.2fMB",
+                         @"Download URL Finished:\n%@\n\nexpected size:%.2fMB",
                          [request requestURL],
                          [request expectedFileSize] / (double) (1024 * 1024)];
     _infoLabel.text = logInfo;
@@ -114,7 +132,7 @@
 - (void)downloadRequestFailed:(OTHTTPDownloadRequest *)request error:(NSError *)error
 {
     NSString *logInfo = [NSString stringWithFormat:
-                         @"Download URL Failed:\n%@\n%@",
+                         @"Download URL Failed:\n%@\n\n%@",
                          [request requestURL],
                          error];
     _infoLabel.text = logInfo;

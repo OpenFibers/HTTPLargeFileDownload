@@ -16,9 +16,10 @@
 		4233B83E17412287005F7C4C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4233B83D17412287005F7C4C /* Default.png */; };
 		4233B84017412287005F7C4C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4233B83F17412287005F7C4C /* Default@2x.png */; };
 		4233B84217412287005F7C4C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4233B84117412287005F7C4C /* Default-568h@2x.png */; };
-		4233B84517412287005F7C4C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233B84417412287005F7C4C /* ViewController.m */; };
 		4233B85117412383005F7C4C /* OTHTTPDownloadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233B85017412383005F7C4C /* OTHTTPDownloadRequest.m */; };
 		4233B85417412486005F7C4C /* OTHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233B85317412486005F7C4C /* OTHTTPRequest.m */; };
+		42585CA31C76AC4F005B6011 /* DownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42585CA21C76AC4F005B6011 /* DownloadViewController.m */; };
+		42585CA61C76AC60005B6011 /* HTTPRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42585CA51C76AC60005B6011 /* HTTPRequestViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,12 +36,14 @@
 		4233B83D17412287005F7C4C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		4233B83F17412287005F7C4C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		4233B84117412287005F7C4C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		4233B84317412287005F7C4C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		4233B84417412287005F7C4C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		4233B84F17412383005F7C4C /* OTHTTPDownloadRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTHTTPDownloadRequest.h; sourceTree = "<group>"; };
 		4233B85017412383005F7C4C /* OTHTTPDownloadRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTHTTPDownloadRequest.m; sourceTree = "<group>"; };
 		4233B85217412486005F7C4C /* OTHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTHTTPRequest.h; sourceTree = "<group>"; };
 		4233B85317412486005F7C4C /* OTHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTHTTPRequest.m; sourceTree = "<group>"; };
+		42585CA11C76AC4F005B6011 /* DownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadViewController.h; sourceTree = "<group>"; };
+		42585CA21C76AC4F005B6011 /* DownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadViewController.m; sourceTree = "<group>"; };
+		42585CA41C76AC60005B6011 /* HTTPRequestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPRequestViewController.h; sourceTree = "<group>"; };
+		42585CA51C76AC60005B6011 /* HTTPRequestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPRequestViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,8 +93,7 @@
 			children = (
 				4233B83A17412287005F7C4C /* OTAppDelegate.h */,
 				4233B83B17412287005F7C4C /* OTAppDelegate.m */,
-				4233B84317412287005F7C4C /* ViewController.h */,
-				4233B84417412287005F7C4C /* ViewController.m */,
+				42585CA01C76AC4F005B6011 /* DemoViewControllers */,
 				4233B83217412287005F7C4C /* Supporting Files */,
 			);
 			path = OTHTTPRequestDemo;
@@ -120,6 +122,17 @@
 				4233B85017412383005F7C4C /* OTHTTPDownloadRequest.m */,
 			);
 			path = OTHTTPRequest;
+			sourceTree = "<group>";
+		};
+		42585CA01C76AC4F005B6011 /* DemoViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				42585CA41C76AC60005B6011 /* HTTPRequestViewController.h */,
+				42585CA51C76AC60005B6011 /* HTTPRequestViewController.m */,
+				42585CA11C76AC4F005B6011 /* DownloadViewController.h */,
+				42585CA21C76AC4F005B6011 /* DownloadViewController.m */,
+			);
+			path = DemoViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -188,9 +201,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42585CA61C76AC60005B6011 /* HTTPRequestViewController.m in Sources */,
 				4233B83817412287005F7C4C /* main.m in Sources */,
 				4233B83C17412287005F7C4C /* OTAppDelegate.m in Sources */,
-				4233B84517412287005F7C4C /* ViewController.m in Sources */,
+				42585CA31C76AC4F005B6011 /* DownloadViewController.m in Sources */,
 				4233B85117412383005F7C4C /* OTHTTPDownloadRequest.m in Sources */,
 				4233B85417412486005F7C4C /* OTHTTPRequest.m in Sources */,
 			);
