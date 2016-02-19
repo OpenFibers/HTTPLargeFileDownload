@@ -47,14 +47,28 @@
 #pragma mark - Params
 
 /**
- *  Get params of request
+ *  Get/set params for request
  */
-@property (nonatomic, strong) NSDictionary *getParams;
+@property (nonatomic, strong) NSDictionary<NSString */*key*/, NSString */*value*/> *getParams;
 
 /**
- *  Post params of request
+ *  Add get params for request
+ *
+ *  @param params get params to add.
  */
-@property (nonatomic, strong) NSDictionary *postParams;
+- (void)addGetParams:(NSDictionary<NSString */*key*/, NSString */*value*/> *)params;
+
+/**
+ *  Get/set post params for request
+ */
+@property (nonatomic, strong) NSDictionary<NSString */*key*/, NSString */*value*/> *postParams;
+
+/**
+ *  Add post params for request
+ *
+ *  @param params post params to add
+ */
+- (void)addPostParams:(NSDictionary<NSString */*key*/, NSString */*value*/> *)params;
 
 /**
  *  Add file in post form with data

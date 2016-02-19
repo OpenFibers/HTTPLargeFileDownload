@@ -10,6 +10,7 @@
 #import "OTHTTPRequestUtils.h"
 
 @interface OTHTTPRequest () <NSURLConnectionDataDelegate>
+@property (nonatomic, strong) NSMutableDictionary *postParamContainer;
 @end
 
 @implementation OTHTTPRequest
@@ -42,12 +43,34 @@
 
 #pragma mark - Param methods
 
-- (void)setGetParams:(NSDictionary *)getParams
+#pragma mark Get params
+
+- (NSDictionary<NSString */*key*/, NSString */*value*/> *)getParams
+{
+    return nil;
+}
+
+- (void)setGetParams:(NSDictionary<NSString *,NSString *> *)getParams
+{
+    NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:getParams];
+    NSString *urlString = _request.URL.absoluteString;
+
+}
+
+- (void)addGetParams:(NSDictionary<NSString *,NSString *> *)params
+{
+    NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:params];
+
+}
+
+#pragma mark Post params
+
+- (void)setPostParams:(NSDictionary<NSString *,NSString *> *)postParams
 {
     
 }
 
-- (void)setPostParams:(NSDictionary *)postParams
+- (void)addPostParams:(NSDictionary<NSString *,NSString *> *)params
 {
     
 }
