@@ -8,9 +8,10 @@
 
 #import "OTHTTPRequest.h"
 #import "OTHTTPRequestUtils.h"
+#import "OTHTTPRequestPostObject.h"
 
 @interface OTHTTPRequest () <NSURLConnectionDataDelegate>
-@property (nonatomic, strong) NSMutableDictionary *postParamContainer;
+@property (nonatomic, strong) NSMutableArray<OTHTTPRequestPostObject *> *postParamContainer;
 @end
 
 @implementation OTHTTPRequest
@@ -32,6 +33,7 @@
         _request = [NSMutableURLRequest requestWithURL:URL];
         self.isLowPriority = YES;
         self.shouldClearCachedResponseWhenRequestDone = YES;
+        self.postParamContainer = [NSMutableArray array];
     }
     return self;
 }
@@ -84,24 +86,58 @@
 
 #pragma mark Post params
 
+- (NSDictionary<NSString *,NSString *> *)postParams
+{
+    NSMutableDictionary *postParams = [NSMutableDictionary dictionary];
+    for (OTHTTPRequestPostObject *object in self.postParamContainer)
+    {
+        if (!object.isUploadObject)
+        {
+            postParams[object.key] = object.value;
+        }
+    }
+    return [NSDictionary dictionaryWithDictionary:postParams];
+}
+
 - (void)setPostParams:(NSDictionary<NSString *,NSString *> *)postParams
 {
-    
+    [self.postParamContainer removeAllObjects];
+    for (NSString *key in postParams.allKeys)
+    {
+        NSString *value = postParams[key];
+        if ([key isKindOfClass:[NSString class]] && [value isKindOfClass:[NSString class]])
+        {
+            [self addPostValue:value forKey:key];
+        }
+    }
 }
 
-- (void)addPostParams:(NSDictionary<NSString *,NSString *> *)params
+- (void)addPostValue:(NSString *)value forKey:(NSString *)key
 {
-    
+    OTHTTPRequestPostObject *object = [[OTHTTPRequestPostObject alloc] init];
+    object.key = key;
+    object.value = value;
+    [self.postParamContainer addObject:object];
 }
 
-- (void)addFileWithData:(NSData *)data fileName:(NSString *)fileName MIMEType:(NSString *)MIMEType
+- (void)addFileForKey:(NSString *)key data:(NSData *)data fileName:(NSString *)fileName MIMEType:(NSString *)MIMEType
 {
-    
+    OTHTTPRequestPostObject *object = [[OTHTTPRequestPostObject alloc] init];
+    object.key = key;
+    object.fileData = data;
+    object.fileName = fileName;
+    object.MIMEType = MIMEType;
+    [self.postParamContainer addObject:object];
 }
 
-- (void)addFileWithFilePath:(NSString *)filePath fileName:(NSString *)fileName MIMEType:(NSString *)MIMEType
+- (void)addFileForKey:(NSString *)key filePath:(NSString *)filePath fileName:(NSString *)fileName MIMEType:(NSString *)MIMEType
 {
-    
+    OTHTTPRequestPostObject *object = [[OTHTTPRequestPostObject alloc] init];
+    object.key = key;
+    object.filePath = filePath;
+    object.fileName = fileName;
+    object.MIMEType = MIMEType;
+    [self.postParamContainer addObject:object];
 }
 
 #pragma mark - Request and response

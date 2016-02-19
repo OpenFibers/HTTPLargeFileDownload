@@ -61,7 +61,7 @@
  *
  *  @param params get params to add.
  */
-- (void)addGetParams:(NSDictionary<NSString */*key*/, NSString */*value*/> *)params;
+- (void)addGetParams:(NSDictionary<NSString */*key*/, NSString */*value*/> *)getParams;
 
 /**
  *  Get/set post params for request
@@ -73,25 +73,27 @@
  *
  *  @param params post params to add
  */
-- (void)addPostParams:(NSDictionary<NSString */*key*/, NSString */*value*/> *)params;
+- (void)addPostValue:(NSString *)value forKey:(NSString *)key;
 
 /**
  *  Add file in post form with data
  *
+ *  @param key      file key to post
  *  @param data     file data to add
  *  @param fileName file name to post
  *  @param MIMEType MIME type to post
  */
-- (void)addFileWithData:(NSData *)data fileName:(NSString *)fileName MIMEType:(NSString *)MIMEType;
+- (void)addFileForKey:(NSString *)key data:(NSData *)data fileName:(NSString *)fileName MIMEType:(NSString *)MIMEType;
 
 /**
  *  Add file in post form with data
  *
+ *  @param key      file key to post
  *  @param filePath file path to add
  *  @param fileName file name to post
  *  @param MIMEType MIME type to post
  */
-- (void)addFileWithFilePath:(NSString *)filePath fileName:(NSString *)fileName MIMEType:(NSString *)MIMEType;
+- (void)addFileForKey:(NSString *)key filePath:(NSString *)filePath fileName:(NSString *)fileName MIMEType:(NSString *)MIMEType;
 
 #pragma mark - Options
 
