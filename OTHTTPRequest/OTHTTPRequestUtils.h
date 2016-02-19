@@ -58,12 +58,21 @@
 + (NSString *)paramsStringFromParamDictionary:(NSDictionary<NSString *, NSString *> *)params;
 
 /**
- *  Parse params from get url request
+ *  Parse Get params from URL string
  *
- *  @param urlString URL string to be parsed.
+ *  @param urlString URL string to parse.
  *
- *  @return The result of parsing.
+ *  @return Parsed GET params.
  */
 + (NSDictionary<NSString *, NSString *> *)parseGetParamsFromURLString:(NSString *)urlString;
+
+/**
+ *  Parse GET params from query string. e.g. a=b&c=d
+ *
+ *  @param queryString the query string to parse
+ *
+ *  @return Parsed GET params.
+ */
++ (NSDictionary<NSString *, NSString *> *)parseGetParamsFromQueryString:(NSString *)queryString;
 
 @end

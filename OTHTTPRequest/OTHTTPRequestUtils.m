@@ -61,21 +61,9 @@
     return [NSString stringWithString:paramString];
 }
 
-+ (NSDictionary<NSString *, NSString *> *)parseGetParamsFromURLString:(NSString *)urlString
++ (NSDictionary<NSString *, NSString *> *)parseGetParamsFromQueryString:(NSString *)queryString
 {
-    if (!urlString)
-    {
-        return nil;
-    }
-    
-    NSURL *URL = [NSURL URLWithString:urlString];
-    NSString *query = URL.query;
-    if (query.length == 0)
-    {
-        return nil;
-    }
-    
-    NSArray *components = [query componentsSeparatedByString:@"&"];
+    NSArray *components = [queryString componentsSeparatedByString:@"&"];
     NSMutableDictionary *resultDic = [NSMutableDictionary dictionary];
     for (NSString *string in components)
     {
@@ -91,6 +79,24 @@
     
     NSDictionary *returnDic = [NSDictionary dictionaryWithDictionary:resultDic];
     return returnDic;
+}
+
++ (NSDictionary<NSString *, NSString *> *)parseGetParamsFromURLString:(NSString *)urlString
+{
+    if (!urlString)
+    {
+        return nil;
+    }
+    
+    NSURL *URL = [NSURL URLWithString:urlString];
+    NSString *queryString = URL.query;
+    if (queryString.length == 0)
+    {
+        return nil;
+    }
+    
+    NSDictionary *result = [self parseGetParamsFromQueryString:queryString];
+    return result;
 }
 
 @end
