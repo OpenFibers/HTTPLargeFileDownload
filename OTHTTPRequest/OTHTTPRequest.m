@@ -9,162 +9,12 @@
 #import "OTHTTPRequest.h"
 #import "OTHTTPRequestUtils.h"
 
-@implementation OTHTTPRequestUploadFile
-- (id)init
-{
-    self = [super init];
-    if (self)
-    {
-        self.fileName = @"fileName";
-        self.name = @"name";
-    }
-    return self;
-}
-@end
-
-@implementation NSMutableURLRequest (GetAndPostParams)
-
-/**
- *  Setup simple request with get params.
- *
- *  @param getParams Get params to be set.
- */
-- (void)setUpGetParams:(NSDictionary *)getParams
-{
-    NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:getParams];
-    NSString *urlString = self.URL.absoluteString;
-    NSRange qouteRange = [urlString rangeOfString:@"?"];
-    if (qouteRange.location != NSNotFound)
-    {
-        urlString = [urlString substringToIndex:qouteRange.location];
-    }
-
-    NSString *finalURLString = [urlString stringByAppendingString:paramString];
-    self.URL = [NSURL URLWithString:finalURLString];
-}
-
-/**
- *  Setup simple request with post params.
- *
- *  @param postParams Post params to be set.
- */
-- (void)setUpPostParams:(NSDictionary *)postParams
-{
-    NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:postParams];
-    NSData *postData = [paramString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-    [self setHTTPBody:postData];
-
-    NSString *postLength = [NSString stringWithFormat:@"%tu", [postData length]];
-    [self setValue:postLength forHTTPHeaderField:@"Content-Length"];
-
-    [self setValue:@"application/x-www-form-urlencoded; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [self setHTTPMethod:@"POST"];
-}
-
-/**
- *  Multipart form data request with post params, and single file's data. Using NSUTF8StringEncoding.
- *
- *  @param postParams Post params to be set.
- *  @param file       File to be upload.
- */
-- (void)setUpMultiPartFormDataRequestWithPostParams:(NSDictionary *)postParams file:(OTHTTPRequestUploadFile *)file
-{
-    [self setUpMultiPartFormDataRequestWithPostParams:postParams filesArray:@[ file ]];
-}
-
-/**
- *  Multipart form data request with post params, and files' data. Using NSUTF8StringEncoding.
- *
- *  @param postParams Post params to be set.
- *  @param filesArray Files to be upload.
- */
-- (void)setUpMultiPartFormDataRequestWithPostParams:(NSDictionary *)postParams filesArray:(NSArray *)filesArray
-{
-    [self setUpMultiPartFormDataRequestWithPostParams:postParams filesArray:filesArray encoding:NSUTF8StringEncoding];
-}
-
-/**
- *  Multipart form data request with post params, and files' data. Using specific string encoding.
- *
- *  @param postParams Post params to be set.
- *  @param filesArray Files to be upload.
- *  @param encoding   Encode for post.
- */
-- (void)setUpMultiPartFormDataRequestWithPostParams:(NSDictionary *)postParams filesArray:(NSArray *)filesArray encoding:(NSStringEncoding)encoding
-{
-    if (!encoding)
-    {
-        encoding = NSUTF8StringEncoding;
-    }
-    NSString *charset = (NSString *)CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(encoding));
-
-    // We don't bother to check if post data contains the boundary, since it's pretty unlikely that it does.
-    CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
-    NSString *uuidString = (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
-    CFRelease(uuid);
-
-    NSString *stringBoundary = [NSString stringWithFormat:@"0xKhTmLbOuNdArY-%@", uuidString];
-
-    if (![self.allHTTPHeaderFields.allKeys containsObject:@"Content-Type"])
-    {
-        [self setValue:[NSString stringWithFormat:@"multipart/form-data; charset=%@; boundary=%@", charset, stringBoundary] forHTTPHeaderField:@"Content-Type"];
-    }
-
-    NSMutableData *postBodyData = [NSMutableData data];
-    [postBodyData appendData:[[NSString stringWithFormat:@"--%@\r\n", stringBoundary] dataUsingEncoding:encoding]];
-
-    // Adds post data
-    NSString *endItemBoundary = [NSString stringWithFormat:@"\r\n--%@\r\n", stringBoundary];
-    NSUInteger i = 0;
-    for (NSString *eachKey in postParams.allKeys)
-    {
-        [postBodyData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", eachKey] dataUsingEncoding:encoding]];
-        [postBodyData appendData:[postParams[eachKey] dataUsingEncoding:encoding]];
-        i++;
-        if (i != [postParams.allKeys count] || [filesArray count] > 0)
-        {
-            //Only add the boundary if this is not the last item in the post body
-            [postBodyData appendData:[endItemBoundary dataUsingEncoding:encoding]];
-        }
-    }
-
-    // Adds files to upload
-    i = 0;
-    for (OTHTTPRequestUploadFile *eachFile in filesArray)
-    {
-        [postBodyData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", eachFile.name, eachFile.fileName] dataUsingEncoding:encoding]];
-
-        [postBodyData appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", eachFile.contentType ? eachFile.contentType : @"application/octet-stream"] dataUsingEncoding:encoding]];
-
-        NSData *data = eachFile.fileData;
-        if ([data isKindOfClass:[NSData class]])
-        {
-            [postBodyData appendData:data];
-        }
-        i++;
-        // Only add the boundary if this is not the last item in the post body
-        if (i != [filesArray count])
-        {
-            [postBodyData appendData:[endItemBoundary dataUsingEncoding:encoding]];
-        }
-    }
-    [postBodyData appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n", stringBoundary] dataUsingEncoding:encoding]];
-    [self setHTTPBody:postBodyData];
-
-    NSString *postLength = [NSString stringWithFormat:@"%tu", [postBodyData length]];
-    [self setValue:postLength forHTTPHeaderField:@"Content-Length"];
-
-    [self setHTTPMethod:@"POST"];
-}
-
-@end
-
 @interface OTHTTPRequest () <NSURLConnectionDataDelegate>
 @end
 
 @implementation OTHTTPRequest
 {
-    NSURLRequest *_request;
+    NSMutableURLRequest *_request;
     NSURLResponse *_response;
 
     NSMutableData *_data;
@@ -173,13 +23,12 @@
 
 #pragma mark - Init Methods
 
-//Create request with a NSURLRequest.
-- (id)initWithNSURLRequest:(NSURLRequest *)request
+- (instancetype)initWithURL:(NSURL *)URL
 {
     self = [super init];
     if (self)
     {
-        _request = request;
+        _request = [NSMutableURLRequest requestWithURL:URL];
         self.isLowPriority = YES;
         self.shouldClearCachedResponseWhenRequestDone = YES;
     }
@@ -189,6 +38,28 @@
 - (void)dealloc
 {
     [self cancel];
+}
+
+#pragma mark - Param methods
+
+- (void)setGetParams:(NSDictionary *)getParams
+{
+    
+}
+
+- (void)setPostParams:(NSDictionary *)postParams
+{
+    
+}
+
+- (void)addFileWithData:(NSData *)data fileName:(NSString *)fileName MIMEType:(NSString *)MIMEType
+{
+    
+}
+
+- (void)addFileWithFilePath:(NSString *)filePath fileName:(NSString *)fileName MIMEType:(NSString *)MIMEType
+{
+    
 }
 
 #pragma mark - Request and response

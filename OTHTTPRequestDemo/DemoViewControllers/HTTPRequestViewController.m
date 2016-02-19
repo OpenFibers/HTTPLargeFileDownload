@@ -95,8 +95,7 @@ static NSString * const RequestURLString = @"https://www.google.com";
         _request = nil;
     }
     NSString *downloadURLString = _requestURLTextField.text;
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:downloadURLString]];
-    _request = [[OTHTTPRequest alloc] initWithNSURLRequest:request];
+    _request = [[OTHTTPRequest alloc] initWithURL:[NSURL URLWithString:downloadURLString]];
     _request.delegate = self;
     [_request start];
 }
