@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @interface OTHTTPRequestUtils : NSObject
 
@@ -58,6 +59,15 @@
 + (NSString *)paramsStringFromParamDictionary:(NSDictionary<NSString *, NSString *> *)params;
 
 /**
+ *  Parse GET params from query string. e.g. a=b&c=d
+ *
+ *  @param queryString the query string to parse
+ *
+ *  @return Parsed GET params.
+ */
++ (NSDictionary<NSString *, NSString *> *)parseGetParamsFromQueryString:(NSString *)queryString;
+
+/**
  *  Parse Get params from URL string
  *
  *  @param urlString URL string to parse.
@@ -67,12 +77,12 @@
 + (NSDictionary<NSString *, NSString *> *)parseGetParamsFromURLString:(NSString *)urlString;
 
 /**
- *  Parse GET params from query string. e.g. a=b&c=d
+ *  Get MIME type from file extension
  *
- *  @param queryString the query string to parse
+ *  @param fileExtension file extension
  *
- *  @return Parsed GET params.
+ *  @return MIME type
  */
-+ (NSDictionary<NSString *, NSString *> *)parseGetParamsFromQueryString:(NSString *)queryString;
++ (NSString *)MIMETypeForFileExtension:(NSString *)fileExtension;
 
 @end

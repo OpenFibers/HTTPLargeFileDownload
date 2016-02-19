@@ -99,4 +99,12 @@
     return result;
 }
 
++ (NSString *)MIMETypeForFileExtension:(NSString *)fileExtension
+{
+    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)fileExtension, NULL);
+    CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass (UTI, kUTTagClassMIMEType);
+    CFRelease(UTI);
+    return (NSString *)CFBridgingRelease(MIMEType);
+}
+
 @end
