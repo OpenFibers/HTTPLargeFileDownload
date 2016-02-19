@@ -35,6 +35,11 @@
 - (instancetype)initWithURL:(NSURL *)URL;
 
 /**
+ *  URL of request;
+ */
+@property (nonatomic, readonly) NSURL *URL;
+
+/**
  *  Delegate of request
  */
 @property (nonatomic, weak) id<OTHTTPRequestDelegate> delegate;

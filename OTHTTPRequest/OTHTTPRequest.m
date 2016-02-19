@@ -47,20 +47,39 @@
 
 - (NSDictionary<NSString */*key*/, NSString */*value*/> *)getParams
 {
-    return nil;
+    NSString *queryString = _request.URL.query;
+    NSDictionary *queryDictionary = [OTHTTPRequestUtils parseGetParamsFromQueryString:queryString];
+    return queryDictionary;
 }
 
 - (void)setGetParams:(NSDictionary<NSString *,NSString *> *)getParams
 {
+    NSURLComponents *mutableURL = [NSURLComponents componentsWithString:_request.URL.absoluteString];
     NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:getParams];
-    NSString *urlString = _request.URL.absoluteString;
-
+    mutableURL.query = paramString;
+    NSURL *newURL = mutableURL.URL;
+    _request.URL = newURL;
 }
 
-- (void)addGetParams:(NSDictionary<NSString *,NSString *> *)params
+- (void)addGetParams:(NSDictionary<NSString *,NSString *> *)getParams
 {
-    NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:params];
-
+    NSURLComponents *mutableURL = [NSURLComponents componentsWithString:_request.URL.absoluteString];
+    NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:getParams];
+    NSString *oldQuery = mutableURL.query;
+    if (oldQuery)
+    {
+        if ([oldQuery hasSuffix:@"&"])
+        {
+            paramString = [oldQuery stringByAppendingString:paramString];
+        }
+        else
+        {
+            paramString = [oldQuery stringByAppendingFormat:@"&%@", paramString];
+        }
+    }
+    mutableURL.query = paramString;
+    NSURL *newURL = mutableURL.URL;
+    _request.URL = newURL;
 }
 
 #pragma mark Post params
@@ -86,6 +105,11 @@
 }
 
 #pragma mark - Request and response
+
+- (NSURL *)URL
+{
+    return _request.URL;
+}
 
 - (NSURLRequest *)request
 {
