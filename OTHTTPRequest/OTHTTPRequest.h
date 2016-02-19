@@ -109,9 +109,6 @@
 //Get responsed string using response's encoding. If response has no encoding info, use UTF8 encoding.
 - (NSString *)responseString;
 
-//Get responsed string using UTF8 encoding.
-- (NSString *)responseUTF8String;
-
 #pragma mark - Start and cancel
 
 //cancel request
