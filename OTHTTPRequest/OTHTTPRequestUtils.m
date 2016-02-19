@@ -67,14 +67,15 @@
     {
         return nil;
     }
-    NSRange queryRange = [urlString rangeOfString:@"?"];
-    if (queryRange.location == NSNotFound)
+    
+    NSURL *URL = [NSURL URLWithString:urlString];
+    NSString *query = URL.query;
+    if (query.length == 0)
     {
         return nil;
     }
     
-    NSString *subString = [urlString substringFromIndex:queryRange.location + queryRange.length];
-    NSArray *components = [subString componentsSeparatedByString:@"&"];
+    NSArray *components = [query componentsSeparatedByString:@"&"];
     NSMutableDictionary *resultDic = [NSMutableDictionary dictionary];
     for (NSString *string in components)
     {
