@@ -7,6 +7,7 @@
 //
 
 #import "OTHTTPRequest.h"
+#import "OTHTTPRequestUtils.h"
 
 @implementation OTHTTPRequestUploadFile
 - (id)init
@@ -30,7 +31,7 @@
  */
 - (void)setUpGetParams:(NSDictionary *)getParams
 {
-    NSString *paramString = [OTHTTPRequest paramsStringFromParamDictionary:getParams];
+    NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:getParams];
     NSString *urlString = self.URL.absoluteString;
     NSRange qouteRange = [urlString rangeOfString:@"?"];
     if (qouteRange.location != NSNotFound)
@@ -49,7 +50,7 @@
  */
 - (void)setUpPostParams:(NSDictionary *)postParams
 {
-    NSString *paramString = [OTHTTPRequest paramsStringFromParamDictionary:postParams];
+    NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:postParams];
     NSData *postData = [paramString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
     [self setHTTPBody:postData];
 
@@ -168,90 +169,6 @@
 
     NSMutableData *_data;
     NSURLConnection *_connection;
-}
-
-#pragma mark - Class Methods
-
-+ (NSString *)urlEncode:(NSString *)stringToEncode
-{
-    return [self urlEncode:stringToEncode usingEncoding:NSUTF8StringEncoding];
-}
-
-+ (NSString *)urlEncode:(NSString *)stringToEncode usingEncoding:(NSStringEncoding)encoding
-{
-    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
-                                                                                 (__bridge CFStringRef)stringToEncode,
-                                                                                 NULL,
-                                                                                 (CFStringRef) @"!*'\"();:@&=+$,/?%#[]% ",
-                                                                                 CFStringConvertNSStringEncodingToEncoding(encoding));
-}
-
-+ (NSString *)urlDecode:(NSString *)stringToDecode
-{
-    return [self urlDecode:stringToDecode usingEncoding:NSUTF8StringEncoding];
-}
-
-+ (NSString *)urlDecode:(NSString *)stringToDecode usingEncoding:(NSStringEncoding)encoding
-{
-    return (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL,
-                                                                                                 (__bridge CFStringRef)stringToDecode,
-                                                                                                 (CFStringRef) @"",
-                                                                                                 CFStringConvertNSStringEncodingToEncoding(encoding));
-}
-
-+ (NSString *)paramsStringFromParamDictionary:(NSDictionary *)params
-{
-    NSMutableString *paramString = [NSMutableString string];
-    for (id key in params.allKeys)
-    {
-        if ([key isKindOfClass:[NSString class]])
-        {
-            NSString *value = params[key];
-            if ([value isKindOfClass:[NSString class]])
-            {
-                [paramString appendString:[OTHTTPRequest urlEncode:key]];
-                [paramString appendString:@"="];
-                [paramString appendString:[OTHTTPRequest urlEncode:value]];
-                
-                if ([params.allKeys lastObject] != key)
-                {
-                    [paramString appendString:@"&"];
-                }
-            }
-        }
-    }
-    return [NSString stringWithString:paramString];
-}
-
-+ (NSDictionary *)parseGetParamsFromURLString:(NSString *)urlString
-{
-    if (!urlString)
-    {
-        return nil;
-    }
-    NSRange queryRange = [urlString rangeOfString:@"?"];
-    if (queryRange.location == NSNotFound)
-    {
-        return nil;
-    }
-
-    NSString *subString = [urlString substringFromIndex:queryRange.location + queryRange.length];
-    NSArray *components = [subString componentsSeparatedByString:@"&"];
-    NSMutableDictionary *resultDic = [NSMutableDictionary dictionary];
-    for (NSString *string in components)
-    {
-        NSRange equalRange = [string rangeOfString:@"="];
-        if (equalRange.location == NSNotFound)
-        {
-            continue;
-        }
-        NSString *key = [string substringToIndex:equalRange.location];
-        NSString *value = [string substringFromIndex:equalRange.location + equalRange.length];
-        [resultDic setObject:value forKey:key];
-    }
-
-    NSDictionary *returnDic = [NSDictionary dictionaryWithDictionary:resultDic];
-    return returnDic;
 }
 
 #pragma mark - Init Methods

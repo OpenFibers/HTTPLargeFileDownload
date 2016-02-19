@@ -75,32 +75,6 @@
 
 @interface OTHTTPRequest : NSObject
 
-#pragma mark - Class Methods
-
-+ (NSString *)urlEncode:(NSString *)stringToEncode; //Encode with UTF8
-+ (NSString *)urlEncode:(NSString *)stringToEncode usingEncoding:(NSStringEncoding)encoding;
-
-+ (NSString *)urlDecode:(NSString *)stringToDecode; //Decode with UTF8
-+ (NSString *)urlDecode:(NSString *)stringToDecode usingEncoding:(NSStringEncoding)encoding;
-
-/**
- *  Generate params string for get or post request, from dictionary.
- *
- *  @param params Param dictionary to be transform into string.
- *
- *  @return Param string.
- */
-+ (NSString *)paramsStringFromParamDictionary:(NSDictionary *)params;
-
-/**
- *  Parse params from get url request
- *
- *  @param urlString URL string to be parsed.
- *
- *  @return The result of parsing.
- */
-+ (NSDictionary *)parseGetParamsFromURLString:(NSString *)urlString;
-
 #pragma mark - Init Methods
 
 //Create request with a NSURLRequest.
