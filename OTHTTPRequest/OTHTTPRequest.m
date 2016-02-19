@@ -25,7 +25,7 @@
 
 #pragma mark - Init Methods
 
-- (instancetype)initWithURL:(NSURL *)URL
+- (nonnull instancetype)initWithURL:(nonnull NSURL *)URL
 {
     self = [super init];
     if (self)
@@ -47,14 +47,14 @@
 
 #pragma mark Get params
 
-- (NSDictionary<NSString */*key*/, NSString */*value*/> *)getParams
+- (nullable NSDictionary<NSString */*key*/, NSString */*value*/> *)getParams
 {
     NSString *queryString = _request.URL.query;
     NSDictionary *queryDictionary = [OTHTTPRequestUtils parseGetParamsFromQueryString:queryString];
     return queryDictionary;
 }
 
-- (void)setGetParams:(NSDictionary<NSString *,NSString *> *)getParams
+- (void)setGetParams:(nullable NSDictionary<NSString *,NSString *> *)getParams
 {
     NSURLComponents *mutableURL = [NSURLComponents componentsWithString:_request.URL.absoluteString];
     NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:getParams];
@@ -86,8 +86,12 @@
 
 #pragma mark Post params
 
-- (NSDictionary<NSString *,NSString *> *)postParams
+- (nullable NSDictionary<NSString *,NSString *> *)postParams
 {
+    if (self.postParamContainer.count == 0)
+    {
+        return nil;
+    }
     NSMutableDictionary *postParams = [NSMutableDictionary dictionary];
     for (OTHTTPRequestPostObject *object in self.postParamContainer)
     {
@@ -99,7 +103,7 @@
     return [NSDictionary dictionaryWithDictionary:postParams];
 }
 
-- (void)setPostParams:(NSDictionary<NSString *,NSString *> *)postParams
+- (void)setPostParams:(nullable NSDictionary<NSString *,NSString *> *)postParams
 {
     [self.postParamContainer removeAllObjects];
     for (NSString *key in postParams.allKeys)
@@ -112,7 +116,7 @@
     }
 }
 
-- (void)addPostValue:(NSString *)value forKey:(NSString *)key
+- (void)addPostValue:(nonnull NSString *)value forKey:(nonnull NSString *)key
 {
     OTHTTPRequestPostObject *object = [[OTHTTPRequestPostObject alloc] init];
     object.key = key;
@@ -120,7 +124,7 @@
     [self.postParamContainer addObject:object];
 }
 
-- (void)addFileForKey:(NSString *)key data:(NSData *)data fileName:(NSString *)fileName MIMEType:(NSString *)MIMEType
+- (void)addFileForKey:(nonnull NSString *)key data:(nonnull NSData *)data fileName:(nullable NSString *)fileName MIMEType:(nullable NSString *)MIMEType
 {
     OTHTTPRequestPostObject *object = [[OTHTTPRequestPostObject alloc] init];
     object.key = key;
@@ -130,7 +134,7 @@
     [self.postParamContainer addObject:object];
 }
 
-- (void)addFileForKey:(NSString *)key filePath:(NSString *)filePath fileName:(NSString *)fileName MIMEType:(NSString *)MIMEType
+- (void)addFileForKey:(nonnull NSString *)key filePath:(nonnull NSString *)filePath fileName:(nullable NSString *)fileName MIMEType:(nullable NSString *)MIMEType
 {
     OTHTTPRequestPostObject *object = [[OTHTTPRequestPostObject alloc] init];
     object.key = key;
@@ -142,7 +146,7 @@
 
 #pragma mark - Request and response
 
-- (NSURL *)URL
+- (nonnull NSURL *)URL
 {
     return _request.URL;
 }
@@ -166,7 +170,7 @@
     return 0;
 }
 
-- (NSData *)responseData
+- (nullable NSData *)responseData
 {
     if (_data == nil)
     {
@@ -176,7 +180,7 @@
     return returnData;
 }
 
-- (NSString *)responseString
+- (nullable NSString *)responseString
 {
     NSString *responseEncoding = [self.response textEncodingName];
     NSData *responseData = [self responseData];

@@ -13,11 +13,11 @@
 @protocol OTHTTPRequestDelegate <NSObject>
 
 @optional
-- (void)otHTTPRequestFinished:(OTHTTPRequest *)request;
-- (void)otHTTPRequestFailed:(OTHTTPRequest *)request error:(NSError *)error;
-- (void)otHTTPRequest:(OTHTTPRequest *)request didReceiveResponse:(NSURLResponse *)response;
-- (void)otHTTPRequest:(OTHTTPRequest *)request dataUpdated:(NSData *)data;
-- (void)otHTTPRequest:(OTHTTPRequest *)request dataUpdated:(NSData *)data totalData:(NSData *)totalData;
+- (void)otHTTPRequestFinished:(nonnull OTHTTPRequest *)request;
+- (void)otHTTPRequestFailed:(nonnull OTHTTPRequest *)request error:(nullable NSError *)error;
+- (void)otHTTPRequest:(nonnull OTHTTPRequest *)request didReceiveResponse:(nonnull NSURLResponse *)response;
+- (void)otHTTPRequest:(nonnull OTHTTPRequest *)request dataUpdated:(nonnull NSData *)data;
+- (void)otHTTPRequest:(nonnull OTHTTPRequest *)request dataUpdated:(nonnull NSData *)data totalData:(nonnull NSData *)totalData;
 
 @end
 
@@ -32,48 +32,48 @@
  *
  *  @return OTHTTPRequest instance
  */
-- (instancetype)initWithURL:(NSURL *)URL;
+- (nonnull instancetype)initWithURL:(nonnull NSURL *)URL;
 
 /**
  *  URL of request;
  */
-@property (nonatomic, readonly) NSURL *URL;
+@property (nonatomic, readonly, nonnull) NSURL *URL;
 
 /**
  *  Delegate of request
  */
-@property (nonatomic, weak) id<OTHTTPRequestDelegate> delegate;
+@property (nonatomic, weak, nullable) id<OTHTTPRequestDelegate> delegate;
 
 /**
  *  Custom user info
  */
-@property (nonatomic, strong) id userInfo;
+@property (nonatomic, strong, nullable) id userInfo;
 
 #pragma mark - Params
 
 /**
  *  Get/set params for request
  */
-@property (nonatomic, strong) NSDictionary<NSString */*key*/, NSString */*value*/> *getParams;
+@property (nonatomic, strong, nullable) NSDictionary<NSString */*key*/, NSString */*value*/> *getParams;
 
 /**
  *  Add get params for request
  *
  *  @param params get params to add.
  */
-- (void)addGetParams:(NSDictionary<NSString */*key*/, NSString */*value*/> *)getParams;
+- (void)addGetParams:(nonnull NSDictionary<NSString */*key*/, NSString */*value*/> *)getParams;
 
 /**
  *  Get/set post params for request
  */
-@property (nonatomic, strong) NSDictionary<NSString */*key*/, NSString */*value*/> *postParams;
+@property (nonatomic, strong, nullable) NSDictionary<NSString */*key*/, NSString */*value*/> *postParams;
 
 /**
  *  Add post params for request
  *
  *  @param params post params to add
  */
-- (void)addPostValue:(NSString *)value forKey:(NSString *)key;
+- (void)addPostValue:(nonnull NSString *)value forKey:(nonnull NSString *)key;
 
 /**
  *  Add file in post form with data
@@ -83,7 +83,7 @@
  *  @param fileName file name to post
  *  @param MIMEType MIME type to post
  */
-- (void)addFileForKey:(NSString *)key data:(NSData *)data fileName:(NSString *)fileName MIMEType:(NSString *)MIMEType;
+- (void)addFileForKey:(nonnull NSString *)key data:(nonnull NSData *)data fileName:(nullable NSString *)fileName MIMEType:(nullable NSString *)MIMEType;
 
 /**
  *  Add file in post form with data
@@ -93,7 +93,7 @@
  *  @param fileName file name to post
  *  @param MIMEType MIME type to post
  */
-- (void)addFileForKey:(NSString *)key filePath:(NSString *)filePath fileName:(NSString *)fileName MIMEType:(NSString *)MIMEType;
+- (void)addFileForKey:(nonnull NSString *)key filePath:(nonnull NSString *)filePath fileName:(nullable NSString *)fileName MIMEType:(nullable NSString *)MIMEType;
 
 #pragma mark - Options
 
@@ -115,7 +115,7 @@
 /**
  *  Get the response of request. Returns nil if response haven't reached yet.
  */
-@property (nonatomic, readonly) NSURLResponse *response;
+@property (nonatomic, readonly, nullable) NSURLResponse *response;
 
 /**
  *  Get the response code of request. Returns 0 if http url response haven't reached yet.
@@ -127,14 +127,14 @@
  *
  *  @return responsed data
  */
-- (NSData *)responseData;
+- (nullable NSData *)responseData;
 
 /**
  *  Get responsed string using response's encoding. If response has no encoding info, use UTF8 encoding.
  *
  *  @return responsed string
  */
-- (NSString *)responseString;
+- (nullable NSString *)responseString;
 
 #pragma mark - Start and cancel
 

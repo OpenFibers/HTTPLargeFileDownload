@@ -18,7 +18,7 @@
  *
  *  @return encoded string
  */
-+ (NSString *)urlEncode:(NSString *)stringToEncode;
++ (nonnull NSString *)urlEncode:(nonnull NSString *)stringToEncode;
 
 /**
  *  URL encode with custom string encoding
@@ -28,26 +28,26 @@
  *
  *  @return encoded string
  */
-+ (NSString *)urlEncode:(NSString *)stringToEncode usingEncoding:(NSStringEncoding)encoding;
++ (nonnull NSString *)urlEncode:(nonnull NSString *)stringToEncode usingEncoding:(NSStringEncoding)encoding;
 
 /**
  *  URL dncode with UTF8
  *
  *  @param stringToDecode string to be url decoded
  *
- *  @return decoded string
+ *  @return decoded string, NULL if the percent escapes cannot be converted to characters, assuming UTF8 encoding
  */
-+ (NSString *)urlDecode:(NSString *)stringToDecode; //Decode with UTF8
++ (nullable NSString *)urlDecode:(nonnull NSString *)stringToDecode; //Decode with UTF8
 
 /**
- *  URL dncode with custom string encoding
+ *  URL decode with custom string encoding
  *
  *  @param stringToDecode string to be url decoded
  *  @param encoding       custom string encoding
  *
- *  @return decoded string
+ *  @return decoded string, NULL if the percent escapes cannot be converted to characters, assuming the encoding given by encoding
  */
-+ (NSString *)urlDecode:(NSString *)stringToDecode usingEncoding:(NSStringEncoding)encoding;
++ (nullable NSString *)urlDecode:(nonnull NSString *)stringToDecode usingEncoding:(NSStringEncoding)encoding;
 
 /**
  *  Generate params string for get or post request, from dictionary.
@@ -56,7 +56,7 @@
  *
  *  @return Param string.
  */
-+ (NSString *)paramsStringFromParamDictionary:(NSDictionary<NSString *, NSString *> *)params;
++ (nonnull NSString *)paramsStringFromParamDictionary:(nullable NSDictionary<NSString *, NSString *> *)params;
 
 /**
  *  Parse GET params from query string. e.g. a=b&c=d
@@ -65,7 +65,7 @@
  *
  *  @return Parsed GET params.
  */
-+ (NSDictionary<NSString *, NSString *> *)parseGetParamsFromQueryString:(NSString *)queryString;
++ (nullable NSDictionary<NSString *, NSString *> *)parseGetParamsFromQueryString:(nullable NSString *)queryString;
 
 /**
  *  Parse Get params from URL string
@@ -74,7 +74,7 @@
  *
  *  @return Parsed GET params.
  */
-+ (NSDictionary<NSString *, NSString *> *)parseGetParamsFromURLString:(NSString *)urlString;
++ (nullable NSDictionary<NSString *, NSString *> *)parseGetParamsFromURLString:(nullable NSString *)urlString;
 
 /**
  *  Get MIME type from file extension
@@ -83,7 +83,7 @@
  *
  *  @return MIME type
  */
-+ (NSString *)MIMETypeForFileExtension:(NSString *)fileExtension;
++ (nonnull NSString *)MIMETypeForFileExtension:(nullable NSString *)fileExtension;
 
 /**
  *  Get MIME type from file name
@@ -92,6 +92,6 @@
  *
  *  @return MIME type
  */
-+ (NSString *)MIMETypeForFileName:(NSString *)fileName;
++ (nonnull NSString *)MIMETypeForFileName:(nullable NSString *)fileName;
 
 @end

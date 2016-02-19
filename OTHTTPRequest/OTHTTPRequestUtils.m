@@ -10,12 +10,12 @@
 
 @implementation OTHTTPRequestUtils
 
-+ (NSString *)urlEncode:(NSString *)stringToEncode
++ (nonnull NSString *)urlEncode:(nonnull NSString *)stringToEncode;
 {
     return [self urlEncode:stringToEncode usingEncoding:NSUTF8StringEncoding];
 }
 
-+ (NSString *)urlEncode:(NSString *)stringToEncode usingEncoding:(NSStringEncoding)encoding
++ (nonnull NSString *)urlEncode:(nonnull NSString *)stringToEncode usingEncoding:(NSStringEncoding)encoding;
 {
     return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
                                                                                  (__bridge CFStringRef)stringToEncode,
@@ -24,12 +24,12 @@
                                                                                  CFStringConvertNSStringEncodingToEncoding(encoding));
 }
 
-+ (NSString *)urlDecode:(NSString *)stringToDecode
++ (nullable NSString *)urlDecode:(nonnull NSString *)stringToDecode; //Decode with UTF8
 {
     return [self urlDecode:stringToDecode usingEncoding:NSUTF8StringEncoding];
 }
 
-+ (NSString *)urlDecode:(NSString *)stringToDecode usingEncoding:(NSStringEncoding)encoding
++ (nullable NSString *)urlDecode:(nonnull NSString *)stringToDecode usingEncoding:(NSStringEncoding)encoding;
 {
     return (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL,
                                                                                                  (__bridge CFStringRef)stringToDecode,
@@ -37,7 +37,7 @@
                                                                                                  CFStringConvertNSStringEncodingToEncoding(encoding));
 }
 
-+ (NSString *)paramsStringFromParamDictionary:(NSDictionary<NSString *, NSString *> *)params;
++ (nonnull NSString *)paramsStringFromParamDictionary:(nullable NSDictionary<NSString *, NSString *> *)params;
 {
     NSMutableString *paramString = [NSMutableString string];
     for (id key in params.allKeys)
@@ -61,8 +61,13 @@
     return [NSString stringWithString:paramString];
 }
 
-+ (NSDictionary<NSString *, NSString *> *)parseGetParamsFromQueryString:(NSString *)queryString
++ (nullable NSDictionary<NSString *, NSString *> *)parseGetParamsFromQueryString:(nullable NSString *)queryString;
 {
+    if (!queryString)
+    {
+        return nil;
+    }
+    
     NSArray *components = [queryString componentsSeparatedByString:@"&"];
     NSMutableDictionary *resultDic = [NSMutableDictionary dictionary];
     for (NSString *string in components)
@@ -81,7 +86,7 @@
     return returnDic;
 }
 
-+ (NSDictionary<NSString *, NSString *> *)parseGetParamsFromURLString:(NSString *)urlString
++ (nullable NSDictionary<NSString *, NSString *> *)parseGetParamsFromURLString:(nullable NSString *)urlString;
 {
     if (!urlString)
     {
@@ -99,7 +104,7 @@
     return result;
 }
 
-+ (NSString *)MIMETypeForFileExtension:(NSString *)fileExtension
++ (nonnull NSString *)MIMETypeForFileExtension:(nullable NSString *)fileExtension;
 {
     NSString *const defaultMIMEType = @"application/octet-stream";
     if (fileExtension.length == 0)
@@ -117,7 +122,7 @@
     return MIMETypetring;
 }
 
-+ (NSString *)MIMETypeForFileName:(NSString *)fileName
++ (nonnull NSString *)MIMETypeForFileName:(nullable NSString *)fileName;
 {
     NSString *extension = [fileName pathExtension];
     NSString *MIMEType = [self MIMETypeForFileExtension:extension];
