@@ -23,6 +23,7 @@
 		42585CA91C76B4B7005B6011 /* OTHTTPRequestUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 42585CA81C76B4B7005B6011 /* OTHTTPRequestUtils.m */; };
 		42585CB81C770078005B6011 /* UploadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42585CB71C770078005B6011 /* UploadViewController.m */; };
 		42E0D5231C771B48009B1517 /* OTHTTPRequestPostObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E0D5221C771B48009B1517 /* OTHTTPRequestPostObject.m */; };
+		42E0D52B1C7753EA009B1517 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42E0D52A1C7753EA009B1517 /* MobileCoreServices.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		42585CB71C770078005B6011 /* UploadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadViewController.m; sourceTree = "<group>"; };
 		42E0D5211C771B48009B1517 /* OTHTTPRequestPostObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTHTTPRequestPostObject.h; sourceTree = "<group>"; };
 		42E0D5221C771B48009B1517 /* OTHTTPRequestPostObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTHTTPRequestPostObject.m; sourceTree = "<group>"; };
+		42E0D52A1C7753EA009B1517 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42E0D52B1C7753EA009B1517 /* MobileCoreServices.framework in Frameworks */,
 				4233B82C17412287005F7C4C /* UIKit.framework in Frameworks */,
 				4233B82E17412287005F7C4C /* Foundation.framework in Frameworks */,
 				4233B83017412287005F7C4C /* CoreGraphics.framework in Frameworks */,
@@ -90,6 +93,7 @@
 		4233B82A17412287005F7C4C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				42E0D52A1C7753EA009B1517 /* MobileCoreServices.framework */,
 				4233B82B17412287005F7C4C /* UIKit.framework */,
 				4233B82D17412287005F7C4C /* Foundation.framework */,
 				4233B82F17412287005F7C4C /* CoreGraphics.framework */,
