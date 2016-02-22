@@ -12,6 +12,7 @@
 
 @interface OTHTTPRequest () <NSURLConnectionDataDelegate>
 @property (nonatomic, strong) NSMutableArray<OTHTTPRequestPostObject *> *postParamContainer;
+@property (nonatomic, strong) NSString *multipartFormBoundary;
 @property (nonatomic, strong) NSMutableURLRequest *request;
 @end
 
@@ -33,6 +34,13 @@
         self.request = [NSMutableURLRequest requestWithURL:URL];
         self.isLowPriority = YES;
         self.postParamContainer = [NSMutableArray array];
+        
+        // We don't bother to check if post data contains the boundary, since it's pretty unlikely that it does.
+        CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
+        NSString *uuidString = (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
+        CFRelease(uuid);
+        self.multipartFormBoundary = [NSString stringWithFormat:@"0xKhTmLbOuNdArY-%@", uuidString];
+
     }
     return self;
 }
@@ -94,12 +102,37 @@
 
 - (void)setContentTypeEncoding:(NSStringEncoding)contentTypeEncoding
 {
+    [self updateContentTypeWithEncoding:contentTypeEncoding];
+}
+
+- (void)updateContentTypeWithEncoding:(NSStringEncoding)contentTypeEncoding
+{
     NSString *encodingName = [OTHTTPRequestUtils encodingNameFromNSStringEncoding:contentTypeEncoding];
-    NSString *contentType = [OTHTTPRequestUtils HTTPContentTypeForEncodingName:encodingName];
+    NSString *contentType = @"";
+    if ([self isMultipartFormRequest])
+    {
+        contentType = [OTHTTPRequestUtils HTTPMultipartContentTypeForEncodingName:encodingName boundary:self.multipartFormBoundary];
+    }
+    else
+    {
+        contentType = [OTHTTPRequestUtils HTTPTextContentTypeForEncodingName:encodingName];
+    }
     if (contentType.length)
     {
         [self.request setValue:contentType forHTTPHeaderField:@"Content-Type"];
     }
+}
+
+- (BOOL)isMultipartFormRequest
+{
+    for (OTHTTPRequestPostObject *object in self.postParams)
+    {
+        if (object.fileData || object.filePath)
+        {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 #pragma mark - Param methods

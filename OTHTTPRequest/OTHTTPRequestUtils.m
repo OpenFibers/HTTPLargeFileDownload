@@ -183,9 +183,23 @@
     return encodingName;
 }
 
-+ (nonnull NSString *)HTTPContentTypeForEncodingName:(nonnull NSString *)encodingName
++ (nonnull NSString *)HTTPTextContentTypeForEncodingName:(nonnull NSString *)encodingName
 {
+    if (!encodingName)
+    {
+        return @"";
+    }
     NSString *result = [NSString stringWithFormat:@"text/html; charset=%@", encodingName ?: @""];
+    return result;
+}
+
++ (nonnull NSString *)HTTPMultipartContentTypeForEncodingName:(nonnull NSString *)encodingName boundary:(nonnull NSString *)boundary
+{
+    if (!encodingName || !boundary)
+    {
+        return @"";
+    }
+    NSString *result = [NSString stringWithFormat:@"multipart/form-data; charset=%@; boundary=%@", encodingName, boundary];
     return result;
 }
 

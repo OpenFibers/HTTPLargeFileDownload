@@ -122,12 +122,22 @@
 + (nullable NSString *)encodingNameFromHTTPContentType:(nonnull NSString *)contentType;
 
 /**
- *  Generate content type for encoding name string
+ *  Generate content type for text request with encoding name string
  *
  *  @param encodingName Encoding name
  *
- *  @return The generated content type for HTTP request header
+ *  @return The generated content type for HTTP request header, "text/html; charset=%@".
  */
-+ (nonnull NSString *)HTTPContentTypeForEncodingName:(nonnull NSString *)encodingName;
++ (nonnull NSString *)HTTPTextContentTypeForEncodingName:(nonnull NSString *)encodingName;
+
+/**
+ *  Generate content type for multipart/form request with encoding name string and boundary
+ *
+ *  @param encodingName Encoding name
+ *  @param boundary     Boundary of http body
+ *
+ *  @return The generated content type for HTTP request header, "multipart/form-data; charset=%@; boundary=%@".
+ */
++ (nonnull NSString *)HTTPMultipartContentTypeForEncodingName:(nonnull NSString *)encodingName boundary:(nonnull NSString *)boundary;
 
 @end
