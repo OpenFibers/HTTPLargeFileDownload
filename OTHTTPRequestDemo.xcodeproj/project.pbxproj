@@ -22,6 +22,7 @@
 		42585CA61C76AC60005B6011 /* HTTPRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42585CA51C76AC60005B6011 /* HTTPRequestViewController.m */; };
 		42585CA91C76B4B7005B6011 /* OTHTTPRequestUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 42585CA81C76B4B7005B6011 /* OTHTTPRequestUtils.m */; };
 		42585CB81C770078005B6011 /* UploadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42585CB71C770078005B6011 /* UploadViewController.m */; };
+		42627DC61C7B40890000EDCF /* OTHTTPRequestInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 42627DC51C7B40890000EDCF /* OTHTTPRequestInputStream.m */; };
 		42E0D5231C771B48009B1517 /* OTHTTPRequestPostObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E0D5221C771B48009B1517 /* OTHTTPRequestPostObject.m */; };
 		42E0D52B1C7753EA009B1517 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42E0D52A1C7753EA009B1517 /* MobileCoreServices.framework */; };
 /* End PBXBuildFile section */
@@ -52,6 +53,8 @@
 		42585CA81C76B4B7005B6011 /* OTHTTPRequestUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTHTTPRequestUtils.m; sourceTree = "<group>"; };
 		42585CB61C770078005B6011 /* UploadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadViewController.h; sourceTree = "<group>"; };
 		42585CB71C770078005B6011 /* UploadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadViewController.m; sourceTree = "<group>"; };
+		42627DC41C7B40890000EDCF /* OTHTTPRequestInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTHTTPRequestInputStream.h; sourceTree = "<group>"; };
+		42627DC51C7B40890000EDCF /* OTHTTPRequestInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTHTTPRequestInputStream.m; sourceTree = "<group>"; };
 		42E0D5211C771B48009B1517 /* OTHTTPRequestPostObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTHTTPRequestPostObject.h; sourceTree = "<group>"; };
 		42E0D5221C771B48009B1517 /* OTHTTPRequestPostObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTHTTPRequestPostObject.m; sourceTree = "<group>"; };
 		42E0D52A1C7753EA009B1517 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -158,6 +161,8 @@
 			children = (
 				42E0D5211C771B48009B1517 /* OTHTTPRequestPostObject.h */,
 				42E0D5221C771B48009B1517 /* OTHTTPRequestPostObject.m */,
+				42627DC41C7B40890000EDCF /* OTHTTPRequestInputStream.h */,
+				42627DC51C7B40890000EDCF /* OTHTTPRequestInputStream.m */,
 			);
 			path = PrivateClasses;
 			sourceTree = "<group>";
@@ -235,6 +240,7 @@
 				4233B83C17412287005F7C4C /* OTAppDelegate.m in Sources */,
 				42585CA31C76AC4F005B6011 /* DownloadViewController.m in Sources */,
 				42585CB81C770078005B6011 /* UploadViewController.m in Sources */,
+				42627DC61C7B40890000EDCF /* OTHTTPRequestInputStream.m in Sources */,
 				4233B85117412383005F7C4C /* OTHTTPDownloadRequest.m in Sources */,
 				4233B85417412486005F7C4C /* OTHTTPRequest.m in Sources */,
 			);
