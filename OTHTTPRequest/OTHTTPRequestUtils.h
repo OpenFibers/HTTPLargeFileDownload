@@ -121,4 +121,13 @@
  */
 + (nullable NSString *)encodingNameFromHTTPContentType:(nonnull NSString *)contentType;
 
+/**
+ *  Generate content type for encoding name string
+ *
+ *  @param encodingName Encoding name
+ *
+ *  @return The generated content type for HTTP request header
+ */
++ (nonnull NSString *)HTTPContentTypeForEncodingName:(nonnull NSString *)encodingName;
+
 @end

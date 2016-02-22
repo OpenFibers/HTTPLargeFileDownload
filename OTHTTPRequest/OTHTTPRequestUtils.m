@@ -182,4 +182,10 @@
     return encodingName;
 }
 
++ (nonnull NSString *)HTTPContentTypeForEncodingName:(nonnull NSString *)encodingName
+{
+    NSString *result = [NSString stringWithFormat:@"text/html; charset=%@", encodingName ?: @""];
+    return result;
+}
+
 @end
