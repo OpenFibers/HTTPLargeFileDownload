@@ -26,7 +26,7 @@
 #pragma mark - Init Methods
 
 /**
- *  Create request with a NSURL
+ *  Create request with an NSURL
  *
  *  @param URL The requesting URL
  *
@@ -73,6 +73,13 @@
  @param field the header field name (case-insensitive).
  */
 - (void)addValue:(nonnull NSString *)value forHTTPHeaderField:(nonnull NSString *)field;
+
+/**
+ *  Get/set content encoding from current request header -> Content-Type -> charset.
+ *  Return NSUTF8StringEncoding if request header -> Content-Type -> charset not setted.
+ *  If want change this property, set it before calling start.
+ */
+@property (nonatomic, assign) NSStringEncoding contentTypeEncoding;
 
 #pragma mark - Params
 

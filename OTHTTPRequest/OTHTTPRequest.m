@@ -79,6 +79,28 @@
     [_request addValue:value forHTTPHeaderField:field];
 }
 
+- (NSStringEncoding)contentTypeEncoding
+{
+    NSString *contentType = [_request allHTTPHeaderFields][@"Content-Type"];
+    NSString *encodingName = [OTHTTPRequestUtils encodingNameFromHTTPContentType:contentType];
+    NSStringEncoding encoding = [OTHTTPRequestUtils NSStringEncodingFromEncodingName:encodingName];
+    if (encoding == 0)
+    {
+        return NSUTF8StringEncoding;
+    }
+    return encoding;
+}
+
+- (void)setContentTypeEncoding:(NSStringEncoding)contentTypeEncoding
+{
+    NSString *encodingName = [OTHTTPRequestUtils encodingNameFromNSStringEncoding:contentTypeEncoding];
+    NSString *contentType = [OTHTTPRequestUtils HTTPContentTypeForEncodingName:encodingName];
+    if (contentType.length)
+    {
+        [_request setValue:contentType forHTTPHeaderField:@"Content-Type"];
+    }
+}
+
 #pragma mark - Param methods
 
 #pragma mark Get params
