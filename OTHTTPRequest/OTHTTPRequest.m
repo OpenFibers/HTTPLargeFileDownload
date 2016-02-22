@@ -40,7 +40,6 @@
         NSString *uuidString = (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
         CFRelease(uuid);
         self.multipartFormBoundary = [NSString stringWithFormat:@"0xKhTmLbOuNdArY-%@", uuidString];
-
     }
     return self;
 }
@@ -108,24 +107,30 @@
 - (void)updateContentTypeWithEncoding:(NSStringEncoding)contentTypeEncoding
 {
     NSString *encodingName = [OTHTTPRequestUtils encodingNameFromNSStringEncoding:contentTypeEncoding];
-    NSString *contentType = @"";
-    if ([self isMultipartFormRequest])
+    NSString *contentType = nil;
+    if ([self isGetRequest])
+    {
+        contentType = nil;//remove content type
+    }
+    else if ([self isMultipartFormRequest])
     {
         contentType = [OTHTTPRequestUtils HTTPMultipartContentTypeForEncodingName:encodingName boundary:self.multipartFormBoundary];
     }
     else
     {
-        contentType = [OTHTTPRequestUtils HTTPTextContentTypeForEncodingName:encodingName];
+        contentType = [OTHTTPRequestUtils HTTPWWWFormTypeForEncodingName:encodingName];
     }
-    if (contentType.length)
-    {
-        [self.request setValue:contentType forHTTPHeaderField:@"Content-Type"];
-    }
+    [self.request setValue:contentType forHTTPHeaderField:@"Content-Type"];
+}
+
+- (BOOL)isGetRequest
+{
+    return self.postParamContainer.count == 0;
 }
 
 - (BOOL)isMultipartFormRequest
 {
-    for (OTHTTPRequestPostObject *object in self.postParams)
+    for (OTHTTPRequestPostObject *object in self.postParamContainer)
     {
         if (object.fileData || object.filePath)
         {

@@ -183,13 +183,13 @@
     return encodingName;
 }
 
-+ (nonnull NSString *)HTTPTextContentTypeForEncodingName:(nonnull NSString *)encodingName
++ (nonnull NSString *)HTTPWWWFormTypeForEncodingName:(nonnull NSString *)encodingName
 {
     if (!encodingName)
     {
         return @"";
     }
-    NSString *result = [NSString stringWithFormat:@"text/html; charset=%@", encodingName ?: @""];
+    NSString *result = [NSString stringWithFormat:@"application/x-www-form-urlencoded; charset=%@", encodingName ?: @""];
     return result;
 }
 
