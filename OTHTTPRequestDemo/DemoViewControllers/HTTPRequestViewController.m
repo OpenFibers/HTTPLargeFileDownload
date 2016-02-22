@@ -109,12 +109,12 @@ static NSString * const RequestURLString = @"https://www.google.com";
 {
     NSString *responseString = request.responseString;
     _infoView.text = responseString;
-    NSLog(@"Request finished with response string:\n%@", responseString);
 }
 
 - (void)otHTTPRequestFailed:(OTHTTPRequest *)request error:(NSError *)error
 {
-    NSLog(@"Request failed with error: %@", error);
+    NSString *errorString = [NSString stringWithFormat:@"Request failed with error: %@", error];
+    _infoView.text = errorString;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
