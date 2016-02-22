@@ -9,6 +9,7 @@
 #import "OTHTTPRequest.h"
 #import "OTHTTPRequestUtils.h"
 #import "OTHTTPRequestPostObject.h"
+#import "OTHTTPRequestInputStream.h"
 
 @interface OTHTTPRequest () <NSURLConnectionDataDelegate>
 @property (nonatomic, strong) NSMutableArray<OTHTTPRequestPostObject *> *postParamContainer;
@@ -252,6 +253,24 @@
     [self updateContentTypeWithEncoding:self.contentTypeEncoding];
 }
 
+#pragma mark - Build HTTP Body
+
+- (void)buildHTTPBody
+{
+    if ([self isGetRequest])
+    {
+        [self.request setHTTPMethod:@"GET"];
+    }
+    else
+    {
+        [self.request setHTTPMethod:@"POST"];
+        OTHTTPRequestInputStream *stream = [[OTHTTPRequestInputStream alloc] init];
+        [stream setupHTTPBodyWithObjects:self.postParamContainer];
+        [self.request setHTTPBodyStream:stream];
+    }
+}
+
+
 #pragma mark - Request and response
 
 - (nonnull NSURL *)URL
@@ -327,6 +346,8 @@
 - (void)beginConnection
 {
     _receivedData = [NSMutableData data];
+    [self buildHTTPBody];
+    
     _connection = [[NSURLConnection alloc] initWithRequest:self.request delegate:self startImmediately:NO];
     if (!self.isLowPriority)
     {
