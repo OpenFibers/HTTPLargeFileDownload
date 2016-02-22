@@ -140,7 +140,7 @@
 
 + (NSStringEncoding)NSStringEncodingFromEncodingName:(nonnull NSString *)encodingName
 {
-    if (encodingName == nil)
+    if (encodingName.length == 0)
     {
         return 0;
     }
@@ -148,6 +148,38 @@
     CFStringEncoding stringEncodingRef = CFStringConvertIANACharSetNameToEncoding(encodingNameRef);
     NSStringEncoding stringEncoding = CFStringConvertEncodingToNSStringEncoding(stringEncodingRef);
     return stringEncoding;
+}
+
++ (nullable NSString *)encodingNameFromHTTPContentType:(nonnull NSString *)contentType
+{
+    if (contentType.length == 0)
+    {
+        return nil;
+    }
+    
+    //remove all white space, and convert to lower case
+    NSArray *words = [contentType componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *noSpaceString = [words componentsJoinedByString:@""];
+    noSpaceString = [noSpaceString lowercaseString];
+    
+    //separate from ;
+    //then get the component begin with charset=
+    NSArray *components = [noSpaceString componentsSeparatedByString:@";"];
+    NSString *const charsetPrefix = @"charset=";
+    NSString *encodingName = nil;
+    for (NSString *eachComponent in components)
+    {
+        if ([eachComponent hasPrefix:charsetPrefix])
+        {
+            NSString *charsetValue = [eachComponent substringFromIndex:charsetPrefix.length];
+            if (charsetValue.length != 0)
+            {
+                encodingName = charsetValue;
+                break;
+            }
+        }
+    }
+    return encodingName;
 }
 
 @end

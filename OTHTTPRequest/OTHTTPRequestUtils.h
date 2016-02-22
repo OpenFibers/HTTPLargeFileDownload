@@ -112,4 +112,13 @@
  */
 + (NSStringEncoding)NSStringEncodingFromEncodingName:(nonnull NSString *)encodingName;
 
+/**
+ *  Get encoding name for HTTP content type (often from request header's content type)
+ *
+ *  @param contentType HTTP content type
+ *
+ *  @return Encoding name. Return nil if content type not recognized.
+ */
++ (nullable NSString *)encodingNameFromHTTPContentType:(nonnull NSString *)contentType;
+
 @end
