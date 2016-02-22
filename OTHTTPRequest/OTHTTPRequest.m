@@ -198,12 +198,20 @@
 - (void)setPostParams:(nullable NSDictionary<NSString *,NSString *> *)postParams
 {
     [self.postParamContainer removeAllObjects];
-    for (NSString *key in postParams.allKeys)
+    
+    if (postParams.allKeys.count)
     {
-        NSString *value = postParams[key];
-        if ([key isKindOfClass:[NSString class]] && [value isKindOfClass:[NSString class]])
+        [self updateContentTypeWithEncoding:self.contentTypeEncoding];
+    }
+    else
+    {
+        for (NSString *key in postParams.allKeys)
         {
-            [self addPostValue:value forKey:key];
+            NSString *value = postParams[key];
+            if ([key isKindOfClass:[NSString class]] && [value isKindOfClass:[NSString class]])
+            {
+                [self addPostValue:value forKey:key];
+            }
         }
     }
 }
@@ -214,6 +222,7 @@
     object.key = key;
     object.value = value;
     [self.postParamContainer addObject:object];
+    [self updateContentTypeWithEncoding:self.contentTypeEncoding];
 }
 
 - (void)addFileForKey:(nonnull NSString *)key data:(nonnull NSData *)data fileName:(nullable NSString *)fileName MIMEType:(nullable NSString *)MIMEType
@@ -224,6 +233,7 @@
     object.fileName = fileName;
     object.MIMEType = MIMEType;
     [self.postParamContainer addObject:object];
+    [self updateContentTypeWithEncoding:self.contentTypeEncoding];
 }
 
 - (void)addFileForKey:(nonnull NSString *)key filePath:(nonnull NSString *)filePath fileName:(nullable NSString *)fileName MIMEType:(nullable NSString *)MIMEType
@@ -234,6 +244,7 @@
     object.fileName = fileName;
     object.MIMEType = MIMEType;
     [self.postParamContainer addObject:object];
+    [self updateContentTypeWithEncoding:self.contentTypeEncoding];
 }
 
 #pragma mark - Request and response
