@@ -12,11 +12,11 @@
 
 @interface OTHTTPRequest () <NSURLConnectionDataDelegate>
 @property (nonatomic, strong) NSMutableArray<OTHTTPRequestPostObject *> *postParamContainer;
+@property (nonatomic, strong) NSMutableURLRequest *request;
 @end
 
 @implementation OTHTTPRequest
 {
-    NSMutableURLRequest *_request;
     NSURLResponse *_response;
 
     NSMutableData *_data;
@@ -30,7 +30,7 @@
     self = [super init];
     if (self)
     {
-        _request = [NSMutableURLRequest requestWithURL:URL];
+        self.request = [NSMutableURLRequest requestWithURL:URL];
         self.isLowPriority = YES;
         self.postParamContainer = [NSMutableArray array];
     }
@@ -63,7 +63,7 @@
         }
         if (cookieHeader)
         {
-            [_request setValue:cookieHeader forHTTPHeaderField:@"Cookie"];
+            [self.request setValue:cookieHeader forHTTPHeaderField:@"Cookie"];
         }
     }
 }
@@ -75,12 +75,12 @@
 
 - (void)addValue:(nonnull NSString *)value forHTTPHeaderField:(nonnull NSString *)field
 {
-    [_request addValue:value forHTTPHeaderField:field];
+    [self.request addValue:value forHTTPHeaderField:field];
 }
 
 - (NSStringEncoding)contentTypeEncoding
 {
-    NSString *contentType = [_request allHTTPHeaderFields][@"Content-Type"];
+    NSString *contentType = [self.request allHTTPHeaderFields][@"Content-Type"];
     NSString *encodingName = [OTHTTPRequestUtils encodingNameFromHTTPContentType:contentType];
     NSStringEncoding encoding = [OTHTTPRequestUtils NSStringEncodingFromEncodingName:encodingName];
     if (encoding == 0 ||
@@ -98,7 +98,7 @@
     NSString *contentType = [OTHTTPRequestUtils HTTPContentTypeForEncodingName:encodingName];
     if (contentType.length)
     {
-        [_request setValue:contentType forHTTPHeaderField:@"Content-Type"];
+        [self.request setValue:contentType forHTTPHeaderField:@"Content-Type"];
     }
 }
 
@@ -108,23 +108,23 @@
 
 - (nullable NSDictionary<NSString */*key*/, NSString */*value*/> *)getParams
 {
-    NSString *queryString = _request.URL.query;
+    NSString *queryString = self.request.URL.query;
     NSDictionary *queryDictionary = [OTHTTPRequestUtils parseGetParamsFromQueryString:queryString];
     return queryDictionary;
 }
 
 - (void)setGetParams:(nullable NSDictionary<NSString *,NSString *> *)getParams
 {
-    NSURLComponents *mutableURL = [NSURLComponents componentsWithString:_request.URL.absoluteString];
+    NSURLComponents *mutableURL = [NSURLComponents componentsWithString:self.request.URL.absoluteString];
     NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:getParams];
     mutableURL.query = paramString;
     NSURL *newURL = mutableURL.URL;
-    _request.URL = newURL;
+    self.request.URL = newURL;
 }
 
 - (void)addGetParams:(NSDictionary<NSString *,NSString *> *)getParams
 {
-    NSURLComponents *mutableURL = [NSURLComponents componentsWithString:_request.URL.absoluteString];
+    NSURLComponents *mutableURL = [NSURLComponents componentsWithString:self.request.URL.absoluteString];
     NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:getParams];
     NSString *oldQuery = mutableURL.query;
     if (oldQuery)
@@ -140,7 +140,7 @@
     }
     mutableURL.query = paramString;
     NSURL *newURL = mutableURL.URL;
-    _request.URL = newURL;
+    self.request.URL = newURL;
 }
 
 #pragma mark Post params
@@ -207,12 +207,7 @@
 
 - (nonnull NSURL *)URL
 {
-    return _request.URL;
-}
-
-- (NSURLRequest *)request
-{
-    return _request;
+    return self.request.URL;
 }
 
 - (NSURLResponse *)response
@@ -283,7 +278,7 @@
 - (void)beginConnection
 {
     _data = [NSMutableData data];
-    _connection = [[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:NO];
+    _connection = [[NSURLConnection alloc] initWithRequest:self.request delegate:self startImmediately:NO];
     if (!self.isLowPriority)
     {
         [_connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
