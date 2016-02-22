@@ -32,7 +32,6 @@
     {
         _request = [NSMutableURLRequest requestWithURL:URL];
         self.isLowPriority = YES;
-        self.shouldClearCachedResponseWhenRequestDone = YES;
         self.postParamContainer = [NSMutableArray array];
     }
     return self;
@@ -323,13 +322,6 @@
     {
         [self.delegate otHTTPRequestFinished:self];
     }
-    if (self.shouldClearCachedResponseWhenRequestDone)
-    {
-        if (_request.URL)
-        {
-            [[NSURLCache sharedURLCache] removeCachedResponseForRequest:_request];
-        }
-    }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
@@ -337,13 +329,6 @@
     if ([self.delegate respondsToSelector:@selector(otHTTPRequestFailed:error:)])
     {
         [self.delegate otHTTPRequestFailed:self error:error];
-    }
-    if (self.shouldClearCachedResponseWhenRequestDone)
-    {
-        if (_request.URL)
-        {
-            [[NSURLCache sharedURLCache] removeCachedResponseForRequest:_request];
-        }
     }
     [self cancel];
 }

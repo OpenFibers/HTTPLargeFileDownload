@@ -136,12 +136,6 @@
  */
 @property (nonatomic, assign) BOOL isLowPriority;
 
-/**
- *  If set to YES, when request done, cached response will be cleared. 
- *  To avoid memory issues, default is YES.
- */
-@property (nonatomic, assign) BOOL shouldClearCachedResponseWhenRequestDone;
-
 #pragma mark - Request and response
 
 /**
