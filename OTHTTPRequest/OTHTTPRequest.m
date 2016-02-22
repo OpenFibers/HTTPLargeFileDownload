@@ -84,7 +84,9 @@
     NSString *contentType = [_request allHTTPHeaderFields][@"Content-Type"];
     NSString *encodingName = [OTHTTPRequestUtils encodingNameFromHTTPContentType:contentType];
     NSStringEncoding encoding = [OTHTTPRequestUtils NSStringEncodingFromEncodingName:encodingName];
-    if (encoding == 0)
+    if (encoding == 0 ||
+        encoding == 0xffffffff/*apple returns a 4 bytes -1 on 16 bits CPU, not 8 bytes*/ ||
+        encoding == NSNotFound)
     {
         return NSUTF8StringEncoding;
     }
