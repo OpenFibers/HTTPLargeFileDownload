@@ -20,7 +20,7 @@
 {
     NSURLResponse *_response;
 
-    NSMutableData *_data;
+    NSMutableData *_receivedData;
     NSURLConnection *_connection;
 }
 
@@ -270,11 +270,11 @@
 
 - (nullable NSData *)responseData
 {
-    if (_data == nil)
+    if (_receivedData == nil)
     {
         return nil;
     }
-    NSData *returnData = [NSData dataWithData:_data];
+    NSData *returnData = [NSData dataWithData:_receivedData];
     return returnData;
 }
 
@@ -301,7 +301,7 @@
 {
     [_connection cancel];
     _connection = nil;
-    _data = nil;
+    _receivedData = nil;
     _response = nil;
 }
 
@@ -321,7 +321,7 @@
 
 - (void)beginConnection
 {
-    _data = [NSMutableData data];
+    _receivedData = [NSMutableData data];
     _connection = [[NSURLConnection alloc] initWithRequest:self.request delegate:self startImmediately:NO];
     if (!self.isLowPriority)
     {
@@ -343,14 +343,14 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    [_data appendData:data];
+    [_receivedData appendData:data];
     if ([self.delegate respondsToSelector:@selector(otHTTPRequest:dataUpdated:)])
     {
         [self.delegate otHTTPRequest:self dataUpdated:data];
     }
     if ([self.delegate respondsToSelector:@selector(otHTTPRequest:dataUpdated:totalData:)])
     {
-        NSData *callbackData = [NSData dataWithData:_data];
+        NSData *callbackData = [NSData dataWithData:_receivedData];
         [self.delegate otHTTPRequest:self dataUpdated:data totalData:callbackData];
     }
 }
