@@ -94,4 +94,22 @@
  */
 + (nonnull NSString *)MIMETypeForFileName:(nullable NSString *)fileName;
 
+/**
+ *  Get encoding Name for NSStringEncoding.
+ *
+ *  @param stringEncoding A specific NSStringEncoding.
+ *
+ *  @return Converted name of encoding. Return nil if stringEncoding is illegal.
+ */
++ (nullable NSString *)encodingNameFromNSStringEncoding:(NSStringEncoding)stringEncoding;
+
+/**
+ *  Get NSStringEncoding for encoding name
+ *
+ *  @param encodingName Encoding name string
+ *
+ *  @return Converted NSStringEncoding. Return 0 if encodingName not recognized.
+ */
++ (NSStringEncoding)NSStringEncodingFromEncodingName:(nonnull NSString *)encodingName;
+
 @end

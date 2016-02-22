@@ -130,4 +130,24 @@
     return MIMEType;
 }
 
++ (nullable NSString *)encodingNameFromNSStringEncoding:(NSStringEncoding)stringEncoding
+{
+    CFStringEncoding cfStringEncoding = CFStringConvertNSStringEncodingToEncoding(stringEncoding);
+    CFStringRef encodingNameRef = CFStringConvertEncodingToIANACharSetName(cfStringEncoding);
+    NSString *encoding = (__bridge NSString *)encodingNameRef;
+    return encoding;
+}
+
++ (NSStringEncoding)NSStringEncodingFromEncodingName:(nonnull NSString *)encodingName
+{
+    if (encodingName == nil)
+    {
+        return 0;
+    }
+    CFStringRef encodingNameRef = (__bridge CFStringRef)encodingName;
+    CFStringEncoding stringEncodingRef = CFStringConvertIANACharSetNameToEncoding(encodingNameRef);
+    NSStringEncoding stringEncoding = CFStringConvertEncodingToNSStringEncoding(stringEncodingRef);
+    return stringEncoding;
+}
+
 @end
