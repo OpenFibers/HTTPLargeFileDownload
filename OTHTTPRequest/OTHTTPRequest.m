@@ -267,8 +267,11 @@
         if ([self isMultipartFormRequest])
         {
             OTMultipartFormRequestInputStream *stream = [[OTMultipartFormRequestInputStream alloc] initWithEncoding:self.contentTypeEncoding];
-            [stream setupHTTPBodyWithObjects:self.postParamContainer boundary:self.multipartFormBoundary];
+            unsigned long long length = [stream setupHTTPBodyWithObjects:self.postParamContainer boundary:self.multipartFormBoundary];
             [self.request setHTTPBodyStream:stream];
+            
+            NSString *postLength = [NSString stringWithFormat:@"%tu", length];
+            [self.request setValue:postLength forHTTPHeaderField:@"Content-Length"];
         }
         else
         {

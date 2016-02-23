@@ -35,9 +35,9 @@
     return self;
 }
 
-- (void)setupHTTPBodyWithObjects:(NSArray<OTHTTPRequestPostObject *> *)objects boundary:(NSString *)boundary
+- (unsigned long long)setupHTTPBodyWithObjects:(NSArray<OTHTTPRequestPostObject *> *)objects boundary:(NSString *)boundary
 {
-    
+    return 0;
 }
 
 
