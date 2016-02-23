@@ -275,7 +275,7 @@
         }
         else
         {
-            NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:self.postParams];
+            NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:self.postParams encoding:self.contentTypeEncoding];
             NSData *postData = [paramString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
             [self.request setHTTPBody:postData];
             

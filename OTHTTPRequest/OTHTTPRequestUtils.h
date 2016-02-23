@@ -50,13 +50,24 @@
 + (nullable NSString *)urlDecode:(nonnull NSString *)stringToDecode usingEncoding:(NSStringEncoding)encoding;
 
 /**
- *  Generate params string for get or post request, from dictionary.
+ *  Generate params string for get or post request, from dictionary. Using UTF-8 encoding.
  *
  *  @param params Param dictionary to be transform into string.
  *
  *  @return Param string.
  */
 + (nonnull NSString *)paramsStringFromParamDictionary:(nullable NSDictionary<NSString *, NSString *> *)params;
+
+/**
+ *  Generate params string for get or post request, from dictionary. Using UTF-8 encoding.
+ *
+ *  @param params Param dictionary to be transform into string.
+ *  @param encoding A specific string encoding.
+ *
+ *  @return Param string.
+ */
++ (nonnull NSString *)paramsStringFromParamDictionary:(nullable NSDictionary<NSString *, NSString *> *)params
+                                             encoding:(NSStringEncoding)encoding;
 
 /**
  *  Parse GET params from query string. e.g. a=b&c=d

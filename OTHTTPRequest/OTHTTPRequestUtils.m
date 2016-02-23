@@ -39,6 +39,12 @@
 
 + (nonnull NSString *)paramsStringFromParamDictionary:(nullable NSDictionary<NSString *, NSString *> *)params
 {
+    return [self paramsStringFromParamDictionary:params encoding:NSUTF8StringEncoding];
+}
+
++ (nonnull NSString *)paramsStringFromParamDictionary:(nullable NSDictionary<NSString *, NSString *> *)params
+                                             encoding:(NSStringEncoding)encoding
+{
     NSMutableString *paramString = [NSMutableString string];
     for (id key in params.allKeys)
     {
@@ -47,9 +53,9 @@
             NSString *value = params[key];
             if ([value isKindOfClass:[NSString class]])
             {
-                [paramString appendString:[self urlEncode:key]];
+                [paramString appendString:[self urlEncode:key usingEncoding:encoding]];
                 [paramString appendString:@"="];
-                [paramString appendString:[self urlEncode:value]];
+                [paramString appendString:[self urlEncode:value usingEncoding:encoding]];
                 
                 if ([params.allKeys lastObject] != key)
                 {
