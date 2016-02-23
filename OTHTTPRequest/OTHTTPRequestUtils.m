@@ -157,22 +157,22 @@
         return nil;
     }
     
-    //separate from ;
+    //remove all white space, and convert to lower case
+    NSArray *words = [contentType componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *noSpaceString = [words componentsJoinedByString:@""];
+    noSpaceString = [noSpaceString lowercaseString];
+
+    //separate from ; and ,
     //then get the component begin with charset=
-    NSArray *components = [contentType componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@";,"]];
+    NSArray *components = [noSpaceString componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@";,"]];
     NSString *const charsetPrefix = @"charset=";
     NSString *encodingName = nil;
     for (NSString *eachComponent in components)
     {
-        //remove all white space, and convert to lower case
-        NSArray *words = [eachComponent componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        NSString *noSpaceString = [words componentsJoinedByString:@""];
-        noSpaceString = [noSpaceString lowercaseString];
-
         //check if has prefix charset=
-        if ([noSpaceString hasPrefix:charsetPrefix])
+        if ([eachComponent hasPrefix:charsetPrefix])
         {
-            NSString *charsetValue = [noSpaceString substringFromIndex:charsetPrefix.length];
+            NSString *charsetValue = [eachComponent substringFromIndex:charsetPrefix.length];
             if (charsetValue.length != 0)
             {
                 encodingName = charsetValue;
