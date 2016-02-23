@@ -94,9 +94,13 @@ static NSString * const RequestURLString = @"https://www.google.com";
         [_request cancel];
         _request = nil;
     }
+    
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"Default" ofType:@"png"];
+    
     NSString *downloadURLString = _requestURLTextField.text;
     _request = [[OTHTTPRequest alloc] initWithURL:[NSURL URLWithString:downloadURLString]];
     [_request addPostValue:@"post_value" forKey:@"key"];
+    [_request addFileForKey:@"file" filePath:filePath fileName:@"Default.png" MIMEType:nil];
     _request.delegate = self;
     [_request start];
 }
