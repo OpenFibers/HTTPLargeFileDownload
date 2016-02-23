@@ -110,20 +110,20 @@
 /**
  *  Add file in post form with data
  *
- *  @param key      file key to post
- *  @param data     file data to add
- *  @param fileName file name to post
- *  @param MIMEType MIME type to post
+ *  @param key      File key to post
+ *  @param data     File data to post in multiform request
+ *  @param fileName File name to post. If not specificed, will use the file path last component.
+ *  @param MIMEType MIME type to post. If not specificed, will use extension of fileName.
  */
 - (void)addFileForKey:(nonnull NSString *)key data:(nonnull NSData *)data fileName:(nullable NSString *)fileName MIMEType:(nullable NSString *)MIMEType;
 
 /**
  *  Add file in post form with data
  *
- *  @param key      file key to post
- *  @param filePath file path to add
- *  @param fileName file name to post
- *  @param MIMEType MIME type to post
+ *  @param key      File key to post
+ *  @param filePath File absolute path to post in multiform request
+ *  @param fileName File name to post. If not specificed, will use the file path last component.
+ *  @param MIMEType MIME type to post. If not specificed, will use extension of fileName.
  */
 - (void)addFileForKey:(nonnull NSString *)key filePath:(nonnull NSString *)filePath fileName:(nullable NSString *)fileName MIMEType:(nullable NSString *)MIMEType;
 
