@@ -9,7 +9,7 @@
 #import "OTHTTPRequest.h"
 #import "OTHTTPRequestUtils.h"
 #import "OTHTTPRequestPostObject.h"
-#import "OTHTTPRequestInputStream.h"
+#import "OTMultipartFormRequestInputStream.h"
 
 @interface OTHTTPRequest () <NSURLConnectionDataDelegate>
 @property (nonatomic, strong) NSMutableArray<OTHTTPRequestPostObject *> *postParamContainer;
@@ -40,7 +40,7 @@
         CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
         NSString *uuidString = (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
         CFRelease(uuid);
-        self.multipartFormBoundary = [NSString stringWithFormat:@"0xKhTmLbOuNdArY-%@", uuidString];
+        self.multipartFormBoundary = [NSString stringWithFormat:@"--OTHTTPRequest-%@", uuidString];
     }
     return self;
 }
@@ -264,9 +264,21 @@
     else
     {
         [self.request setHTTPMethod:@"POST"];
-        OTHTTPRequestInputStream *stream = [[OTHTTPRequestInputStream alloc] init];
-        [stream setupHTTPBodyWithObjects:self.postParamContainer];
-        [self.request setHTTPBodyStream:stream];
+        if ([self isMultipartFormRequest])
+        {
+            OTMultipartFormRequestInputStream *stream = [[OTMultipartFormRequestInputStream alloc] initWithEncoding:self.contentTypeEncoding];
+            [stream setupHTTPBodyWithObjects:self.postParamContainer boundary:self.multipartFormBoundary];
+            [self.request setHTTPBodyStream:stream];
+        }
+        else
+        {
+            NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:self.postParams];
+            NSData *postData = [paramString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+            [self.request setHTTPBody:postData];
+            
+            NSString *postLength = [NSString stringWithFormat:@"%tu", [postData length]];
+            [self.request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+        }
     }
 }
 
