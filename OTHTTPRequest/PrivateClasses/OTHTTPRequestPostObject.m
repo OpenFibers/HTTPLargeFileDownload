@@ -71,6 +71,11 @@
     _MIMEType = MIMEType;
 }
 
+- (BOOL)isFileObject
+{
+    return self.fileData || self.isFileExist;
+}
+
 - (BOOL)isFileExist
 {
     if (self.filePath.length == 0)

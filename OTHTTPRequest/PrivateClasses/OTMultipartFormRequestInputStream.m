@@ -19,6 +19,8 @@
 @synthesize streamStatus = _streamStatus;
 @synthesize delegate = _delegate;
 
+#pragma mark - Life cycle
+
 - (instancetype)initWithEncoding:(NSStringEncoding)encoding
 {
     self = [super init];
@@ -29,6 +31,7 @@
             self.encoding = NSUTF8StringEncoding;
         }
         self.encoding = encoding;
+        self.formParts = [NSMutableArray array];
     }
     return self;
 }
@@ -39,10 +42,110 @@
     return self;
 }
 
+- (void)dealloc
+{
+    
+}
+
+#pragma mark - Body part methods
+
 - (unsigned long long)setupHTTPBodyWithObjects:(NSArray<OTHTTPRequestPostObject *> *)objects boundary:(NSString *)boundary
 {
+    if (objects.count == 0)
+    {
+        return 0;
+    }
+    
+    OTMultipartFormRequestBodyPart *separatorPart = [self separatorBoundaryPart:boundary];
+    
+    OTMultipartFormRequestBodyPart *beginPart = [self beginPartWithBoundary:boundary];
+    [self.formParts addObject:beginPart];
+    
+    for (OTHTTPRequestPostObject *eachObject in objects)
+    {
+        if (eachObject.isFileObject)
+        {
+            OTMultipartFormRequestBodyPart *headerPart = [self fileHeaderPartWithPostFileObject:eachObject];
+            [self.formParts addObject:headerPart];
+            
+            OTMultipartFormRequestBodyPart *bodyPart = [self fileBodyPartWithPostFileObject:eachObject];
+            [self.formParts addObject:bodyPart];
+        }
+        else
+        {
+            OTMultipartFormRequestBodyPart *stringParamPart = [self stringParamPartWithPostFileObject:eachObject];
+            [self.formParts addObject:stringParamPart];
+        }
+        
+        if (eachObject != objects.lastObject)
+        {
+            [self.formParts addObject:separatorPart];
+        }
+    }
+    
+    OTMultipartFormRequestBodyPart *endPart = [self endBoundaryPart:boundary];
+    [self.formParts addObject:endPart];
+    
     return 0;
 }
+
+- (OTMultipartFormRequestBodyPart *)beginPartWithBoundary:(NSString *)boundary
+{
+    NSString *beginBoundary = [NSString stringWithFormat:@"--%@\r\n", boundary];
+    OTMultipartFormRequestBodyPart *beginPart = [[OTMultipartFormRequestBodyPart alloc] initWithString:beginBoundary encoding:self.encoding];
+    return beginPart;
+}
+
+- (OTMultipartFormRequestBodyPart *)separatorBoundaryPart:(NSString *)boundary
+{
+    NSString *separatorBoundary = [NSString stringWithFormat:@"\r\n--%@\r\n", boundary];
+    OTMultipartFormRequestBodyPart *separatorPart = [[OTMultipartFormRequestBodyPart alloc] initWithString:separatorBoundary encoding:self.encoding];
+    return separatorPart;
+}
+
+- (OTMultipartFormRequestBodyPart *)endBoundaryPart:(NSString *)boundary
+{
+    NSString *separatorBoundary = [NSString stringWithFormat:@"\r\n--%@--\r\n", boundary];
+    OTMultipartFormRequestBodyPart *separatorPart = [[OTMultipartFormRequestBodyPart alloc] initWithString:separatorBoundary encoding:self.encoding];
+    return separatorPart;
+}
+
+- (OTMultipartFormRequestBodyPart *)stringParamPartWithPostFileObject:(OTHTTPRequestPostObject *)object
+{
+    NSString *partString = [NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n%@", object.key, object.value ?: @""];
+    NSData *partData = [partString dataUsingEncoding:self.encoding];
+    OTMultipartFormRequestBodyPart *part = [[OTMultipartFormRequestBodyPart alloc] initWithData:partData];
+    return part;
+}
+
+- (OTMultipartFormRequestBodyPart *)fileHeaderPartWithPostFileObject:(OTHTTPRequestPostObject *)object
+{
+    if (object.isFileExist)
+    {
+        NSString *partString = [NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\nContent-Type: %@\r\n\r\n", object.key, object.fileName, object.MIMEType];
+        NSData *partData = [partString dataUsingEncoding:self.encoding];
+        OTMultipartFormRequestBodyPart *part = [[OTMultipartFormRequestBodyPart alloc] initWithData:partData];
+        return part;
+    }
+    return nil;
+}
+
+- (OTMultipartFormRequestBodyPart *)fileBodyPartWithPostFileObject:(OTHTTPRequestPostObject *)object
+{
+    if (object.fileData)
+    {
+        OTMultipartFormRequestBodyPart *bodyPart = [[OTMultipartFormRequestBodyPart alloc] initWithData:object.fileData];
+        return bodyPart;
+    }
+    else if(object.isFileExist)
+    {
+        OTMultipartFormRequestBodyPart *bodyPart = [[OTMultipartFormRequestBodyPart alloc] initWithFilePath:object.filePath];
+        return bodyPart;
+    }
+    return nil;
+}
+
+#pragma mark - NSInputStream methods
 
 - (NSInteger)read:(uint8_t *)buffer maxLength:(NSUInteger)length
 {
