@@ -12,7 +12,9 @@
 @interface OTMultipartFormRequestInputStream () <NSStreamDelegate>
 @property (nonatomic, readwrite) NSStreamStatus streamStatus;
 @property (nonatomic, assign) NSStringEncoding encoding;
-@property (nonatomic, strong) NSMutableArray *formParts;
+@property (nonatomic, strong) NSMutableArray<OTMultipartFormRequestBodyPart *> *formParts;
+@property (nonatomic, strong) OTMultipartFormRequestBodyPart *currentReadingBodyPart;
+@property (nonatomic, strong) NSEnumerator *HTTPBodyEnumerator;
 @end
 
 @implementation OTMultipartFormRequestInputStream
@@ -95,6 +97,8 @@
     
     OTMultipartFormRequestBodyPart *endPart = [self endBoundaryPart:boundary];
     [self.formParts addObject:endPart];
+    
+    self.HTTPBodyEnumerator = self.formParts.objectEnumerator;
 }
 
 - (OTMultipartFormRequestBodyPart *)beginPartWithBoundary:(NSString *)boundary
