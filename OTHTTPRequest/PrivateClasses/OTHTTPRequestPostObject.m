@@ -71,6 +71,17 @@
     _MIMEType = MIMEType;
 }
 
+- (BOOL)isFileExist
+{
+    if (self.filePath.length == 0)
+    {
+        return NO;
+    }
+    BOOL isDirectory = NO;
+    BOOL exist = [[NSFileManager defaultManager] fileExistsAtPath:self.filePath isDirectory:&isDirectory];
+    return exist && !isDirectory;
+}
+
 - (BOOL)isUploadObject
 {
     return self.fileData.length != 0 || self.filePath.length != 0;
