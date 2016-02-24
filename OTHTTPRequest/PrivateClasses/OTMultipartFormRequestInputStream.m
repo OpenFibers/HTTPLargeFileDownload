@@ -49,11 +49,21 @@
 
 #pragma mark - Body part methods
 
-- (unsigned long long)setupHTTPBodyWithObjects:(NSArray<OTHTTPRequestPostObject *> *)objects boundary:(NSString *)boundary
+- (unsigned long long)contentLength
+{
+    unsigned long long totalLength = 0;
+    for (OTMultipartFormRequestBodyPart *part in self.formParts)
+    {
+        totalLength += part.length;
+    }
+    return totalLength;
+}
+
+- (void)setupHTTPBodyWithObjects:(NSArray<OTHTTPRequestPostObject *> *)objects boundary:(NSString *)boundary
 {
     if (objects.count == 0)
     {
-        return 0;
+        return;
     }
     
     OTMultipartFormRequestBodyPart *separatorPart = [self separatorBoundaryPart:boundary];
@@ -85,8 +95,6 @@
     
     OTMultipartFormRequestBodyPart *endPart = [self endBoundaryPart:boundary];
     [self.formParts addObject:endPart];
-    
-    return 0;
 }
 
 - (OTMultipartFormRequestBodyPart *)beginPartWithBoundary:(NSString *)boundary

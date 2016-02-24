@@ -28,6 +28,13 @@
  *
  *  @return The length of body content
  */
-- (unsigned long long)setupHTTPBodyWithObjects:(nullable NSArray<OTHTTPRequestPostObject *> *)objects boundary:(nonnull NSString *)boundary;
+- (void)setupHTTPBodyWithObjects:(nullable NSArray<OTHTTPRequestPostObject *> *)objects boundary:(nonnull NSString *)boundary;
+
+/**
+ *  Get content length after `setupHTTPBodyWithObjects:boundary:`
+ *
+ *  @return The length of body content
+ */
+- (unsigned long long)contentLength;
 
 @end

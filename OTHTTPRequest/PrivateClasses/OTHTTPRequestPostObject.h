@@ -29,7 +29,7 @@
 @property (nonatomic, strong) NSString *filePath;
 
 //if object stands for a uploading file
-@property (nonatomic, strong) BOOL isFileObject;
+@property (nonatomic, readonly) BOOL isFileObject;
 
 //if file at filePath is a normal file, not directory
 @property (nonatomic, readonly) BOOL isFileExist;
