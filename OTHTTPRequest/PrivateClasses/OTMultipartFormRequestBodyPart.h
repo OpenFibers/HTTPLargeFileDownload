@@ -10,8 +10,14 @@
 
 @interface OTMultipartFormRequestBodyPart : NSObject
 
-@property (nonatomic, strong) NSData *data;
-@property (nonatomic, strong) NSString *filePath;
-@property (nonatomic, assign) unsigned long long length;
+- (nullable instancetype)initWithData:(nonnull NSData *)data;
+- (nullable instancetype)initWithString:(nonnull NSString *)string encoding:(NSStringEncoding)encoding;
+- (nullable instancetype)initWithFilePath:(nonnull NSString *)filePath;
+
+@property (nonatomic, readonly) unsigned long long length;
+
+- (void)resetReadHandleAndOffset;
+
+- (NSInteger)read:(nonnull uint8_t *)buffer maxLength:(NSUInteger)length;
 
 @end
