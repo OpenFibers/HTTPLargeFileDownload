@@ -31,6 +31,7 @@
     if (self)
     {
         self.data = data;
+        _length = data.length;
     }
     return self;
 }
@@ -46,6 +47,7 @@
     {
         NSData *data = [string dataUsingEncoding:encoding];
         self.data = data;
+        _length = data.length;
     }
     return self;
 }
@@ -62,6 +64,16 @@
     if (self)
     {
         self.filePath = filePath;
+        NSError *error;
+        unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error] fileSize];
+        if (!error)
+        {
+            _length = fileSize;
+        }
+        else
+        {
+            _length = 0;
+        }
     }
     return self;
 }
