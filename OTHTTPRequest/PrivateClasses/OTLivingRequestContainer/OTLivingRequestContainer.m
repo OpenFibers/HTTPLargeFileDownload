@@ -36,17 +36,23 @@
 
 - (void)addRequest:(id)request
 {
-    if (![self.containerArray containsObject:request])
+    @synchronized(self.containerArray)
     {
-        [self.containerArray addObject:request];
+        if (![self.containerArray containsObject:request])
+        {
+            [self.containerArray addObject:request];
+        }
     }
 }
 
 - (void)removeRequest:(id)request
 {
-    if ([self.containerArray containsObject:request])
+    @synchronized(self.containerArray)
     {
-        [self.containerArray removeObject:request];
+        if ([self.containerArray containsObject:request])
+        {
+            [self.containerArray removeObject:request];
+        }
     }
 }
 

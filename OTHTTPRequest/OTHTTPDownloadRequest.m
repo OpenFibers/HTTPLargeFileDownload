@@ -7,6 +7,7 @@
 //
 
 #import "OTHTTPDownloadRequest.h"
+#import "OTLivingRequestContainer.h"
 
 #if !__has_feature(objc_arc)
 #error ARC is required
@@ -178,7 +179,7 @@
             [self.connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
         }
         [self.connection start];
-        [[self class] addRequestToContainer:self];
+        [[OTLivingRequestContainer sharedContainer] addRequest:self];
     }
     else
     {
@@ -212,7 +213,7 @@
     }
     
     //self may dealloc after remove from container, so don't execute any code below this line
-    [[self class] removeRequestFromContainer:self];
+    [[OTLivingRequestContainer sharedContainer] removeRequest:self];
 }
 
 - (void)start
@@ -475,38 +476,6 @@
 }
 
 #pragma mark - Class helpers
-
-//added living request to container, incase they won't dealloc if working
-+ (NSMutableArray <OTHTTPDownloadRequest *> *)livingDownloadRequestContainer
-{
-    static NSMutableArray *array = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        array = [NSMutableArray array];
-    });
-    return array;
-}
-
-+ (void)addRequestToContainer:(OTHTTPDownloadRequest *)request
-{
-    NSMutableArray <OTHTTPDownloadRequest *> *container = [self livingDownloadRequestContainer];
-    @synchronized(container)
-    {
-        [container addObject:request];
-    }
-}
-
-+ (void)removeRequestFromContainer:(OTHTTPDownloadRequest *)request
-{
-    NSMutableArray <OTHTTPDownloadRequest *> *container = [self livingDownloadRequestContainer];
-    @synchronized(container)
-    {
-        if ([container containsObject:request])
-        {
-            [container removeObject:request];
-        }
-    }
-}
 
 //Returns YES if create successed or file already exists
 + (BOOL)createFileAtPath:(NSString *)fileFullPath
