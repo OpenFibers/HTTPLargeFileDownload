@@ -62,7 +62,7 @@
         return _MIMEType;
     }
     
-    NSString *MIMEType = [OTHTTPRequestUtils MIMETypeForFileExtension:self.fileName];
+    NSString *MIMEType = [OTHTTPRequestUtils MIMETypeForFileName:self.fileName];
     return MIMEType;
 }
 
