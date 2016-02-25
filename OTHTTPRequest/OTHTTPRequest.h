@@ -173,4 +173,40 @@
  */
 - (void)cancel;
 
+#pragma mark - Upload speed for multipart/form-data request
+
+/**
+ *  Get average upload speed in bytes/second.
+ *  Only for multipart/form-data request (upload request). Otherwise returns 0.
+ */
+@property (nonatomic, readonly) double averageUploadSpeed;
+
+/**
+ *  Interval for each progress callback, default is 0.2.
+ *  Only for multipart/form-data request (upload request).
+ */
+@property (nonatomic, assign) NSTimeInterval uploadCallbackInterval;
+
+/**
+ *  Uploaded content (http body) size.
+ *  Only for multipart/form-data request (upload request).
+ */
+@property (nonatomic, readonly) unsigned long long uploadedContentSize;
+
+/**
+ *  HTTP content size
+ */
+@property (nonatomic, readonly) unsigned long long contentLength;
+
+#pragma mark - Callback blocks
+
+@property (nonatomic, copy, nullable) void (^successedCallback)(OTHTTPRequest * _Nonnull request);
+@property (nonatomic, copy, nullable) void (^failedCallback)(OTHTTPRequest * _Nonnull request,  NSError * _Nullable error);
+@property (nonatomic, copy, nullable) void (^receivedResponseCallback)(OTHTTPRequest * _Nonnull request, NSURLResponse * _Nonnull response);
+@property (nonatomic, copy, nullable) void (^dataUpdatedCallback)(OTHTTPRequest * _Nonnull request, NSData * _Nonnull totalReceivedData);
+@property (nonatomic, copy, nullable) void (^progressUpdatedCallback)(OTHTTPRequest * _Nonnull request,
+                                                                      float progress,
+                                                                      float bytesPerSecond,
+                                                                      long long bytesSent,
+                                                                      long long contentLength);
 @end
