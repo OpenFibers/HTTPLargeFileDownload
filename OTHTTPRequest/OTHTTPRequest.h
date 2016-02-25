@@ -16,7 +16,6 @@
 - (void)otHTTPRequestFinished:(nonnull OTHTTPRequest *)request;
 - (void)otHTTPRequestFailed:(nonnull OTHTTPRequest *)request error:(nullable NSError *)error;
 - (void)otHTTPRequest:(nonnull OTHTTPRequest *)request didReceiveResponse:(nonnull NSURLResponse *)response;
-- (void)otHTTPRequest:(nonnull OTHTTPRequest *)request dataUpdated:(nonnull NSData *)data;
 - (void)otHTTPRequest:(nonnull OTHTTPRequest *)request dataUpdated:(nonnull NSData *)data totalData:(nonnull NSData *)totalData;
 
 @end
