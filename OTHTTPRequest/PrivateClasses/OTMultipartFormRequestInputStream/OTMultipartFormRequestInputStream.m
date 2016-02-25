@@ -164,9 +164,9 @@
 
 #pragma mark - Callback delegate
 
-- (void)readProgressUpdated
+- (void)callbackReadProgressUpdated
 {
-    if ([self.progressDelegate respondsToSelector:@selector(readProgressUpdatedWithBytesHasRead:)])
+    if ([self.progressDelegate respondsToSelector:@selector(otMultipartFormRequestInputStreamReadProgressUpdated:bytesHasRead:totalBytes:)])
     {
         [self.progressDelegate otMultipartFormRequestInputStreamReadProgressUpdated:self bytesHasRead:self.bytesHasRead totalBytes:self.contentLength];
     }
@@ -206,6 +206,8 @@
             }
         }
     }
+    self.bytesHasRead += totalNumberOfBytesRead;
+    [self callbackReadProgressUpdated];
     return totalNumberOfBytesRead;
 }
 

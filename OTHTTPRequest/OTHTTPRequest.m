@@ -12,7 +12,7 @@
 #import "OTMultipartFormRequestInputStream.h"
 #import "OTLivingRequestContainer.h"
 
-@interface OTHTTPRequest () <NSURLConnectionDataDelegate>
+@interface OTHTTPRequest () <NSURLConnectionDataDelegate, OTMultipartFormRequestInputStreamProgressDelegate>
 @property (nonatomic, strong) NSMutableArray<OTHTTPRequestPostObject *> *postParamContainer;
 @property (nonatomic, strong) NSString *multipartFormBoundary;
 @property (nonatomic, strong) NSMutableURLRequest *request;
@@ -270,6 +270,7 @@
         if ([self isMultipartFormRequest])
         {
             OTMultipartFormRequestInputStream *stream = [[OTMultipartFormRequestInputStream alloc] initWithEncoding:self.contentTypeEncoding];
+            stream.progressDelegate = self;
             [stream setupHTTPBodyWithObjects:self.postParamContainer boundary:self.multipartFormBoundary];
             [self.request setHTTPBodyStream:stream];
             
@@ -375,6 +376,15 @@
     }
     [_connection start];
     [[OTLivingRequestContainer sharedContainer] addRequest:self];
+}
+
+#pragma mark - Stream upload progress callback
+
+- (void)otMultipartFormRequestInputStreamReadProgressUpdated:(nonnull OTMultipartFormRequestInputStream *)stream
+                                                bytesHasRead:(unsigned long long)bytesHasRead
+                                                  totalBytes:(unsigned long long)totalBytes
+{
+    
 }
 
 #pragma mark - NSURLConnectionDataDelegate Callbacks
