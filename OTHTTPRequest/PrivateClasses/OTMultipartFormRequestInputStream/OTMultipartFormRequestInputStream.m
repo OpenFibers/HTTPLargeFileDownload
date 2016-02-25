@@ -219,8 +219,7 @@
 - (BOOL)hasBytesAvailable
 {
     BOOL streamOpen = [self streamStatus] == NSStreamStatusOpen;
-    BOOL bytesAvailable = self.bytesHasRead != self.contentLength;
-    return streamOpen && bytesAvailable;
+    return streamOpen;
 }
 
 - (void)open
