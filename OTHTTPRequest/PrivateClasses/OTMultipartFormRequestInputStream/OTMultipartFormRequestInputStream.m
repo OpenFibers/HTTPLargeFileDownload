@@ -160,6 +160,16 @@
     return nil;
 }
 
+#pragma mark - Callback delegate
+
+- (void)readProgressUpdated
+{
+    if ([self.progressDelegate respondsToSelector:@selector(readProgressUpdatedWithBytesHasRead:)])
+    {
+        [self.progressDelegate otMultipartFormRequestInputStreamReadProgressUpdated:self bytesHasRead:self.bytesHasRead totalBytes:self.contentLength];
+    }
+}
+
 #pragma mark - NSInputStream methods
 
 - (NSInteger)read:(uint8_t *)buffer maxLength:(NSUInteger)length

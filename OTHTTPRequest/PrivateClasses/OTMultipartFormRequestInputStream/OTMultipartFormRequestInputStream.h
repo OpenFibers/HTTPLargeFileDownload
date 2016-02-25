@@ -9,7 +9,19 @@
 #import <Foundation/Foundation.h>
 #import "OTHTTPRequestPostObject.h"
 
+@class OTMultipartFormRequestInputStream;
+
+@protocol OTMultipartFormRequestInputStreamProgressDelegate <NSObject>
+
+- (void)otMultipartFormRequestInputStreamReadProgressUpdated:(nonnull OTMultipartFormRequestInputStream *)stream
+                                                bytesHasRead:(unsigned long long)bytesHasRead
+                                                  totalBytes:(unsigned long long)totalBytes;
+
+@end
+
 @interface OTMultipartFormRequestInputStream : NSInputStream
+
+@property (nonatomic, weak, nullable) id<OTMultipartFormRequestInputStreamProgressDelegate> progressDelegate;
 
 /**
  *  Init a input stream with encoding. If an invalid encoding given, will init with NSUTF8StringEncoding.
@@ -35,6 +47,6 @@
  *
  *  @return The length of body content
  */
-- (unsigned long long)contentLength;
+@property (nonatomic, readonly) unsigned long long contentLength;
 
 @end
