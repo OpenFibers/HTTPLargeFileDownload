@@ -15,11 +15,14 @@
 @property (nonatomic, strong) NSMutableArray<OTMultipartFormRequestBodyPart *> *formParts;
 @property (nonatomic, strong) OTMultipartFormRequestBodyPart *currentReadingBodyPart;
 @property (nonatomic, strong) NSEnumerator *HTTPBodyEnumerator;
+@property (nonatomic, assign) unsigned long long bytesHasRead;
+@property (nonatomic, readwrite, strong) NSError *streamError;
 @end
 
 @implementation OTMultipartFormRequestInputStream
 @synthesize streamStatus = _streamStatus;
 @synthesize delegate = _delegate;
+@synthesize streamError = _streamError;
 
 #pragma mark - Life cycle
 
@@ -166,30 +169,31 @@
         return 0;
     }
     NSInteger totalNumberOfBytesRead = 0;
-//    while ((NSUInteger)totalNumberOfBytesRead < MIN(length, self.numberOfBytesInPacket))
-//    {
-//        if (!self.currentHTTPBodyPart || ![self.currentHTTPBodyPart hasBytesAvailable])
-//        {
-//            if (!(self.currentHTTPBodyPart = [self.HTTPBodyPartEnumerator nextObject]))
-//            {
-//                break;
-//            }
-//        }
-//        else
-//        {
-//            NSUInteger maxLength = length - (NSUInteger)totalNumberOfBytesRead;
-//            NSInteger numberOfBytesRead = [self.currentHTTPBodyPart read:&buffer[totalNumberOfBytesRead] maxLength:maxLength];
-//            if (numberOfBytesRead == -1)
-//            {
-//                self.streamError = self.currentHTTPBodyPart.inputStream.streamError;
-//                break;
-//            }
-//            else
-//            {
-//                totalNumberOfBytesRead += numberOfBytesRead;
-//            }
-//        }
-//    }
+    unsigned long long bytesLeft = self.contentLength - self.bytesHasRead;
+    while ((NSUInteger)totalNumberOfBytesRead < MIN(length, bytesLeft))
+    {
+        if (!self.currentReadingBodyPart || [self.currentReadingBodyPart hasReadToEnd])
+        {
+            if (!(self.currentReadingBodyPart = [self.HTTPBodyEnumerator nextObject]))
+            {
+                break;
+            }
+        }
+        else
+        {
+            NSUInteger maxLength = length - (NSUInteger)totalNumberOfBytesRead;
+            NSInteger numberOfBytesRead = [self.currentReadingBodyPart read:&buffer[totalNumberOfBytesRead] maxLength:maxLength];
+            if (numberOfBytesRead == -1)
+            {
+                self.streamError = self.currentReadingBodyPart.streamError;
+                break;
+            }
+            else
+            {
+                totalNumberOfBytesRead += numberOfBytesRead;
+            }
+        }
+    }
     return totalNumberOfBytesRead;
 }
 
@@ -200,7 +204,9 @@
 
 - (BOOL)hasBytesAvailable
 {
-    return [self streamStatus] == NSStreamStatusOpen;
+    BOOL streamOpen = [self streamStatus] == NSStreamStatusOpen;
+    BOOL bytesAvailable = self.bytesHasRead != self.contentLength;
+    return streamOpen && bytesAvailable;
 }
 
 - (void)open
@@ -215,6 +221,10 @@
 
 - (void)close
 {
+    for (OTMultipartFormRequestBodyPart *eachPart in self.formParts)
+    {
+        [eachPart resetReadHandleAndOffset];
+    }
     self.streamStatus = NSStreamStatusClosed;
 }
 

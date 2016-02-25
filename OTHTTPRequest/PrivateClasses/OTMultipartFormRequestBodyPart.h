@@ -20,4 +20,8 @@
 
 - (NSInteger)read:(nonnull uint8_t *)buffer maxLength:(NSUInteger)length;
 
+- (BOOL)hasReadToEnd;
+
+- (nullable NSError *)streamError;
+
 @end

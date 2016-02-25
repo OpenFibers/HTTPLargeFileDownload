@@ -107,18 +107,10 @@
 
 - (NSInteger)readData:(uint8_t *)buffer maxLength:(NSUInteger)length
 {
-    NSUInteger rangeLength = MIN(self.length - self.bytesHasRead, length);
-    NSRange readRange = NSMakeRange(self.bytesHasRead, rangeLength);
-    [self.data getBytes:buffer range:readRange];
-    self.bytesHasRead += rangeLength;
-    return rangeLength;
-}
-
-- (NSInteger)readFile:(uint8_t *)buffer maxLength:(NSUInteger)length
-{
     if (!self.fileReadStream)
     {
-        self.fileReadStream = [[NSInputStream alloc] initWithFileAtPath:self.filePath];
+        self.fileReadStream = [[NSInputStream alloc] initWithData:self.data];
+        [self.fileReadStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
         [self.fileReadStream open];
     }
     
@@ -130,6 +122,35 @@
     }
     
     return bytesRead;
+}
+
+- (NSInteger)readFile:(uint8_t *)buffer maxLength:(NSUInteger)length
+{
+    if (!self.fileReadStream)
+    {
+        self.fileReadStream = [[NSInputStream alloc] initWithFileAtPath:self.filePath];
+        [self.fileReadStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+        [self.fileReadStream open];
+    }
+    
+    NSInteger bytesRead = [self.fileReadStream read:buffer maxLength:length];
+    self.bytesHasRead += bytesRead;
+    if (self.bytesHasRead == self.length)
+    {
+        [self.fileReadStream close];
+    }
+    
+    return bytesRead;
+}
+
+- (BOOL)hasReadToEnd
+{
+    return self.length == self.bytesHasRead;
+}
+
+- (NSError *)streamError
+{
+    return self.fileReadStream.streamError;
 }
 
 @end
