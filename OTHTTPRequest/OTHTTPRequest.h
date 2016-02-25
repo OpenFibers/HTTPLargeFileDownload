@@ -16,7 +16,22 @@
 - (void)otHTTPRequestFinished:(nonnull OTHTTPRequest *)request;
 - (void)otHTTPRequestFailed:(nonnull OTHTTPRequest *)request error:(nullable NSError *)error;
 - (void)otHTTPRequest:(nonnull OTHTTPRequest *)request didReceiveResponse:(nonnull NSURLResponse *)response;
-- (void)otHTTPRequest:(nonnull OTHTTPRequest *)request dataUpdated:(nonnull NSData *)data totalData:(nonnull NSData *)totalData;
+- (void)otHTTPRequest:(nonnull OTHTTPRequest *)request receivedDataUpdated:(nonnull NSData *)totalReceivedData;
+
+/**
+ *  Upload progress updated callback
+ *
+ *  @param request        The request instance
+ *  @param uploadProgress Current upload progress
+ *  @param bytesPerSecond Upload speed in bytes/second
+ *  @param totalSent      Total sent bytes size
+ *  @param contentLength  Post body content length
+ */
+- (void)otHTTPRequest:(nonnull OTHTTPRequest *)request
+uploadProgressUpdated:(float)uploadProgress
+                speed:(float)bytesPerSecond
+            bytesSent:(unsigned long long)totalSent
+        contentLength:(unsigned long long)contentLength;
 
 @end
 
@@ -203,7 +218,7 @@
 @property (nonatomic, copy, nullable) void (^successedCallback)(OTHTTPRequest * _Nonnull request);
 @property (nonatomic, copy, nullable) void (^failedCallback)(OTHTTPRequest * _Nonnull request,  NSError * _Nullable error);
 @property (nonatomic, copy, nullable) void (^receivedResponseCallback)(OTHTTPRequest * _Nonnull request, NSURLResponse * _Nonnull response);
-@property (nonatomic, copy, nullable) void (^dataUpdatedCallback)(OTHTTPRequest * _Nonnull request, NSData * _Nonnull totalReceivedData);
+@property (nonatomic, copy, nullable) void (^receivedDataUpdatedCallback)(OTHTTPRequest * _Nonnull request, NSData * _Nonnull totalReceivedData);
 @property (nonatomic, copy, nullable) void (^progressUpdatedCallback)(OTHTTPRequest * _Nonnull request,
                                                                       float progress,
                                                                       float bytesPerSecond,

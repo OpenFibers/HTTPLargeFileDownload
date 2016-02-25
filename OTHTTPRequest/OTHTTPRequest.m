@@ -390,7 +390,7 @@
     if ([self.delegate respondsToSelector:@selector(otHTTPRequest:dataUpdated:totalData:)])
     {
         NSData *callbackData = [NSData dataWithData:_receivedData];
-        [self.delegate otHTTPRequest:self dataUpdated:data totalData:callbackData];
+        [self.delegate otHTTPRequest:self receivedDataUpdated:callbackData];
     }
 }
 
