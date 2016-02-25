@@ -54,14 +54,14 @@
 
 #pragma mark - Body part methods
 
-- (unsigned long long)contentLength
+- (void)updateContentLength
 {
     unsigned long long totalLength = 0;
     for (OTMultipartFormRequestBodyPart *part in self.formParts)
     {
         totalLength += part.length;
     }
-    return totalLength;
+    _contentLength = totalLength;
 }
 
 - (void)setupHTTPBodyWithObjects:(NSArray<OTHTTPRequestPostObject *> *)objects boundary:(NSString *)boundary
@@ -100,6 +100,8 @@
     
     OTMultipartFormRequestBodyPart *endPart = [self endBoundaryPart:boundary];
     [self.formParts addObject:endPart];
+    
+    [self updateContentLength];
     
     self.HTTPBodyEnumerator = self.formParts.objectEnumerator;
 }
