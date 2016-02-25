@@ -25,6 +25,7 @@
 		42CB2E551C7EE58C0099A421 /* OTMultipartFormRequestBodyPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CB2E521C7EE58C0099A421 /* OTMultipartFormRequestBodyPart.m */; };
 		42CB2E561C7EE58C0099A421 /* OTMultipartFormRequestInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CB2E541C7EE58C0099A421 /* OTMultipartFormRequestInputStream.m */; };
 		42CB2E5A1C7EE5A20099A421 /* OTHTTPRequestPostObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CB2E591C7EE5A20099A421 /* OTHTTPRequestPostObject.m */; };
+		42CB2E5E1C7EE5F00099A421 /* OTLivingRequestContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CB2E5D1C7EE5F00099A421 /* OTLivingRequestContainer.m */; };
 		42E0D52B1C7753EA009B1517 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42E0D52A1C7753EA009B1517 /* MobileCoreServices.framework */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +61,8 @@
 		42CB2E541C7EE58C0099A421 /* OTMultipartFormRequestInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTMultipartFormRequestInputStream.m; sourceTree = "<group>"; };
 		42CB2E581C7EE5A20099A421 /* OTHTTPRequestPostObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTHTTPRequestPostObject.h; sourceTree = "<group>"; };
 		42CB2E591C7EE5A20099A421 /* OTHTTPRequestPostObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTHTTPRequestPostObject.m; sourceTree = "<group>"; };
+		42CB2E5C1C7EE5F00099A421 /* OTLivingRequestContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTLivingRequestContainer.h; sourceTree = "<group>"; };
+		42CB2E5D1C7EE5F00099A421 /* OTLivingRequestContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTLivingRequestContainer.m; sourceTree = "<group>"; };
 		42E0D52A1C7753EA009B1517 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -179,9 +182,19 @@
 			path = OTHTTPRequestPostObject;
 			sourceTree = "<group>";
 		};
+		42CB2E5B1C7EE5E40099A421 /* OTLivingRequestContainer */ = {
+			isa = PBXGroup;
+			children = (
+				42CB2E5C1C7EE5F00099A421 /* OTLivingRequestContainer.h */,
+				42CB2E5D1C7EE5F00099A421 /* OTLivingRequestContainer.m */,
+			);
+			path = OTLivingRequestContainer;
+			sourceTree = "<group>";
+		};
 		42E0D5201C771B3F009B1517 /* PrivateClasses */ = {
 			isa = PBXGroup;
 			children = (
+				42CB2E5B1C7EE5E40099A421 /* OTLivingRequestContainer */,
 				42CB2E571C7EE5A20099A421 /* OTHTTPRequestPostObject */,
 				42CB2E501C7EE58C0099A421 /* OTMultipartFormRequestInputStream */,
 			);
@@ -255,6 +268,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				42585CA91C76B4B7005B6011 /* OTHTTPRequestUtils.m in Sources */,
+				42CB2E5E1C7EE5F00099A421 /* OTLivingRequestContainer.m in Sources */,
 				42585CA61C76AC60005B6011 /* HTTPRequestViewController.m in Sources */,
 				4233B83817412287005F7C4C /* main.m in Sources */,
 				4233B83C17412287005F7C4C /* OTAppDelegate.m in Sources */,
