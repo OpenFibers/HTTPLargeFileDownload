@@ -122,6 +122,18 @@ static NSString * const RequestURLString = @"https://www.google.com";
     _infoView.text = errorString;
 }
 
+- (void)otHTTPRequest:(OTHTTPRequest *)request uploadProgressUpdated:(float)uploadProgress speed:(float)bytesPerSecond bytesSent:(unsigned long long)totalSent contentLength:(unsigned long long)contentLength
+{
+    NSString *logInfo = [NSString stringWithFormat:
+                         @"Upload URL:\n%@\nprogress:%.2f %%\n\nuploaded size:%.2fKB\n\nexpected size:%.2fKB\n\ncurrent speed:%.2f KB/s",
+                         [request URL],
+                         uploadProgress * 100,
+                         totalSent / (double) (1024),
+                         contentLength / (double) (1024),
+                         request.averageUploadSpeed / (double) (1024)];
+    _infoView.text = logInfo;
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];

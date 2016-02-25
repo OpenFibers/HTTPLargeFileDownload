@@ -16,6 +16,8 @@
 @property (nonatomic, strong) NSMutableArray<OTHTTPRequestPostObject *> *postParamContainer;
 @property (nonatomic, strong) NSString *multipartFormBoundary;
 @property (nonatomic, strong) NSMutableURLRequest *request;
+@property (nonatomic, assign) NSTimeInterval connectionBeginTime;
+@property (nonatomic, assign) NSTimeInterval lastProgressCallbackTime;
 @end
 
 @implementation OTHTTPRequest
@@ -366,6 +368,8 @@
 
 - (void)beginConnection
 {
+    self.connectionBeginTime = [[NSDate date] timeIntervalSince1970];
+
     _receivedData = [NSMutableData data];
     [self buildHTTPBody];
     
@@ -384,7 +388,33 @@
                                                 bytesHasRead:(unsigned long long)bytesHasRead
                                                   totalBytes:(unsigned long long)totalBytes
 {
-    
+    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
+    NSTimeInterval elapsed = currentTime - _connectionBeginTime;
+    _averageUploadSpeed = (elapsed == 0 ? 0 : bytesHasRead / elapsed);
+    if (currentTime - self.lastProgressCallbackTime > self.uploadCallbackInterval)
+    {
+        self.lastProgressCallbackTime = currentTime;
+        CGFloat progress = 0.0f;
+        if (totalBytes != 0)
+        {
+            progress = (double)(bytesHasRead / (double)totalBytes);
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(otHTTPRequest:uploadProgressUpdated:speed:bytesSent:contentLength:)])
+            {
+                [self.delegate otHTTPRequest:self
+                       uploadProgressUpdated:progress
+                                       speed:self.averageUploadSpeed
+                                   bytesSent:bytesHasRead
+                               contentLength:totalBytes];
+            }
+            if (self.uploadProgressCallback)
+            {
+                self.uploadProgressCallback(self, progress, self.averageUploadSpeed, bytesHasRead, totalBytes);
+            }
+        });
+    }
 }
 
 #pragma mark - NSURLConnectionDataDelegate Callbacks
