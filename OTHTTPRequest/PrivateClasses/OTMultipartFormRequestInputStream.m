@@ -49,7 +49,7 @@
 
 - (void)dealloc
 {
-    
+    [self close];
 }
 
 #pragma mark - Body part methods
@@ -221,11 +221,11 @@
 
 - (void)close
 {
+    self.streamStatus = NSStreamStatusClosed;
     for (OTMultipartFormRequestBodyPart *eachPart in self.formParts)
     {
         [eachPart resetReadHandleAndOffset];
     }
-    self.streamStatus = NSStreamStatusClosed;
 }
 
 - (id)propertyForKey:(NSString *)key
