@@ -367,18 +367,17 @@
             {
                 progress = (double)(_currentContentLength / (double)_expectedContentLength);
             }
-            if ([self.delegate respondsToSelector:@selector(downloadRequest:currentProgressUpdated:speed:received:totalReceived:expectedDataSize:)])
+            if ([self.delegate respondsToSelector:@selector(downloadRequest:currentProgressUpdated:speed:totalReceived:expectedDataSize:)])
             {
                 [self.delegate downloadRequest:self
                         currentProgressUpdated:progress
                                          speed:_averageDownloadSpeed
-                                      received:dataLength
                                  totalReceived:_currentContentLength
                               expectedDataSize:_expectedContentLength];
             }
             if (self.progressUpdatedCallback)
             {
-                self.progressUpdatedCallback(self, progress, _averageDownloadSpeed, dataLength, _currentContentLength, _expectedContentLength);
+                self.progressUpdatedCallback(self, progress, _averageDownloadSpeed, _currentContentLength, _expectedContentLength);
             }
         }
     }

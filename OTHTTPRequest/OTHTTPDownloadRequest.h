@@ -51,14 +51,12 @@
  *  @param request          The downloading request instance
  *  @param progress         Current progress
  *  @param bytesPerSecond   Current speed, bytes per second
- *  @param received         Received content size in this network package
  *  @param totalReceived    Total received content size in cache file
  *  @param expectedDataSize Expected file size from http response header
  */
 - (void)downloadRequest:(OTHTTPDownloadRequest *)request
  currentProgressUpdated:(float)progress
                   speed:(float)bytesPerSecond
-               received:(NSUInteger)received
           totalReceived:(long long)totalReceived
        expectedDataSize:(long long)expectedDataSize;
 
@@ -181,7 +179,6 @@
 @property (nonatomic, copy) void(^progressUpdatedCallback)(OTHTTPDownloadRequest *request,
                                                             float progress,
                                                             float bytesPerSecond,
-                                                            NSUInteger received,
                                                             long long totalReceived,
                                                             long long expectedDataSize);
 

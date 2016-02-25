@@ -387,7 +387,7 @@
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
     [_receivedData appendData:data];
-    if ([self.delegate respondsToSelector:@selector(otHTTPRequest:dataUpdated:totalData:)])
+    if ([self.delegate respondsToSelector:@selector(otHTTPRequest:receivedDataUpdated:)])
     {
         NSData *callbackData = [NSData dataWithData:_receivedData];
         [self.delegate otHTTPRequest:self receivedDataUpdated:callbackData];
