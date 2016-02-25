@@ -125,7 +125,7 @@
 @property (nonatomic, assign) NSTimeInterval downloadProgressCallbackInterval;
 
 /**
- *  Get average download speed.
+ *  Get average download speed in bytes/second.
  */
 @property (nonatomic, readonly) double averageDownloadSpeed;
 
