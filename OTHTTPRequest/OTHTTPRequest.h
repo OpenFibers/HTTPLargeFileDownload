@@ -13,13 +13,40 @@
 @protocol OTHTTPRequestDelegate <NSObject>
 
 @optional
+
+/**
+ *  Request finished callback
+ *
+ *  @param request        The request instance
+ */
 - (void)otHTTPRequestFinished:(nonnull OTHTTPRequest *)request;
+
+/**
+ *  Request failed callback
+ *
+ *  @param request The request instance
+ *  @param error   Callback Error
+ */
 - (void)otHTTPRequestFailed:(nonnull OTHTTPRequest *)request error:(nullable NSError *)error;
+
+/**
+ *  Request did receive response callback
+ *
+ *  @param request  The request instance
+ *  @param response The received response
+ */
 - (void)otHTTPRequest:(nonnull OTHTTPRequest *)request didReceiveResponse:(nonnull NSURLResponse *)response;
+
+/**
+ *  Request received data callback
+ *
+ *  @param request           The request instance
+ *  @param totalReceivedData Total received data
+ */
 - (void)otHTTPRequest:(nonnull OTHTTPRequest *)request receivedDataUpdated:(nonnull NSData *)totalReceivedData;
 
 /**
- *  Upload progress updated callback
+ *  Upload progress updated callback, only for multipart/form-data (file uploading) request
  *
  *  @param request        The request instance
  *  @param uploadProgress Current upload progress
@@ -214,6 +241,8 @@ uploadProgressUpdated:(float)uploadProgress
 @property (nonatomic, readonly) unsigned long long contentLength;
 
 #pragma mark - Callback blocks
+
+//blocks callbacks work as same as delegate's methods
 
 @property (nonatomic, copy, nullable) void (^successedCallback)(OTHTTPRequest * _Nonnull request);
 @property (nonatomic, copy, nullable) void (^failedCallback)(OTHTTPRequest * _Nonnull request,  NSError * _Nullable error);

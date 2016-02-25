@@ -169,7 +169,7 @@
 
 #pragma mark Callback blocks
 
-//blocks callback work as same as delegate's methods
+//blocks callbacks work as same as delegate's methods
 
 - (void)setSuccessedCallback:(void (^)(OTHTTPDownloadRequest *))successedCallback
               failedCallback:(void (^)(OTHTTPDownloadRequest *, NSError *))failedCallback
