@@ -236,9 +236,9 @@ uploadProgressUpdated:(float)uploadProgress
 @property (nonatomic, readonly) unsigned long long uploadedContentSize;
 
 /**
- *  HTTP content size
+ *  HTTP request body content length
  */
-@property (nonatomic, readonly) unsigned long long contentLength;
+@property (nonatomic, readonly) unsigned long long requestBodyContentLength;
 
 #pragma mark - Callback blocks
 
@@ -248,9 +248,13 @@ uploadProgressUpdated:(float)uploadProgress
 @property (nonatomic, copy, nullable) void (^failedCallback)(OTHTTPRequest * _Nonnull request,  NSError * _Nullable error);
 @property (nonatomic, copy, nullable) void (^receivedResponseCallback)(OTHTTPRequest * _Nonnull request, NSURLResponse * _Nonnull response);
 @property (nonatomic, copy, nullable) void (^receivedDataUpdatedCallback)(OTHTTPRequest * _Nonnull request, NSData * _Nonnull totalReceivedData);
-@property (nonatomic, copy, nullable) void (^progressUpdatedCallback)(OTHTTPRequest * _Nonnull request,
-                                                                      float progress,
-                                                                      float bytesPerSecond,
-                                                                      long long bytesSent,
-                                                                      long long contentLength);
+
+/**
+ *  Upload progress callback, only for multipart/form (file uploading) request
+ */
+@property (nonatomic, copy, nullable) void (^uploadProgressCallback)(OTHTTPRequest * _Nonnull request,
+                                                                     float progress,
+                                                                     float bytesPerSecond,
+                                                                     unsigned long long bytesSent,
+                                                                     unsigned long long contentLength);
 @end

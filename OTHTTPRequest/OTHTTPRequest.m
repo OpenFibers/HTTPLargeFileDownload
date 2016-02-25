@@ -42,6 +42,8 @@
         NSString *uuidString = (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
         CFRelease(uuid);
         self.multipartFormBoundary = [NSString stringWithFormat:@"--OTHTTPRequest-%@", uuidString];
+        
+        self.uploadCallbackInterval = 0.2;
     }
     return self;
 }
@@ -273,6 +275,7 @@
             
             NSString *postLength = [NSString stringWithFormat:@"%tu", stream.contentLength];
             [self.request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+            _requestBodyContentLength = stream.contentLength;
         }
         else
         {
@@ -282,6 +285,7 @@
             
             NSString *postLength = [NSString stringWithFormat:@"%tu", [postData length]];
             [self.request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+            _requestBodyContentLength = [postData length];
         }
     }
 }

@@ -57,8 +57,8 @@
 - (void)downloadRequest:(OTHTTPDownloadRequest *)request
  currentProgressUpdated:(float)progress
                   speed:(float)bytesPerSecond
-          totalReceived:(long long)totalReceived
-       expectedDataSize:(long long)expectedDataSize;
+          totalReceived:(unsigned long long)totalReceived
+       expectedDataSize:(unsigned long long)expectedDataSize;
 
 @end
 
@@ -179,8 +179,8 @@
 @property (nonatomic, copy) void(^progressUpdatedCallback)(OTHTTPDownloadRequest *request,
                                                             float progress,
                                                             float bytesPerSecond,
-                                                            long long totalReceived,
-                                                            long long expectedDataSize);
+                                                            unsigned long long totalReceived,
+                                                            unsigned long long expectedDataSize);
 
 #pragma mark Start/Pause
 
