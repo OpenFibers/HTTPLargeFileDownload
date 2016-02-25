@@ -109,7 +109,6 @@ static NSString *const DownloadURLString = @"http://dl.google.com/drive/installg
 - (void)downloadRequest:(OTHTTPDownloadRequest *)request
  currentProgressUpdated:(float)progress
                   speed:(float)bytesPerSecond
-               received:(NSUInteger)received
           totalReceived:(long long)totalReceived
        expectedDataSize:(long long)expectedDataSize
 {
