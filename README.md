@@ -10,7 +10,7 @@ A very light lib for http request.
 * Delegate and block callback
 * CPU time shorter than ASIHTTPRequest, both upload and download
 
-![](https://raw.githubusercontent.com/OpenFibers/OTHTTPRequest/master/demo.png)
+<img src="https://raw.githubusercontent.com/OpenFibers/OTHTTPRequest/master/demo.png" alt="demo" width="487">
 
 ## How to install
 
