@@ -386,15 +386,28 @@
     {
         [self.delegate otHTTPRequest:self didReceiveResponse:response];
     }
+    if (self.receivedResponseCallback)
+    {
+        self.receivedResponseCallback(self, response);
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
     [_receivedData appendData:data];
-    if ([self.delegate respondsToSelector:@selector(otHTTPRequest:receivedDataUpdated:)])
+    
+    if ([self.delegate respondsToSelector:@selector(otHTTPRequest:receivedDataUpdated:)] ||
+        self.receivedDataUpdatedCallback)
     {
         NSData *callbackData = [NSData dataWithData:_receivedData];
-        [self.delegate otHTTPRequest:self receivedDataUpdated:callbackData];
+        if ([self.delegate respondsToSelector:@selector(otHTTPRequest:receivedDataUpdated:)])
+        {
+            [self.delegate otHTTPRequest:self receivedDataUpdated:callbackData];
+        }
+        if (self.receivedDataUpdatedCallback)
+        {
+            self.receivedDataUpdatedCallback(self, callbackData);
+        }
     }
 }
 
@@ -403,6 +416,11 @@
     if ([self.delegate respondsToSelector:@selector(otHTTPRequestFinished:)])
     {
         [self.delegate otHTTPRequestFinished:self];
+    }
+    
+    if (self.successedCallback)
+    {
+        self.successedCallback(self);
     }
     
     //self may dealloc after remove from container, so don't execute any code below this line
@@ -415,6 +433,12 @@
     {
         [self.delegate otHTTPRequestFailed:self error:error];
     }
+    
+    if (self.failedCallback)
+    {
+        self.failedCallback(self, error);
+    }
+    
     [self cancel];
 
     //self may dealloc after remove from container, so don't execute any code below this line
