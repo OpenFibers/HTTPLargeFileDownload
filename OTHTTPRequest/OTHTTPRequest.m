@@ -10,6 +10,7 @@
 #import "OTHTTPRequestUtils.h"
 #import "OTHTTPRequestPostObject.h"
 #import "OTMultipartFormRequestInputStream.h"
+#import "OTLivingRequestContainer.h"
 
 @interface OTHTTPRequest () <NSURLConnectionDataDelegate>
 @property (nonatomic, strong) NSMutableArray<OTHTTPRequestPostObject *> *postParamContainer;
@@ -369,6 +370,7 @@
         [_connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     }
     [_connection start];
+    [[OTLivingRequestContainer sharedContainer] addRequest:self];
 }
 
 #pragma mark - NSURLConnectionDataDelegate Callbacks
@@ -402,6 +404,9 @@
     {
         [self.delegate otHTTPRequestFinished:self];
     }
+    
+    //self may dealloc after remove from container, so don't execute any code below this line
+    [[OTLivingRequestContainer sharedContainer] removeRequest:self];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
@@ -411,6 +416,9 @@
         [self.delegate otHTTPRequestFailed:self error:error];
     }
     [self cancel];
+
+    //self may dealloc after remove from container, so don't execute any code below this line
+    [[OTLivingRequestContainer sharedContainer] removeRequest:self];
 }
 
 @end
