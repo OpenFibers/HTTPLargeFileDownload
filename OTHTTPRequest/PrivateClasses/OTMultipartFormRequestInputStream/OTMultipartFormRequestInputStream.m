@@ -71,8 +71,6 @@
         return;
     }
     
-    OTMultipartFormRequestBodyPart *separatorPart = [self separatorBoundaryPart:boundary];
-    
     OTMultipartFormRequestBodyPart *beginPart = [self beginPartWithBoundary:boundary];
     [self.formParts addObject:beginPart];
     
@@ -94,6 +92,7 @@
         
         if (eachObject != objects.lastObject)
         {
+            OTMultipartFormRequestBodyPart *separatorPart = [self separatorBoundaryPart:boundary];
             [self.formParts addObject:separatorPart];
         }
     }
