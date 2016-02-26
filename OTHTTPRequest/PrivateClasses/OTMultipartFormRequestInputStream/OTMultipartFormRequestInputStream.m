@@ -205,8 +205,11 @@
             }
         }
     }
-    self.bytesHasRead += totalNumberOfBytesRead;
-    [self callbackReadProgressUpdated];
+    if (totalNumberOfBytesRead)
+    {
+        self.bytesHasRead += totalNumberOfBytesRead;
+        [self callbackReadProgressUpdated];
+    }
     return totalNumberOfBytesRead;
 }
 
