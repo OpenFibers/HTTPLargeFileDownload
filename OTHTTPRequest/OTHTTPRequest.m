@@ -161,7 +161,7 @@
 {
     NSURLComponents *mutableURL = [NSURLComponents componentsWithString:self.request.URL.absoluteString];
     NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:getParams];
-    mutableURL.query = paramString;
+    mutableURL.percentEncodedQuery = paramString;
     NSURL *newURL = mutableURL.URL;
     self.request.URL = newURL;
 }
@@ -170,7 +170,7 @@
 {
     NSURLComponents *mutableURL = [NSURLComponents componentsWithString:self.request.URL.absoluteString];
     NSString *paramString = [OTHTTPRequestUtils paramsStringFromParamDictionary:getParams];
-    NSString *oldQuery = mutableURL.query;
+    NSString *oldQuery = mutableURL.percentEncodedQuery;
     if (oldQuery)
     {
         if ([oldQuery hasSuffix:@"&"])
@@ -182,7 +182,7 @@
             paramString = [oldQuery stringByAppendingFormat:@"&%@", paramString];
         }
     }
-    mutableURL.query = paramString;
+    mutableURL.percentEncodedQuery = paramString;
     NSURL *newURL = mutableURL.URL;
     self.request.URL = newURL;
 }
