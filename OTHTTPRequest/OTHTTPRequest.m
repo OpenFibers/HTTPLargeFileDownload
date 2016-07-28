@@ -273,7 +273,7 @@
 
 - (void)buildHTTPBody
 {
-    if ([self isGetRequest])
+    if ([self isGetRequest] && self.request.HTTPBody.length == 0)
     {
         [self.request setHTTPMethod:@"GET"];
     }
@@ -281,7 +281,7 @@
     {
         [self.request setHTTPMethod:@"POST"];
         
-        if ([self.request HTTPBody].length != 0)//if HTTP body was set manually, only update content length
+        if (self.request.HTTPBody.length != 0)//if HTTP body was set manually, only update content length
         {
             NSData *postData = [self.request HTTPBody];
             NSString *postLength = [NSString stringWithFormat:@"%tu", [postData length]];
