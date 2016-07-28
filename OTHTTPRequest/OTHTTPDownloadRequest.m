@@ -393,7 +393,7 @@
             ((_currentContentLength != _expectedContentLength) && _expectedContentLength != -1)) //Response data length error
         {
             NSError *error = [[NSError alloc] initWithDomain:@"OTHTTPDownloadRequest response data length error"
-                                                        code:_responseStatusCode
+                                                        code:responseCode
                                                     userInfo:nil];
             [self failedCallbackWithError:error];
             [[NSFileManager defaultManager] removeItemAtPath:_cacheFilePath error:nil];
@@ -441,7 +441,7 @@
     else //Response code error
     {
         NSError *error = [[NSError alloc] initWithDomain:@"OTHTTPDownloadRequest response code error"
-                                                    code:_responseStatusCode
+                                                    code:responseCode
                                                 userInfo:nil];
         [self failedCallbackWithError:error];
     }
