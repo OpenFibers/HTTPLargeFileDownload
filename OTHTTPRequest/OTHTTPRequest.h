@@ -168,6 +168,20 @@ uploadProgressUpdated:(float)uploadProgress
  */
 - (void)addFileForKey:(nonnull NSString *)key filePath:(nonnull NSString *)filePath fileName:(nullable NSString *)fileName MIMEType:(nullable NSString *)MIMEType;
 
+/**
+ *  Sets the request body data of the receiver. This data is sent as the message body of the request, as in done in an HTTP POST request.
+ *
+ *  @param HTTPBody the new request body data for the receiver.
+ */
+- (void)setHTTPBody:(nonnull NSData *)HTTPBody;
+
+/**
+ *  Sets the request body data of the receiver, use current encoding setting (default is utf-8) with HTTPBodyString. Please set encoding before call this, otherwise if encoding get changed later, HTTPBody will not change to the new encoding, until call this method again.
+ *
+ *  @param HTTPBodyString the new request body string for the receiver.
+ */
+- (void)setHTTPBodyUseCurrentEncodeSettingWithBodyString:(nonnull NSString *)HTTPBodyString;
+
 #pragma mark - Options
 
 /**

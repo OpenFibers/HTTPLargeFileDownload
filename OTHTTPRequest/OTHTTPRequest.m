@@ -258,6 +258,17 @@
     [self updateContentTypeWithEncoding:self.contentTypeEncoding];
 }
 
+- (void)setHTTPBody:(nonnull NSData *)HTTPBody
+{
+    [self.request setHTTPBody:HTTPBody];
+}
+
+- (void)setHTTPBodyUseCurrentEncodeSettingWithBodyString:(nonnull NSString *)HTTPBodyString
+{
+    NSData *data = [HTTPBodyString dataUsingEncoding:self.contentTypeEncoding];
+    [self setHTTPBody:data];
+}
+
 #pragma mark - Build HTTP Body
 
 - (void)buildHTTPBody
@@ -269,7 +280,15 @@
     else
     {
         [self.request setHTTPMethod:@"POST"];
-        if ([self isMultipartFormRequest])
+        
+        if ([self.request HTTPBody].length != 0)//if HTTP body was set manually, only update content length
+        {
+            NSData *postData = [self.request HTTPBody];
+            NSString *postLength = [NSString stringWithFormat:@"%tu", [postData length]];
+            [self.request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+            _requestBodyContentLength = [postData length];
+        }
+        else if ([self isMultipartFormRequest])
         {
             OTMultipartFormRequestInputStream *stream = [[OTMultipartFormRequestInputStream alloc] initWithEncoding:self.contentTypeEncoding];
             stream.progressDelegate = self;
