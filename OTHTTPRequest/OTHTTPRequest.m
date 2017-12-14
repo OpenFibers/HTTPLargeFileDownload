@@ -413,7 +413,7 @@
     if (currentTime - self.lastProgressCallbackTime > self.uploadCallbackInterval)
     {
         self.lastProgressCallbackTime = currentTime;
-        CGFloat progress = 0.0f;
+        double progress = 0.0f;
         if (totalBytes != 0)
         {
             progress = (double)(bytesHasRead / (double)totalBytes);

@@ -362,7 +362,7 @@
         if (currentTime - _lastProgressCallbackTime > self.downloadProgressCallbackInterval)
         {
             _lastProgressCallbackTime = currentTime;
-            CGFloat progress = 0.0f;
+            double progress = 0.0f;
             if (_expectedContentLength != 0)
             {
                 progress = (double)(_currentContentLength / (double)_expectedContentLength);
