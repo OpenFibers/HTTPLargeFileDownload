@@ -37,8 +37,6 @@
  *
  *  @param objects  OTHTTPRequestPostObjects
  *  @param boundary Boundary of multipart form
- *
- *  @return The length of body content
  */
 - (void)setupHTTPBodyWithObjects:(nullable NSArray<OTHTTPRequestPostObject *> *)objects boundary:(nonnull NSString *)boundary;
 

@@ -132,7 +132,7 @@ uploadProgressUpdated:(float)uploadProgress
 /**
  *  Add get params for request
  *
- *  @param params get params to add.
+ *  @param getParams GET method params to add.
  */
 - (void)addGetParams:(nonnull NSDictionary<NSString */*key*/, NSString */*value*/> *)getParams;
 
@@ -144,7 +144,8 @@ uploadProgressUpdated:(float)uploadProgress
 /**
  *  Add post params for request
  *
- *  @param params post params to add
+ *  @param value POST method value to add
+ *  @param key POST method key to add
  */
 - (void)addPostValue:(nonnull NSString *)value forKey:(nonnull NSString *)key;
 
